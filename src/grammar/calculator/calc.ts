@@ -2,6 +2,7 @@
 import calculatorLexer from "./output/calculatorLexer.ts";
 import { CharStream, CommonTokenStream } from "antlr4";
 import calculatorParser from "./output/calculatorParser.ts";
+import { CalculatorVisitor } from "./calc-visitor.ts";
 
 async function main() {
   const reader = Bun.stdin.stream();
@@ -10,10 +11,11 @@ async function main() {
     const stream = new CharStream(chunkText);
     const lexer = new calculatorLexer(stream);
     const tokens = new CommonTokenStream(lexer);
-    const parser = new calculatorParser(tokens)
+    const parser = new calculatorParser(tokens);
     const parseTree = parser.prog();
-    console.log(parseTree)
+    const calculatorVisitor = new CalculatorVisitor()
+    calculatorVisitor.visit(parseTree);
   }
 }
 
-await main()
+await main();
