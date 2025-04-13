@@ -1,5 +1,14 @@
 {
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "@types/bun": "^1.2.9",
     "antlr4": "^4.13.2"
+  },
+  "name": "grammar",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "peerDependencies": {
+    "typescript": "^5"
   }
 }
