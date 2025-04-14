@@ -1,1 +1,5 @@
-console.log("Hello via Bun!");
+async function main() {
+  console.log("Hello World!");
+}
+
+await main();
