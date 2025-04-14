@@ -8,15 +8,19 @@ import type {
 
 export class SalVisitor implements ParseTreeVisitor<Number> {
   visit(tree: ParseTree): Number {
-    throw new Error("Method not implemented.");
+    console.log(tree.getText());
+    return 0;
   }
   visitChildren(node: RuleNode): Number {
-    throw new Error("Method not implemented.");
+    console.log(node.getText());
+    return 0;
   }
   visitTerminal(node: TerminalNode): Number {
-    throw new Error("Method not implemented.");
+    console.log(node.getText());
+    return 0;
   }
   visitErrorNode(node: ErrorNode): Number {
-    throw new Error("Method not implemented.");
+    console.log(node.getText());
+    return 0;
   }
 }

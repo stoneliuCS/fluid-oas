@@ -28,6 +28,7 @@ export default class SalGrammarParser extends Parser {
 	public static readonly INT = 9;
 	public static readonly NEWLINE = 10;
 	public static readonly WS = 11;
+	public static readonly DECLARE = 12;
 	public static readonly EOF = Token.EOF;
 	public static readonly RULE_prog = 0;
 	public static readonly RULE_stats = 1;
@@ -44,7 +45,7 @@ export default class SalGrammarParser extends Parser {
                                                              null, null, 
                                                              "ID", "INT", 
                                                              "NEWLINE", 
-                                                             "WS" ];
+                                                             "WS", "DECLARE" ];
 	// tslint:disable:no-trailing-whitespace
 	public static readonly ruleNames: string[] = [
 		"prog", "stats", "stat", "block", "expr",
@@ -317,7 +318,7 @@ export default class SalGrammarParser extends Parser {
 		return true;
 	}
 
-	public static readonly _serializedATN: number[] = [4,1,11,53,2,0,7,0,2,
+	public static readonly _serializedATN: number[] = [4,1,12,53,2,0,7,0,2,
 	1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,1,0,1,0,1,1,1,1,1,1,5,1,16,8,1,10,1,12,1,
 	19,9,1,1,2,1,2,3,2,23,8,2,1,3,1,3,5,3,27,8,3,10,3,12,3,30,9,3,1,3,1,3,1,
 	4,1,4,1,4,1,4,1,4,1,4,1,4,3,4,41,8,4,1,4,1,4,1,4,1,4,1,4,5,4,48,8,4,10,

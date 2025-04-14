@@ -9,6 +9,7 @@ ID=8
 INT=9
 NEWLINE=10
 WS=11
+DECLARE=12
 ';'=1
 '{'=2
 '}'=3
