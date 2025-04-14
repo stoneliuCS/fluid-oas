@@ -4,15 +4,23 @@ import SalCommonTokens;
 // Begin parsing here.
 prog: stats ;
 
-stats: (stat ';')* ; // Match zero or more ';' terminated statements.
+// Match zero or more ';' terminated statements.
+stats: (stat ';')* ; 
 
-stat: block 
+// A Statement can be one of schema or block
+stat: schema 
     | expr
+    | block
     ;
+
+schema: DECLARE SCHEMA '{' expr '}'
+      | DECLARE SCHEMA '{' '}'
+      ;
 
 block: '{' stat* '}';
 
 expr: ID '(' expr ')'
     | expr '[' expr ']'
     | INT
+    | WS
     ;

@@ -6,6 +6,7 @@ import {ParseTreeListener} from "antlr4";
 import { ProgContext } from "./SalGrammarParser";
 import { StatsContext } from "./SalGrammarParser";
 import { StatContext } from "./SalGrammarParser";
+import { SchemaContext } from "./SalGrammarParser";
 import { BlockContext } from "./SalGrammarParser";
 import { ExprContext } from "./SalGrammarParser";
 
@@ -45,6 +46,16 @@ export default class SalGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitStat?: (ctx: StatContext) => void;
+	/**
+	 * Enter a parse tree produced by `SalGrammarParser.schema`.
+	 * @param ctx the parse tree
+	 */
+	enterSchema?: (ctx: SchemaContext) => void;
+	/**
+	 * Exit a parse tree produced by `SalGrammarParser.schema`.
+	 * @param ctx the parse tree
+	 */
+	exitSchema?: (ctx: SchemaContext) => void;
 	/**
 	 * Enter a parse tree produced by `SalGrammarParser.block`.
 	 * @param ctx the parse tree
