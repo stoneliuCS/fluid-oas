@@ -2,8 +2,17 @@ grammar SalGrammar;
 import SalCommonTokens;
 
 // Begin parsing here.
-prog: stats+ ;
+prog: stats ;
 
 stats: (stat ';')* ; // Match zero or more ';' terminated statements.
-stat: block ;
+
+stat: block 
+    | expr
+    ;
+
 block: '{' stat* '}';
+
+expr: ID '(' expr ')'
+    | expr '[' expr ']'
+    | INT
+    ;

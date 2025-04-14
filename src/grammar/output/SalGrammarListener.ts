@@ -7,6 +7,7 @@ import { ProgContext } from "./SalGrammarParser";
 import { StatsContext } from "./SalGrammarParser";
 import { StatContext } from "./SalGrammarParser";
 import { BlockContext } from "./SalGrammarParser";
+import { ExprContext } from "./SalGrammarParser";
 
 
 /**
@@ -54,5 +55,15 @@ export default class SalGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitBlock?: (ctx: BlockContext) => void;
+	/**
+	 * Enter a parse tree produced by `SalGrammarParser.expr`.
+	 * @param ctx the parse tree
+	 */
+	enterExpr?: (ctx: ExprContext) => void;
+	/**
+	 * Exit a parse tree produced by `SalGrammarParser.expr`.
+	 * @param ctx the parse tree
+	 */
+	exitExpr?: (ctx: ExprContext) => void;
 }
 
