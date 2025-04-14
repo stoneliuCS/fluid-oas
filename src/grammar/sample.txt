@@ -1,0 +1,6 @@
+// Type aliases you can define with special properties
+type id: string : min(0): max(4) // Define a string with fixed length
+
+schema UserBody: {
+  field1: Maybe()
+}
