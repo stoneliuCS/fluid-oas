@@ -1,6 +1,30 @@
-// Type aliases you can define with special properties
-type id: string : min(0): max(4) // Define a string with fixed length
+DECLARE SCHEMA {
+  // Schema Declarations
+};
 
-schema UserBody: {
-  field1: Maybe()
+ROUTE_1 = "/api/v1/healthcheck"
+
+DECLARE ROUTE_1 {
+
+    POST {
+
+    };
+
+    PUT {
+
+    };
+
+    PATCH {
+
+    };
+
+    GET {
+
+    };
+
 }
+
+DECLARE ROUTES {
+  // Route Declarations
+
+};
