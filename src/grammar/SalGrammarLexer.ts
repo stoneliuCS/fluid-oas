@@ -1,4 +1,4 @@
-// Generated from ./SalGrammar.g4 by ANTLR 4.12.0
+// Generated from /Users/stoneliu/Desktop/Playground/sal/src/grammar/SalGrammar.g4 by ANTLR 4.12.0
 // noinspection ES6UnusedImports,JSUnusedGlobalSymbols,JSUnusedLocalSymbols
 import {
 	ATN,

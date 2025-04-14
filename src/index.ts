@@ -1,5 +1,5 @@
-import { SalParser } from "./SalParser";
-import { SalVisitor } from "./SalVisitor";
+import { SalParser } from "./lexer/SalParser";
+import { SalVisitor } from "./lexer/SalVisitor";
 
 async function main() {
   for await (const chunk of Bun.stdin.stream()) {
