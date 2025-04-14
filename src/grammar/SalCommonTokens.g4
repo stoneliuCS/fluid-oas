@@ -1,10 +1,21 @@
 lexer grammar SalCommonTokens;
 
-ID : [a-zA-Z]+ ; // match identifiers
-INT : [0-9]+ ; // match integers
-NEWLINE:'\r'? '\n' ; // return newlines to parser (end-statement signal)
-WS : [ \t]+ -> skip ; // toss out whitespace
+// TERMINALS
 
-// Keywords
-DECLARE : 'DECLARE';
-SCHEMA : 'SCHEMA';
+// match identifiers
+ID : [a-zA-Z]+ ; 
+
+// match integers
+INT : [0-9]+ ; 
+
+// match strings including double quotes inside strings
+STRING:'"' (ESC|.)*?'"' ;
+fragment
+ESC : '\\"' | '\\\\' ; // 2-char sequences \" and \\
+
+// Comment matching for both // and /**/
+LINE_COMMENT : '//' .*? '\r'? '\n' -> skip ; // Match "//" stuff '\n'
+COMMENT : '/*' .*? '*/' -> skip ; // Match "/*" stuff "*/"
+
+// Match and discard all whitespace.
+WS : [ \t\r\n]+ -> skip ; // match 1-or-more whitespace but discard
