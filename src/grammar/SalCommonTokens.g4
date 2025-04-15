@@ -1,6 +1,13 @@
 lexer grammar SalCommonTokens;
 
-// TERMINALS
+// KEYWORDS
+SCHEMA : 'SCHEMA';
+DECLARE : 'DECLARE';
+
+// TYPES
+NUMBER_TYPE : 'number';
+STRING_TYPE : 'string';
+BOOL_TYPE : 'bool';
 
 // match identifiers
 ID : [a-zA-Z]+ ; 

@@ -1,1 +1,10 @@
-DECLARE SCHEMA User {};
+// Comment!
+DECLARE SCHEMA User {
+  "hello" : number,
+  "mai" : string
+};
+
+DECLARE SCHEMA UserME {
+  "hello" : number,
+  "mai" : string
+};
