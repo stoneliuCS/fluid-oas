@@ -12,6 +12,8 @@ import {
 	Interval, IntervalSet
 } from 'antlr4';
 import SalGrammarListener from "./SalGrammarListener.js";
+import SalGrammarVisitor from "./SalGrammarVisitor.js";
+
 // for running tests with parameters, TODO: discuss strategy for typed parameters in CI
 // eslint-disable-next-line no-unused-vars
 type int = number;
@@ -396,6 +398,14 @@ export class ProgContext extends ParserRuleContext {
 	 		listener.exitProg(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: SalGrammarVisitor<Result>): Result {
+		if (visitor.visitProg) {
+			return visitor.visitProg(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -423,6 +433,14 @@ export class SalContext extends ParserRuleContext {
 	 		listener.exitSal(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: SalGrammarVisitor<Result>): Result {
+		if (visitor.visitSal) {
+			return visitor.visitSal(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -445,6 +463,14 @@ export class CodeContext extends ParserRuleContext {
 	public exitRule(listener: SalGrammarListener): void {
 	    if(listener.exitCode) {
 	 		listener.exitCode(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: SalGrammarVisitor<Result>): Result {
+		if (visitor.visitCode) {
+			return visitor.visitCode(this);
+		} else {
+			return visitor.visitChildren(this);
 		}
 	}
 }
@@ -480,6 +506,14 @@ export class SchemaContext extends ParserRuleContext {
 	 		listener.exitSchema(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: SalGrammarVisitor<Result>): Result {
+		if (visitor.visitSchema) {
+			return visitor.visitSchema(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -507,6 +541,14 @@ export class ObjectContext extends ParserRuleContext {
 	 		listener.exitObject(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: SalGrammarVisitor<Result>): Result {
+		if (visitor.visitObject) {
+			return visitor.visitObject(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -532,6 +574,14 @@ export class PairContext extends ParserRuleContext {
 	public exitRule(listener: SalGrammarListener): void {
 	    if(listener.exitPair) {
 	 		listener.exitPair(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: SalGrammarVisitor<Result>): Result {
+		if (visitor.visitPair) {
+			return visitor.visitPair(this);
+		} else {
+			return visitor.visitChildren(this);
 		}
 	}
 }
@@ -565,6 +615,14 @@ export class TypeContext extends ParserRuleContext {
 	public exitRule(listener: SalGrammarListener): void {
 	    if(listener.exitType) {
 	 		listener.exitType(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: SalGrammarVisitor<Result>): Result {
+		if (visitor.visitType) {
+			return visitor.visitType(this);
+		} else {
+			return visitor.visitChildren(this);
 		}
 	}
 }
