@@ -1,6 +1,6 @@
 import { CharStream, CommonTokenStream } from "antlr4";
-import SalGrammarLexer from "../grammar/SalGrammarLexer.ts";
-import SalGrammarParser, { ProgContext } from "../grammar/SalGrammarParser";
+import SalGrammarLexer from "./SalGrammarLexer.ts";
+import SalGrammarParser, { ProgContext } from "./SalGrammarParser";
 
 /**
  * Converts SAL source code into a ParseTree with the inital start rule.

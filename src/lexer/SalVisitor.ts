@@ -1,8 +1,8 @@
 import type { ErrorNode, ParseTree, RuleNode, TerminalNode } from "antlr4";
-import SalGrammarVisitor from "../grammar/SalGrammarVisitor";
+import SalGrammarVisitor from "./SalGrammarVisitor";
 import {
   ProgContext,
-} from "../grammar/SalGrammarParser";
+} from "./SalGrammarParser";
 
 export class SalVisitor implements SalGrammarVisitor<number> {
   visitProg: (ctx: ProgContext) => number = (ctx: ProgContext) => {
