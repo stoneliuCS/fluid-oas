@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
-import { toSalParseTree } from "../../lexer/SalParser";
-import { SalVisitor } from "../../lexer/SalVisitor";
+import { toSalParseTree } from "../../src/lexer/SalParser";
+import { SalVisitor } from "../../src/lexer/SalVisitor";
 
 test("Empty sal source code should make an empty parse tree.", () => {
   // Arrange
