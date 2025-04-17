@@ -17,7 +17,7 @@ export function toSalParseTree(code: string): ProgContext {
 }
 
 /*
- * Interprets and Transpiles the file into a SalParseTree
+ * Interprets and transpiles the file into a SalParseTree
  */
 export async function interpretFile(filePath : string) {
   const salFile = Bun.file(filePath);

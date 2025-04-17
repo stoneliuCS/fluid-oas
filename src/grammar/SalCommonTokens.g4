@@ -1,8 +1,10 @@
 lexer grammar SalCommonTokens;
 
 // KEYWORDS
-SCHEMA : 'SCHEMA';
 DECLARE : 'DECLARE';
+SCHEMA : 'SCHEMA';
+ROUTE : 'ROUTE';
+TYPE : 'TYPE';
 
 // TYPES
 NUMBER_TYPE : 'number';

@@ -1,4 +1,4 @@
-// Generated from /Users/stoneliu/Desktop/Playground/sal/src/grammar/SalGrammar.g4 by ANTLR 4.12.0
+// Generated from /Users/stoneliu/Playground/sal/src/grammar/SalGrammar.g4 by ANTLR 4.12.0
 
 import {ParseTreeListener} from "antlr4";
 
@@ -7,9 +7,11 @@ import { ProgContext } from "./SalGrammarParser";
 import { SalContext } from "./SalGrammarParser";
 import { CodeContext } from "./SalGrammarParser";
 import { SchemaContext } from "./SalGrammarParser";
-import { ObjectContext } from "./SalGrammarParser";
-import { PairContext } from "./SalGrammarParser";
+import { RouteContext } from "./SalGrammarParser";
 import { TypeContext } from "./SalGrammarParser";
+import { Schema_definitionContext } from "./SalGrammarParser";
+import { PairContext } from "./SalGrammarParser";
+import { Schema_typeContext } from "./SalGrammarParser";
 
 
 /**
@@ -58,15 +60,35 @@ export default class SalGrammarListener extends ParseTreeListener {
 	 */
 	exitSchema?: (ctx: SchemaContext) => void;
 	/**
-	 * Enter a parse tree produced by `SalGrammarParser.object`.
+	 * Enter a parse tree produced by `SalGrammarParser.route`.
 	 * @param ctx the parse tree
 	 */
-	enterObject?: (ctx: ObjectContext) => void;
+	enterRoute?: (ctx: RouteContext) => void;
 	/**
-	 * Exit a parse tree produced by `SalGrammarParser.object`.
+	 * Exit a parse tree produced by `SalGrammarParser.route`.
 	 * @param ctx the parse tree
 	 */
-	exitObject?: (ctx: ObjectContext) => void;
+	exitRoute?: (ctx: RouteContext) => void;
+	/**
+	 * Enter a parse tree produced by `SalGrammarParser.type`.
+	 * @param ctx the parse tree
+	 */
+	enterType?: (ctx: TypeContext) => void;
+	/**
+	 * Exit a parse tree produced by `SalGrammarParser.type`.
+	 * @param ctx the parse tree
+	 */
+	exitType?: (ctx: TypeContext) => void;
+	/**
+	 * Enter a parse tree produced by `SalGrammarParser.schema_definition`.
+	 * @param ctx the parse tree
+	 */
+	enterSchema_definition?: (ctx: Schema_definitionContext) => void;
+	/**
+	 * Exit a parse tree produced by `SalGrammarParser.schema_definition`.
+	 * @param ctx the parse tree
+	 */
+	exitSchema_definition?: (ctx: Schema_definitionContext) => void;
 	/**
 	 * Enter a parse tree produced by `SalGrammarParser.pair`.
 	 * @param ctx the parse tree
@@ -78,14 +100,14 @@ export default class SalGrammarListener extends ParseTreeListener {
 	 */
 	exitPair?: (ctx: PairContext) => void;
 	/**
-	 * Enter a parse tree produced by `SalGrammarParser.type`.
+	 * Enter a parse tree produced by `SalGrammarParser.schema_type`.
 	 * @param ctx the parse tree
 	 */
-	enterType?: (ctx: TypeContext) => void;
+	enterSchema_type?: (ctx: Schema_typeContext) => void;
 	/**
-	 * Exit a parse tree produced by `SalGrammarParser.type`.
+	 * Exit a parse tree produced by `SalGrammarParser.schema_type`.
 	 * @param ctx the parse tree
 	 */
-	exitType?: (ctx: TypeContext) => void;
+	exitSchema_type?: (ctx: Schema_typeContext) => void;
 }
 

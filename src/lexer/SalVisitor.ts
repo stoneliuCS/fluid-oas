@@ -10,8 +10,7 @@ export class SalVisitor implements SalGrammarVisitor<number> {
       console.log("Ending visit...");
       return 0;
     } else {
-      console.log(ctx.start.text);
-      console.log(ctx.getChild(0).getText())
+      console.log("HIT")
       return 1;
     }
   };

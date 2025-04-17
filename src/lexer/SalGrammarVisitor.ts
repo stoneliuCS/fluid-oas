@@ -1,4 +1,4 @@
-// Generated from /Users/stoneliu/Desktop/Playground/sal/src/grammar/SalGrammar.g4 by ANTLR 4.12.0
+// Generated from /Users/stoneliu/Playground/sal/src/grammar/SalGrammar.g4 by ANTLR 4.12.0
 
 import {ParseTreeVisitor} from 'antlr4';
 
@@ -7,9 +7,11 @@ import { ProgContext } from "./SalGrammarParser";
 import { SalContext } from "./SalGrammarParser";
 import { CodeContext } from "./SalGrammarParser";
 import { SchemaContext } from "./SalGrammarParser";
-import { ObjectContext } from "./SalGrammarParser";
-import { PairContext } from "./SalGrammarParser";
+import { RouteContext } from "./SalGrammarParser";
 import { TypeContext } from "./SalGrammarParser";
+import { Schema_definitionContext } from "./SalGrammarParser";
+import { PairContext } from "./SalGrammarParser";
+import { Schema_typeContext } from "./SalGrammarParser";
 
 
 /**
@@ -45,11 +47,23 @@ export default class SalGrammarVisitor<Result> extends ParseTreeVisitor<Result> 
 	 */
 	visitSchema?: (ctx: SchemaContext) => Result;
 	/**
-	 * Visit a parse tree produced by `SalGrammarParser.object`.
+	 * Visit a parse tree produced by `SalGrammarParser.route`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	visitObject?: (ctx: ObjectContext) => Result;
+	visitRoute?: (ctx: RouteContext) => Result;
+	/**
+	 * Visit a parse tree produced by `SalGrammarParser.type`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitType?: (ctx: TypeContext) => Result;
+	/**
+	 * Visit a parse tree produced by `SalGrammarParser.schema_definition`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitSchema_definition?: (ctx: Schema_definitionContext) => Result;
 	/**
 	 * Visit a parse tree produced by `SalGrammarParser.pair`.
 	 * @param ctx the parse tree
@@ -57,10 +71,10 @@ export default class SalGrammarVisitor<Result> extends ParseTreeVisitor<Result> 
 	 */
 	visitPair?: (ctx: PairContext) => Result;
 	/**
-	 * Visit a parse tree produced by `SalGrammarParser.type`.
+	 * Visit a parse tree produced by `SalGrammarParser.schema_type`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	visitType?: (ctx: TypeContext) => Result;
+	visitSchema_type?: (ctx: Schema_typeContext) => Result;
 }
 
