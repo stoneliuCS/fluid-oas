@@ -12,7 +12,7 @@ export class OpenApiBuilder {
 
   public constructor(metadata?: Partial<MetadataParams>) {
     if (this.metadata) {
-      Object.assign(this.metadata, metadata);
+      this.metadata = Object.assign(this.metadata, metadata);
     } else {
       this.metadata = metadata;
     }

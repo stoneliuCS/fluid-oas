@@ -17,7 +17,10 @@ export class MetadataVisitor implements OperatorVisitor<MetadataParams> {
     if (!this.metadata) {
       return builder;
     }
-    const newBuilder = Object.assign({}, builder.metadata, this.metadata);
+    if (!builder.metadata) {
+      return new OpenApiBuilder(this.metadata);
+    }
+    const newBuilder = Object.assign(builder.metadata, this.metadata);
     return new OpenApiBuilder(newBuilder);
   }
 
