@@ -8,6 +8,7 @@ describe("Metadata tests for OpenAPIBuilder class.", () => {
   beforeAll(() => {
     apiBuilder = new OpenApiBuilder();
   });
+
   it("OpenApiBuilder immutability tests with metadata visitor", () => {
     // Arrange
     const infoObject = {

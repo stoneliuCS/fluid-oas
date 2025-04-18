@@ -1,10 +1,10 @@
-import { OpenApiBuilder } from "./OpenApiBuilder";
 import type {
-  MetadataParams,
   OperatorVisitor,
+  MetadataParams,
   RouteParams,
   SchemaParams,
-} from "./OpenApiBuilderTypes";
+} from "../types/OperatorTypes";
+import { OpenApiBuilder } from "./OpenApiBuilder";
 
 export class MetadataVisitor implements OperatorVisitor<MetadataParams> {
   private readonly metadata?: Partial<MetadataParams>;

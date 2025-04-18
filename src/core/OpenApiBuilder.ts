@@ -1,20 +1,31 @@
 import type {
-  OperatorVisitor,
-  OperatorParams,
   MetadataParams,
-} from "./OpenApiBuilderTypes";
+  OperatorParams,
+  OperatorVisitor,
+  RouteParams,
+} from "../types/OperatorTypes";
 
 /**
  * OpenApiBuilder is a completely functional DSL for creating elegant OpenAPI definitions in pure TypeScript.
  */
 export class OpenApiBuilder {
   public readonly metadata?: Partial<MetadataParams>;
+  public readonly routes?: Partial<RouteParams>;
 
-  public constructor(metadata?: Partial<MetadataParams>) {
+  public constructor(
+    metadata?: Partial<MetadataParams>,
+    routes?: Partial<RouteParams>,
+  ) {
     if (this.metadata) {
       this.metadata = Object.assign(this.metadata, metadata);
     } else {
       this.metadata = metadata;
+    }
+
+    if (this.routes) {
+      this.routes = Object.assign(this.routes, routes);
+    } else {
+      this.routes = routes;
     }
   }
 
