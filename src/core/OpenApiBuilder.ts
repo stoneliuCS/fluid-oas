@@ -1,10 +1,23 @@
-import type { OperatorVisitor, OperatorParams } from "./OpenApiOperator";
+import type {
+  OperatorVisitor,
+  OperatorParams,
+  MetadataParams,
+} from "./OpenApiBuilderTypes";
 
 /**
- * The ApiBuilder defines a fluent interface for creating a complete TypeSafe
- * REST API by expressing schema's in an OPENAPI interface.
+ * OpenApiBuilder is a completely functional DSL for creating elegant API definitions in pure TypeScript.
  */
 export class OpenApiBuilder {
+
+  public readonly metadata?: Partial<MetadataParams>;
+
+  public constructor(metadata?: Partial<MetadataParams>) {
+    if (this.metadata) {
+      Object.assign(this.metadata, metadata);
+    } else {
+      this.metadata = metadata;
+    }
+  }
 
   /**
    * Adds the specified OPENAPI schema, metadata, or route to this OpenAPIBuilder
