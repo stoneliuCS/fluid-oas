@@ -1,8 +1,8 @@
-# S.A.L
+# S.A.L.T
 A Structured Application Programming Interface Language for TypeScript APIs
 
 ## Purpose
-S.A.L is an external Domain Specific Language for expressing type-safe web APIs written in TypeScript.
+S.A.L.T is an internal/embedded Domain Specific Language for expressing type-safe web APIs written in TypeScript.
 
 The core logic is to communicate a simple but expressive language which can generate three key things:
 - Generate an OpenAPI Specification.

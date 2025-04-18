@@ -1,6 +1,0 @@
-DECLARE SCHEMA User {
-  "username" : string,
-  "firstName" : string,
-  "lastName" : string,
-  "cool?" : bool
-};
