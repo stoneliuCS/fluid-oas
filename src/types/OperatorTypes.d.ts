@@ -1,4 +1,4 @@
-export type OperatorParams = MetadataParams | RouteParams | SchemaParams;
+export type OperatorParams = RootParams | RouteParams | SchemaParams;
 
 export interface OperatorVisitor<OperatorParams> {
   operate(builder: OpenApiBuilder): OpenApiBuilder;
@@ -8,14 +8,21 @@ export interface OperatorVisitor<OperatorParams> {
   ): OperatorVisitor<OperatorParams>;
 }
 
-export interface MetadataParams {
+export interface RootParams {
   readonly openApiVersion: OpenApiVersions;
   readonly info: OpenApiInfo;
 }
 
 export interface RouteParams {
-  readonly apiRoute: string;
+  /**
+   * Relative route, path templates are allowed.
+   *
+   * Usage: "/pets", "/pets/{id}"
+   */
+  readonly route: string;
   readonly type: "POST" | "PUT" | "PATCH" | "GET" | "DELETE";
+  readonly description: string;
+  readonly summary: string;
 }
 
 export interface SchemaParams {}

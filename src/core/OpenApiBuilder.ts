@@ -1,5 +1,5 @@
 import type {
-  MetadataParams,
+  RootParams,
   OperatorParams,
   OperatorVisitor,
   RouteParams,
@@ -7,14 +7,19 @@ import type {
 
 /**
  * OpenApiBuilder is a completely functional DSL for creating elegant OpenAPI definitions in pure TypeScript.
+ *
+ * Decouples two key points of Web API Design:
+ *
+ * Route defining
+ * Schema defining
  */
 export class OpenApiBuilder {
 
-  public readonly metadata?: Partial<MetadataParams>;
+  public readonly metadata?: Partial<RootParams>;
   public readonly routes?: Partial<RouteParams>;
 
   public constructor(
-    metadata?: Partial<MetadataParams>,
+    metadata?: Partial<RootParams>,
     routes?: Partial<RouteParams>,
   ) {
     if (this.metadata) {

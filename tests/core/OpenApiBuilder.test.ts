@@ -1,6 +1,6 @@
 import { describe, beforeAll, it, expect } from "bun:test";
 import { OpenApiBuilder } from "../../src/core/OpenApiBuilder";
-import { MetadataVisitor } from "../../src/core/OpenApiOperator";
+import { RootVisitor } from "../../src/core/OpenApiOperator";
 
 describe("Metadata tests for OpenAPIBuilder class.", () => {
   let apiBuilder: OpenApiBuilder;
@@ -22,7 +22,7 @@ describe("Metadata tests for OpenAPIBuilder class.", () => {
         },
       }
     const openApiVersion = "3.1.1"
-    const metadata = new MetadataVisitor()
+    const metadata = new RootVisitor()
       .with("info", infoObject )
       .with("openApiVersion", openApiVersion);
 
@@ -34,7 +34,7 @@ describe("Metadata tests for OpenAPIBuilder class.", () => {
     expect(newBuilder.metadata).not.toBeUndefined();
 
     // Arrange
-    const infoMetadata = new MetadataVisitor().with("openApiVersion", "3.1.1")
+    const infoMetadata = new RootVisitor().with("openApiVersion", "3.1.1")
 
     // Act
     const adjustedBuilder = newBuilder.accept(infoMetadata)

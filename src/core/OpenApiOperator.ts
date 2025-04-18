@@ -1,15 +1,15 @@
 import type {
   OperatorVisitor,
-  MetadataParams,
+  RootParams,
   RouteParams,
   SchemaParams,
 } from "../types/OperatorTypes";
 import { OpenApiBuilder } from "./OpenApiBuilder";
 
-export class MetadataVisitor implements OperatorVisitor<MetadataParams> {
-  private readonly metadata?: Partial<MetadataParams>;
+export class RootVisitor implements OperatorVisitor<RootParams> {
+  private readonly metadata?: Partial<RootParams>;
 
-  public constructor(metadata?: Partial<MetadataParams>) {
+  public constructor(metadata?: Partial<RootParams>) {
     this.metadata = metadata;
   }
 
@@ -24,16 +24,16 @@ export class MetadataVisitor implements OperatorVisitor<MetadataParams> {
     return new OpenApiBuilder(newBuilder);
   }
 
-  with<K extends keyof MetadataParams>(
+  with<K extends keyof RootParams>(
     key: K,
-    val: MetadataParams[K],
-  ): OperatorVisitor<MetadataParams> {
+    val: RootParams[K],
+  ): OperatorVisitor<RootParams> {
     if (!this.metadata) {
-      return new MetadataVisitor({ [key]: val });
+      return new RootVisitor({ [key]: val });
     }
     const copy = structuredClone(this.metadata);
     copy[key] = val;
-    return new MetadataVisitor(copy);
+    return new RootVisitor(copy);
   }
 }
 
