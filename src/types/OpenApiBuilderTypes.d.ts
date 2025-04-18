@@ -1,4 +1,4 @@
-readonly type OpenApiVersions = "3.0" | "3.1";
+readonly type OpenApiVersions = "3.1.1";
 
 interface OpenApiInfo {
   readonly title: string;

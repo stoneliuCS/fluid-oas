@@ -9,6 +9,7 @@ import type {
  * OpenApiBuilder is a completely functional DSL for creating elegant OpenAPI definitions in pure TypeScript.
  */
 export class OpenApiBuilder {
+
   public readonly metadata?: Partial<MetadataParams>;
   public readonly routes?: Partial<RouteParams>;
 

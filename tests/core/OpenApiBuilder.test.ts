@@ -21,7 +21,7 @@ describe("Metadata tests for OpenAPIBuilder class.", () => {
           identifier: "Something",
         },
       }
-    const openApiVersion = "3.1"
+    const openApiVersion = "3.1.1"
     const metadata = new MetadataVisitor()
       .with("info", infoObject )
       .with("openApiVersion", openApiVersion);
@@ -34,7 +34,7 @@ describe("Metadata tests for OpenAPIBuilder class.", () => {
     expect(newBuilder.metadata).not.toBeUndefined();
 
     // Arrange
-    const infoMetadata = new MetadataVisitor().with("openApiVersion", "3.0")
+    const infoMetadata = new MetadataVisitor().with("openApiVersion", "3.1.1")
 
     // Act
     const adjustedBuilder = newBuilder.accept(infoMetadata)
@@ -42,6 +42,6 @@ describe("Metadata tests for OpenAPIBuilder class.", () => {
     // Assert
     expect(adjustedBuilder.metadata).not.toBeUndefined()
     expect(adjustedBuilder.metadata?.info).toEqual(infoObject)
-    expect(adjustedBuilder.metadata?.openApiVersion).toBe("3.0")
+    expect(adjustedBuilder.metadata?.openApiVersion).toBe("3.1.1")
   });
 });
