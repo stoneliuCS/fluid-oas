@@ -1,23 +1,15 @@
-import { type OpenApiBuilderMetadata } from "./OpenApiBuilderTypes";
-import type { OpenApiOperator } from "./OpenApiOperator";
+import type { OperatorVisitor, OperatorParams } from "./OpenApiOperator";
 
 /**
  * The ApiBuilder defines a fluent interface for creating a complete TypeSafe
  * REST API by expressing schema's in an OPENAPI interface.
  */
 export class OpenApiBuilder {
-  public readonly metadata: OpenApiBuilderMetadata;
-  public readonly schema;
-  public readonly routes;
-
-  public constructor(metadata: OpenApiBuilderMetadata) {
-    this.metadata = metadata;
-  }
 
   /**
    * Adds the specified OPENAPI schema, metadata, or route to this OpenAPIBuilder
    */
-  public add(operator: OpenApiOperator): OpenApiBuilder {
+  public accept(operator: OperatorVisitor<OperatorParams>): OpenApiBuilder {
     return operator.operate(this);
   }
 
