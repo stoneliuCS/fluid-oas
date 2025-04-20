@@ -332,4 +332,13 @@ export class OpenApiMetadata {
     }
     return this.jsonSchemaDialect
   }
+
+  public getServers(): OpenApiServer[] {
+    if (!this.servers) {
+      throw new MetadataNotFound(
+        "The servers from this OpenAPI schema metadata field could not be found.",
+      );
+    }
+    return this.servers;
+  }
 }
