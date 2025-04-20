@@ -19,4 +19,13 @@ describe("New OpenApiMetadata test.", () => {
     metadata1 = metadata1.addInfo({ title: "PetStore", version: "v1.0.0" });
     expect(metadata1).not.toEqual(metadata2);
   });
+
+  it("Test that setting the version of OpenApiMetadata is accurate", () => {
+    let metadata = emptyMetadata.addVersion("3.0.0");
+    expect(metadata.getVersion()).toBe("3.0.0");
+    metadata = emptyMetadata.addVersion("3.1.0");
+    expect(metadata.getVersion()).toBe("3.1.0");
+    metadata = emptyMetadata.addVersion("3.1.1");
+    expect(metadata.getVersion()).toBe("3.1.1");
+  });
 });
