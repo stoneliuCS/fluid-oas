@@ -1,3 +1,4 @@
+import { MetadataNotFound } from "../lib/error";
 import type {
   OpenApiExternalDocumentation,
   OpenApiInfo,
@@ -79,6 +80,24 @@ export class OpenApiMetadata {
     Object.freeze(this.security);
     Object.freeze(this.tags);
     Object.freeze(this.externalDocs);
+  }
+
+  /**
+   * From this OpenApiMetadata, create complete typesafe Zod specifications.
+   *
+   * NOTE: It is recommended that the OpenAPIBuilder calls this method.
+   */
+  public toZod(ZodSchemaVisitor: any) {
+    throw new Error("Use visitor pattern for this.");
+  }
+
+  /**
+   * From this OpenApiMetadata, create an OpenApiSpecification.
+   *
+   * NOTE: It is recommended that the OpenAPIBuilder calls this method.
+   */
+  public toOpenApiSpecification(): void {
+    throw new Error("Unimplemented.");
   }
 
   /**
@@ -284,5 +303,24 @@ export class OpenApiMetadata {
       this.tags,
       externalDocs,
     );
+  }
+
+  public getVersion(): OpenApiVersion {
+    if (!this.version) {
+      throw new MetadataNotFound(
+        "The version from this OpenAPI metadata field could not be found.",
+      );
+    }
+    return this.version;
+  }
+
+
+  public getInfo(): OpenApiInfo {
+    if (!this.info) {
+      throw new MetadataNotFound(
+        "The info from this OpenAPI metadata field could not be found.",
+      );
+    }
+    return this.info;
   }
 }

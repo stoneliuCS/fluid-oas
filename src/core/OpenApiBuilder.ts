@@ -8,11 +8,11 @@ export class OpenApiBuilder {
     this.metadata = metadata;
   }
 
-  public toZod() {
-    throw new Error("Not Supported Yet.")
+  public toZod(visitor : unknown ) {
+    this.metadata.toZod(visitor)
   }
 
   public toOpenApi() {
-    throw new Error("Not Supported Yet.")
+    this.metadata.toOpenApiSpecification();
   }
 }
