@@ -323,4 +323,13 @@ export class OpenApiMetadata {
     }
     return this.info;
   }
+
+  public getJsonSchemaDialect() : OpenApiJsonSchemaDialect {
+    if (!this.jsonSchemaDialect) {
+      throw new MetadataNotFound(
+        "The json schema dialect from this OpenAPI metadata field could not be found.",
+      );
+    }
+    return this.jsonSchemaDialect
+  }
 }

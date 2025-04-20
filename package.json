@@ -1,5 +1,5 @@
 {
-  "name": "sal",
+  "name": "salt",
   "module": "./src",
   "type": "module",
   "devDependencies": {
