@@ -1,23 +1,47 @@
-readonly type OpenApiVersions = "3.1.1";
+export type OpenApiVersion = Readonly<"3.0.0" | "3.1.0" | "3.1.1">;
 
-interface OpenApiInfo {
-  readonly title: string;
-  readonly version: string;
-  readonly summary?: string;
-  readonly description?: string;
-  readonly termsOfService?: string; //TODO: Make this validate valid URIs
-  readonly contact?: OpenApiContact;
-  readonly license?: OpenApiLicense;
-}
+export type OpenApiInfo = Readonly<{
+  title: string;
+  version: string;
+  summary?: string;
+  description?: string;
+  termsOfService?: string;
+  contact?: OpenApiInfoContact;
+  license?: OpenApiInfoLicense;
+}>;
 
-interface OpenApiContact {
-  readonly name: string;
-  readonly url: string; //TODO: Same here
-  readonly email: string;
-}
+export type OpenApiTag = Readonly<{
+  name: string;
+  description?: string;
+  externalDocs?: OpenApiExternalDocumentation;
+}>;
 
-interface OpenApiLicense {
-  readonly name: string;
-  readonly identifier?: string;
-  readonly url?: string; //TODO: Same here
-}
+export type OpenApiExternalDocumentation = Readonly<{
+  description?: string;
+  url: string;
+}>;
+
+export type OpenApiJsonSchemaDialect = Readonly<string>;
+export type OpenApiServer = Readonly<{
+  url: string;
+  description?: string;
+  variables?: Map<string, OpenApiServerVariable>;
+}>;
+
+type OpenApiServerVariable = Readonly<{
+  enum?: string[];
+  default: string;
+  description?: string;
+}>;
+
+type OpenApiInfoContact = Readonly<{
+  name: string;
+  url: string;
+  email: string;
+}>;
+
+type OpenApiInfoLicense = Readonly<{
+  name: string;
+  identifier?: string;
+  url?: string;
+}>;
