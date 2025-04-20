@@ -183,7 +183,7 @@ export class OpenApiMetadata {
       this.info,
       this.jsonSchemaDialect,
       this.servers,
-      this.routes,
+      routesCopy,
       this.webhooks,
       this.components,
       this.security,
@@ -237,6 +237,52 @@ export class OpenApiMetadata {
       this.security,
       this.tags,
       this.externalDocs,
+    );
+  }
+
+  public addTag(tag: OpenApiTag) {
+    if (!this.tags) {
+      return new OpenApiMetadata(
+        this.version,
+        this.info,
+        this.jsonSchemaDialect,
+        this.servers,
+        this.routes,
+        this.webhooks,
+        this.components,
+        this.security,
+        [tag],
+        this.externalDocs,
+      );
+    }
+    const tagsCopy = structuredClone(this.tags);
+    tagsCopy.push(tag);
+    return new OpenApiMetadata(
+      this.version,
+      this.info,
+      this.jsonSchemaDialect,
+      this.servers,
+      this.routes,
+      this.webhooks,
+      this.components,
+      this.security,
+      tagsCopy,
+      this.externalDocs,
+    );
+  }
+
+  public addExternalDocumentation(externalDocs: OpenApiExternalDocumentation) {
+    return new OpenApiMetadata(
+      this.version,
+      this.info,
+      this.jsonSchemaDialect,
+      this.servers,
+      this.routes,
+      this.webhooks,
+      this.components,
+      this.security,
+      this.tags,
+      externalDocs,
     );
   }
 }
