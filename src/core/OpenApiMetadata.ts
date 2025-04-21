@@ -341,4 +341,14 @@ export class OpenApiMetadata {
     }
     return this.servers;
   }
+
+
+  public getRoutes(): OpenApiRoute[] {
+    if (!this.routes) {
+      throw new MetadataNotFound(
+        "The routes from this OpenAPI schema metadata field could not be found.",
+      );
+    }
+    return this.routes;
+  }
 }

@@ -1,33 +1,31 @@
-import type { OpenApiServer } from "../types/OpenApiBuilderTypes";
-import type { OpenApiMetadata } from "./OpenApiMetadata";
+import { BadPathError } from "../lib/error";
+import { validatePath } from "../lib/url";
 
 export class OpenApiRoute {
-  private readonly url: string;
-  private readonly metadata?: OpenApiMetadata;
+  private readonly uri: string;
   private readonly summary?: string;
   private readonly description?: string;
-  private readonly servers?: OpenApiServer[];
 
-  public constructor(
-    url: string,
-    metadata?: OpenApiMetadata,
-    summary?: string,
-    description?: string,
-    servers?: OpenApiServer[],
-  ) {
-    //TODO: Verify that this url is in valid string form.
-    this.url = url;
-    if (metadata) {
-      this.metadata = metadata;
+  /**
+   * @param uri - Uri of the route, must be a string of the form: /foo/bar or can allow parameters such as /foo/{id} or /foo/:id
+   * @param summary - An optional summary
+   * @param description - An optional description
+   */
+  public constructor(uri: string, summary?: string, description?: string) {
+    //TODO: Verify that this uri is in valid string form.
+    if (!validatePath(uri)) {
+      throw new BadPathError("Uri is of invalid form: ");
     }
+    this.uri = uri;
     if (summary) {
       this.summary = summary;
     }
     if (description) {
       this.description = description;
     }
-    if (servers) {
-      this.servers = servers;
-    }
+  }
+
+  public addGet(): OpenApiRoute {
+    return this;
   }
 }
