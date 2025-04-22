@@ -24,5 +24,5 @@ metadata = metadata
   .addRoute(healthcheck);
 
 const openapi = new OpenApiBuilder(metadata);
-console.log(openapi)
 
+openapi.toOpenApi()
