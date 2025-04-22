@@ -1,5 +1,39 @@
 export type OpenApiVersion = Readonly<"3.0.0" | "3.1.0" | "3.1.1">;
 
+export enum OpenApiOperation {
+  GET = "get",
+  POST = "post",
+  PUT = "put",
+  DELETE = "delete",
+  PATCH = "patch",
+}
+
+export enum OpenApiContentType {
+  JSON = "application/json",
+  XML = "application/xml",
+  FORM = "application/x-www-form-urlencoded",
+  MULTIPART = "multipart/form-data",
+}
+
+export enum OpenApiStatusCode {
+  OK = "200",
+  CREATED = "201",
+  NO_CONTENT = "204",
+  BAD_REQUEST = "400",
+  UNAUTHORIZED = "401",
+  FORBIDDEN = "403",
+  NOT_FOUND = "404",
+  INTERNAL_SERVER_ERROR = "500",
+}
+export enum OpenApiSchemaType {
+  STRING = "string",
+  NUMBER = "number",
+  INTEGER = "integer",
+  BOOLEAN = "boolean",
+  ARRAY = "array",
+  OBJECT = "object",
+}
+
 export type OpenApiInfo = Readonly<{
   title: string;
   version: string;

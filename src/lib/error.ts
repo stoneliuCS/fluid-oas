@@ -6,10 +6,10 @@ export class BadPathError extends Error {
   }
 }
 
-export class MetadataNotFound extends Error {
+export class PropertyNotFound extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "OpenApiMetadataNotFound";
-    Object.setPrototypeOf(this, MetadataNotFound.prototype);
+    this.name = "OpenApiPropertyNotFound";
+    Object.setPrototypeOf(this, PropertyNotFound.prototype);
   }
 }

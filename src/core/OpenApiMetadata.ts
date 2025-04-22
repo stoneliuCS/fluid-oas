@@ -1,4 +1,3 @@
-import { MetadataNotFound } from "../lib/error";
 import type {
   OpenApiExternalDocumentation,
   OpenApiInfo,
@@ -6,25 +5,25 @@ import type {
   OpenApiServer,
   OpenApiTag,
   OpenApiVersion,
-} from "../types/OpenApiBuilderTypes";
-import type { OpenApiComponent } from "./OpenApiComponent";
+} from "../types/OpenApiTypes";
 import type { OpenApiRoute } from "./OpenApiRoute";
+import type { OpenApiSchema } from "./OpenApiSchema";
 import type { OpenApiSecurity } from "./OpenApiSecurity";
 
 /**
  * The OpenAPI metadata class holds the entire root construction of the OpenAPI specification
  */
 export class OpenApiMetadata {
-  private readonly version?: OpenApiVersion;
-  private readonly info?: OpenApiInfo;
-  private readonly jsonSchemaDialect?: OpenApiJsonSchemaDialect;
-  private readonly servers?: OpenApiServer[];
-  private readonly routes?: OpenApiRoute[];
-  private readonly webhooks?: Map<string, OpenApiRoute>;
-  private readonly components?: OpenApiComponent;
-  private readonly security?: OpenApiSecurity[];
-  private readonly tags?: OpenApiTag[];
-  private readonly externalDocs?: OpenApiExternalDocumentation;
+  readonly version?: OpenApiVersion;
+  readonly info?: OpenApiInfo;
+  readonly jsonSchemaDialect?: OpenApiJsonSchemaDialect;
+  readonly servers?: OpenApiServer[];
+  readonly routes?: OpenApiRoute[];
+  readonly webhooks?: Map<string, OpenApiRoute>;
+  readonly components?: OpenApiSchema;
+  readonly security?: OpenApiSecurity[];
+  readonly tags?: OpenApiTag[];
+  readonly externalDocs?: OpenApiExternalDocumentation;
 
   public constructor(
     version?: OpenApiVersion,
@@ -33,7 +32,7 @@ export class OpenApiMetadata {
     servers?: OpenApiServer[],
     routes?: OpenApiRoute[],
     webhooks?: Map<string, OpenApiRoute>,
-    components?: OpenApiComponent,
+    components?: OpenApiSchema,
     security?: OpenApiSecurity[],
     tags?: OpenApiTag[],
     externalDocs?: OpenApiExternalDocumentation,
@@ -244,7 +243,7 @@ export class OpenApiMetadata {
     );
   }
 
-  public addComponent(component: OpenApiComponent) {
+  public addComponent(component: OpenApiSchema) {
     return new OpenApiMetadata(
       this.version,
       this.info,
@@ -303,52 +302,5 @@ export class OpenApiMetadata {
       this.tags,
       externalDocs,
     );
-  }
-
-  public getVersion(): OpenApiVersion {
-    if (!this.version) {
-      throw new MetadataNotFound(
-        "The version from this OpenAPI metadata field could not be found.",
-      );
-    }
-    return this.version;
-  }
-
-
-  public getInfo(): OpenApiInfo {
-    if (!this.info) {
-      throw new MetadataNotFound(
-        "The info from this OpenAPI metadata field could not be found.",
-      );
-    }
-    return this.info;
-  }
-
-  public getJsonSchemaDialect() : OpenApiJsonSchemaDialect {
-    if (!this.jsonSchemaDialect) {
-      throw new MetadataNotFound(
-        "The json schema dialect from this OpenAPI metadata field could not be found.",
-      );
-    }
-    return this.jsonSchemaDialect
-  }
-
-  public getServers(): OpenApiServer[] {
-    if (!this.servers) {
-      throw new MetadataNotFound(
-        "The servers from this OpenAPI schema metadata field could not be found.",
-      );
-    }
-    return this.servers;
-  }
-
-
-  public getRoutes(): OpenApiRoute[] {
-    if (!this.routes) {
-      throw new MetadataNotFound(
-        "The routes from this OpenAPI schema metadata field could not be found.",
-      );
-    }
-    return this.routes;
   }
 }

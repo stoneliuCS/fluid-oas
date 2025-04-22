@@ -32,4 +32,5 @@ export function validatePath(pathString: string): boolean {
   for (const segment of segments) {
     if (segment.length === 0) return false;
   }
+  return true;
 }

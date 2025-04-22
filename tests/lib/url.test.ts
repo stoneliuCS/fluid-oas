@@ -1,6 +1,5 @@
 import { expect, describe, test } from "bun:test";
 import { isValidUri, validatePath } from "../../src/lib/url";
-import { BadPathError } from "../../src/lib/error";
 
 describe("Test valid uri function", () => {
   test("Check that valid uri true", () => {
@@ -51,6 +50,41 @@ describe("ValidPath functionality tests.", () => {
   test("Check that a double slash path is invalid", () => {
     // Arrange
     const invalidPath = "//";
+
+    // Act
+    const actual = validatePath(invalidPath);
+
+    // Assert
+    expect(actual).toBeFalse();
+  });
+
+  test("Check that a normal path is fine", () => {
+    // Arrange
+    const invalidPath = "/api/v1/user";
+
+    // Act
+    const actual = validatePath(invalidPath);
+
+    // Assert
+    expect(actual).toBeTrue();
+  });
+
+
+  test("Check that query params of either can work.", () => {
+    // Arrange
+    const invalidPath = "/api/v1/user/:id/groups";
+
+    // Act
+    const actual = validatePath(invalidPath);
+
+    // Assert
+    expect(actual).toBeTrue();
+  });
+
+
+  test("Check that the ending root cannot have a /", () => {
+    // Arrange
+    const invalidPath = "/api/v1/user/:id/groups/";
 
     // Act
     const actual = validatePath(invalidPath);
