@@ -1,12 +1,22 @@
 export type OpenApiVersion = Readonly<"3.0.0" | "3.1.0" | "3.1.1">;
 
-export enum OpenApiOperation {
-  GET = "get",
-  POST = "post",
-  PUT = "put",
-  DELETE = "delete",
-  PATCH = "patch",
-}
+export type OpenApiEncoding = Readonly<{}>;
+
+export type OpenApiHeader = Readonly<{}>;
+
+export type OpenApiRequestBody = Readonly<{}>;
+
+export type OpenApiCallback = Readonly<{}>;
+
+export type OpenApiParameter = Readonly<{
+  name: string;
+  in: "query" | "header" | "path" | "cookie";
+  description?: string;
+  required?: boolean;
+  deprecated?: string;
+}>;
+
+export type OpenApiOperation = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 export enum OpenApiContentType {
   JSON = "application/json",
@@ -15,16 +25,15 @@ export enum OpenApiContentType {
   MULTIPART = "multipart/form-data",
 }
 
-export enum OpenApiStatusCode {
-  OK = "200",
-  CREATED = "201",
-  NO_CONTENT = "204",
-  BAD_REQUEST = "400",
-  UNAUTHORIZED = "401",
-  FORBIDDEN = "403",
-  NOT_FOUND = "404",
-  INTERNAL_SERVER_ERROR = "500",
-}
+export type OpenApiStatusCode =
+  | "200"
+  | "201"
+  | "204"
+  | "400"
+  | "401"
+  | "403"
+  | "404"
+  | "500";
 export enum OpenApiSchemaType {
   STRING = "string",
   NUMBER = "number",

@@ -16,34 +16,35 @@ Defining a complete API specification is made easy, it reads like english:
 
 ```ts
 // Define Schemas for your OpenAPI specification:
+const userEndpoint = new OpenApiRoute("/users/{id}")
+  // Adds the Parameter to the OpenApiRoute path
+  .addOperation("GET")
+  .addParameter("id")
+  .addLocation("path")
+  .additionalMetadata()
 
-const healthCheckSuccess = new OpenApiSchema(
-  "SuccessResponse",
-  OpenApiSchemaType.OBJECT,
-);
-
-const internalServerError = new OpenApiSchema(
-  "ErrorResponse",
-  OpenApiSchemaType.OBJECT,
-);
-
-// Define the healthcheck endpoint in a completely object oriented fashion
-const healthcheck = new OpenApiRoute("/api/v1/healthcheck")
-  .addGetOperation()
-
-  .addResponse(OpenApiStatusCode.OK, "Ping the health of the server.")
+  // Adds the reponse to the OpenApiRoute path
+  .addResponse("200")
+  .addDescription("Successfully gotten user")
+  .addHeaders() // Add additional headers if needed, or leave it blank.
   .addContentType(OpenApiContentType.JSON)
-  .addSchema(healthCheckSuccess)
+  .addSchema(successResponse)
+  .additionalMetadata() // Add additional metadata like examples if needed or leave it blank.
 
-  .addResponse(OpenApiStatusCode.INTERNAL_SERVER_ERROR, "Internal Server Error")
+  // Adds the reponse to the OpenApiRoute path
+  .addResponse("500")
+  .addDescription("Internal Server Error")
+  .addHeaders()
   .addContentType(OpenApiContentType.JSON)
-  .addSchema(internalServerError)
-  .return();
+  .addSchema(errorResponse)
+  .additionalMetadata()
+  // Finish the route
+  .return()
 
 const metadata = new OpenApiMetadata()
   .addVersion("3.0.0")
   .addInfo({ title: "PetStore", version: "1.0.0" })
-  .addRoute(healthcheck);
+  .addRoute(userEndpoint);
 
 const openapi = new OpenApiBuilder(metadata);
 

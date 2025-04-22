@@ -3,29 +3,71 @@ import { deepFreeze } from "../lib/freeze";
 import { validatePath } from "../lib/url";
 import {
   OpenApiContentType,
-  OpenApiOperation,
-  OpenApiStatusCode,
+  type OpenApiCallback,
+  type OpenApiEncoding,
+  type OpenApiExternalDocumentation,
+  type OpenApiHeader,
+  type OpenApiOperation,
+  type OpenApiParameter,
+  type OpenApiRequestBody,
+  type OpenApiServer,
+  type OpenApiStatusCode,
 } from "../types/OpenApiTypes";
 import type { OpenApiSchema } from "./OpenApiSchema";
+import type { OpenApiSecurity } from "./OpenApiSecurity";
 
+type OpenApiRouteContext = Readonly<{
+  uri: string;
+  summary?: string;
+  description?: string;
+  operations?: Map<OpenApiOperation, OpenApiRouteBuilder>;
+}>;
+
+type OpenApiMedia = Readonly<{
+  schema: OpenApiSchema;
+}>;
+
+type OpenApiLink = Readonly<{}>;
+
+type OpenApiResponse = Readonly<{
+  description: string;
+  headers?: Map<string, OpenApiHeader>;
+  content?: Map<string, OpenApiMedia>;
+  links?: Map<string, OpenApiLink>;
+}>;
+
+/**
+ * Represents a single API operation on a path.
+ *
+ * See: https://swagger.io/specification/
+ */
 class OpenApiRouteBuilder {
-  readonly type: OpenApiOperation;
-  readonly route: OpenApiRoute;
-  readonly contentType?: OpenApiContentType;
-  readonly summary?: string;
-  readonly description?: string;
-  readonly responses?: Map<[OpenApiStatusCode, string], OpenApiSchema>;
+  private readonly type: OpenApiOperation;
+  private readonly ctx: OpenApiRouteContext;
+  private readonly contentType?: OpenApiContentType;
+  private readonly summary?: string;
+  private readonly description?: string;
+  private readonly responses?: Map<OpenApiStatusCode, OpenApiResponse>;
+  private readonly parameters?: Set<OpenApiParameter>;
+  private readonly externalDocs?: OpenApiExternalDocumentation;
+  private readonly operationId?: string;
+  private readonly requestBody?: OpenApiRequestBody;
+  private readonly callBacks?: Map<string, OpenApiCallback>;
+  private readonly deprecated?: boolean;
+  private readonly security?: OpenApiSecurity[];
+  private readonly servers?: OpenApiServer[];
 
   public constructor(
     type: OpenApiOperation,
-    route: OpenApiRoute,
+    ctx: OpenApiRouteContext,
     summary?: string,
     description?: string,
     contentType?: OpenApiContentType,
-    responses?: Map<[OpenApiStatusCode, string], OpenApiSchema>,
+    responses?: Map<OpenApiStatusCode, OpenApiResponse>,
+    parameters?: Set<OpenApiParameter>,
   ) {
     this.type = type;
-    this.route = route;
+    this.ctx = ctx;
     if (contentType) {
       this.contentType = contentType;
     }
@@ -38,40 +80,82 @@ class OpenApiRouteBuilder {
     if (responses) {
       this.responses = responses;
     }
+    if (parameters) {
+      this.parameters = parameters;
+    }
     deepFreeze(this);
   }
 
-  public addResponse(statusCode: OpenApiStatusCode, description: string) {
+  /**
+   * Adds a parameter to this OpenApiRouteBuilder
+   * @param name - The name of the parameter
+   * @returns OpenApiRouteBuilder with the added parameters.
+   */
+  public addParameter(name: string) {
     return {
-      addContentType: (contentType: OpenApiContentType) => {
+      addLocation: (location: "query" | "header" | "path" | "cookie") => {
         return {
-          addSchema: (schema: OpenApiSchema) => {
-            if (!this.responses) {
-              const responseMap: Map<
-                [OpenApiStatusCode, string],
-                OpenApiSchema
-              > = new Map();
-              responseMap.set([statusCode, description], schema);
+          additionalMetadata: (
+            description?: string,
+            required?: boolean,
+            deprecated?: string,
+          ) => {
+            const parameter: OpenApiParameter = {
+              name: name,
+              in: location,
+              description: description,
+              required: required,
+              deprecated: deprecated,
+            };
+            if (!this.parameters) {
               return new OpenApiRouteBuilder(
                 this.type,
-                this.route,
+                this.ctx,
                 this.summary,
                 this.description,
-                contentType,
-                responseMap,
-              );
-            } else {
-              const newResponses = structuredClone(this.responses);
-              newResponses.set([statusCode, description], schema);
-              return new OpenApiRouteBuilder(
-                this.type,
-                this.route,
-                this.summary,
-                this.description,
-                contentType,
-                newResponses,
+                this.contentType,
+                this.responses,
+                new Set([parameter]),
               );
             }
+            const parameterCopy = structuredClone(this.parameters);
+            parameterCopy.add(parameter);
+            return new OpenApiRouteBuilder(
+              this.type,
+              this.ctx,
+              this.summary,
+              this.description,
+              this.contentType,
+              this.responses,
+              parameterCopy,
+            );
+          },
+        };
+      },
+    };
+  }
+
+  public addResponse(statusCode: OpenApiStatusCode) {
+    return {
+      addDescription: (description: string) => {
+        return {
+          addHeaders: (headers?: Map<string, OpenApiHeader>) => {
+            return {
+              addContentType: (contentType: OpenApiContentType) => {
+                return {
+                  addSchema: (schema: OpenApiSchema) => {
+                    return {
+                      additionalMetadata: (
+                        examples?: string[],
+                        encodings?: Map<string, OpenApiEncoding>,
+                      ) => {
+                        return this;
+                      },
+                    };
+                  },
+                };
+              },
+            };
           },
         };
       },
@@ -79,13 +163,13 @@ class OpenApiRouteBuilder {
   }
 
   public return(): OpenApiRoute {
-    const operationsCopy = structuredClone(this.route.operations);
+    const operationsCopy = structuredClone(this.ctx.operations);
     if (operationsCopy) {
       operationsCopy.set(this.type, this);
     }
     return new OpenApiRoute(
-      this.route.uri,
-      this.route.summary,
+      this.ctx.uri,
+      this.ctx.summary,
       this.description,
       operationsCopy,
     );
@@ -93,10 +177,10 @@ class OpenApiRouteBuilder {
 }
 
 export class OpenApiRoute {
-  readonly uri: string;
-  readonly summary?: string;
-  readonly description?: string;
-  readonly operations?: Map<OpenApiOperation, OpenApiRouteBuilder>;
+  private readonly uri: string;
+  private readonly summary?: string;
+  private readonly description?: string;
+  private readonly operations?: Map<OpenApiOperation, OpenApiRouteBuilder>;
 
   /**
    * @param uri - Uri of the route, must be a string of the form: /foo/bar or can allow parameters such as /foo/{id}
@@ -125,12 +209,13 @@ export class OpenApiRoute {
     deepFreeze(this);
   }
 
-  public addGetOperation(description?: string, summary?: string) {
-    return new OpenApiRouteBuilder(
-      OpenApiOperation.GET,
-      this,
-      summary,
-      description,
-    );
+  public addOperation(op: OpenApiOperation) {
+    const ctx: OpenApiRouteContext = {
+      uri: this.uri,
+      summary: this.summary,
+      description: this.description,
+      operations: this.operations,
+    };
+    return new OpenApiRouteBuilder(op, ctx);
   }
 }
