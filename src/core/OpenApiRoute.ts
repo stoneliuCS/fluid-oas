@@ -1,4 +1,5 @@
 import { BadPathError } from "../lib/error";
+import { deepFreeze } from "../lib/freeze";
 import { validatePath } from "../lib/url";
 import {
   OpenApiContentType,
@@ -37,12 +38,7 @@ class OpenApiRouteBuilder {
     if (responses) {
       this.responses = responses;
     }
-    Object.freeze(this.type);
-    Object.freeze(this.route);
-    Object.freeze(this.summary);
-    Object.freeze(this.description);
-    Object.freeze(this.contentType);
-    Object.freeze(this.responses);
+    deepFreeze(this);
   }
 
   public addResponse(statusCode: OpenApiStatusCode, description: string) {
@@ -95,6 +91,7 @@ class OpenApiRouteBuilder {
     );
   }
 }
+
 export class OpenApiRoute {
   readonly uri: string;
   readonly summary?: string;
@@ -125,10 +122,7 @@ export class OpenApiRoute {
     if (operations) {
       this.operations = operations;
     }
-    Object.freeze(this.uri)
-    Object.freeze(this.summary)
-    Object.freeze(this.description)
-    Object.freeze(this.operations)
+    deepFreeze(this);
   }
 
   public addGetOperation(description?: string, summary?: string) {

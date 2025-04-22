@@ -1,3 +1,4 @@
+import { deepFreeze } from "../lib/freeze";
 import type {
   OpenApiExternalDocumentation,
   OpenApiInfo,
@@ -12,6 +13,9 @@ import type { OpenApiSecurity } from "./OpenApiSecurity";
 
 /**
  * The OpenAPI metadata class holds the entire root construction of the OpenAPI specification
+ *
+ * Its fields are deeply immutable, and are safe to access without mutability. All methods
+ * related to the OpenApiMetadata class will construct new OpenApiMetadata classes.
  */
 export class OpenApiMetadata {
   readonly version?: OpenApiVersion;
@@ -69,25 +73,7 @@ export class OpenApiMetadata {
       this.externalDocs = externalDocs;
     }
     // Freezes everything inside this class to prevent mutability.
-    Object.freeze(this.version);
-    Object.freeze(this.info);
-    Object.freeze(this.jsonSchemaDialect);
-    Object.freeze(this.servers);
-    Object.freeze(this.routes);
-    Object.freeze(this.webhooks);
-    Object.freeze(this.components);
-    Object.freeze(this.security);
-    Object.freeze(this.tags);
-    Object.freeze(this.externalDocs);
-  }
-
-  /**
-   * From this OpenApiMetadata, create complete typesafe Zod specifications.
-   *
-   * NOTE: It is recommended that the OpenAPIBuilder calls this method.
-   */
-  public toZod(ZodSchemaVisitor: any) {
-    throw new Error("Use visitor pattern for this.");
+    deepFreeze(this)
   }
 
   /**

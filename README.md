@@ -1,7 +1,9 @@
 # S.A.L.T
+
 A Structured Application Programming Interface Language for TypeScript APIs
 
 ## Purpose
+
 S.A.L.T is an internal/embedded Domain Specific Language for expressing type-safe web APIs written in TypeScript through the OpenAPI specification.
 
 The key features of SALT is an entirely type-safe, functional API to express an OpenAPI specification in TypeScript.
@@ -11,27 +13,39 @@ The key features of SALT is an entirely type-safe, functional API to express an 
 - Write the controllers you want, no frameworks to dictate how to write your APIs or controllers.
 
 Defining a complete API specification is made easy, it reads like english:
+
 ```ts
-let metadata = new OpenApiMetadata();
+// Define Schemas for your OpenAPI specification:
+
+const healthCheckSuccess = new OpenApiSchema(
+  "SuccessResponse",
+  OpenApiSchemaType.OBJECT,
+);
+
+const internalServerError = new OpenApiSchema(
+  "ErrorResponse",
+  OpenApiSchemaType.OBJECT,
+);
+
 // Define the healthcheck endpoint in a completely object oriented fashion
 const healthcheck = new OpenApiRoute("/api/v1/healthcheck")
   .addGetOperation()
 
   .addResponse(OpenApiStatusCode.OK, "Ping the health of the server.")
   .addContentType(OpenApiContentType.JSON)
-  .addSchema(new OpenApiSchema())
+  .addSchema(healthCheckSuccess)
 
   .addResponse(OpenApiStatusCode.INTERNAL_SERVER_ERROR, "Internal Server Error")
   .addContentType(OpenApiContentType.JSON)
-  .addSchema(new OpenApiSchema())
+  .addSchema(internalServerError)
   .return();
 
-metadata = metadata
+const metadata = new OpenApiMetadata()
   .addVersion("3.0.0")
   .addInfo({ title: "PetStore", version: "1.0.0" })
   .addRoute(healthcheck);
 
 const openapi = new OpenApiBuilder(metadata);
 
-openapi.toOpenApi()
+openapi.toOpenApi();
 ```

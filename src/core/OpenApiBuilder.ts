@@ -8,10 +8,6 @@ export class OpenApiBuilder {
     this.metadata = metadata;
   }
 
-  public toZod(visitor : unknown ) {
-    this.metadata.toZod(visitor)
-  }
-
   public toOpenApi() {
     this.metadata.toOpenApiSpecification();
   }
