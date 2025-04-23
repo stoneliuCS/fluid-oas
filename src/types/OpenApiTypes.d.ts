@@ -1,8 +1,13 @@
+import type { OpenApiSchema } from "../core/OpenApiSchema";
+
 export type OpenApiVersion = Readonly<"3.0.0" | "3.1.0" | "3.1.1">;
 
 export type OpenApiEncoding = Readonly<{}>;
 
-export type OpenApiHeader = Readonly<{}>;
+export type OpenApiHeader = Readonly<{
+  description? : string
+  schema? : OpenApiSchema
+}>;
 
 export type OpenApiRequestBody = Readonly<{}>;
 
