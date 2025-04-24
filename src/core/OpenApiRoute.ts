@@ -17,6 +17,24 @@ import {
 import type { OpenApiSchema } from "./OpenApiSchema";
 import type { OpenApiSecurity } from "./OpenApiSecurity";
 
+// Internal Types
+
+type OpenApiRouteBuilderContext = {
+  routeContext: OpenApiRouteContext;
+  tags?: OpenApiTag[];
+  summary?: string;
+  description?: string;
+  externalDocs?: OpenApiExternalDocumentation;
+  operationId?: string;
+  parameters?: Set<OpenApiParameterBuilder<OpenApiRouteBuilder>>;
+  requestBody?: OpenApiRequestBody;
+  responses?: Set<OpenApiResponseBuilder>;
+  callBacks?: Map<string, OpenApiCallback>;
+  deprecated?: boolean;
+  security?: OpenApiSecurity[];
+  servers?: OpenApiServer[];
+};
+
 type OpenApiResponseContext = Readonly<{
   routeBuilderCtx: OpenApiRouteBuilderContext;
   contentType: OpenApiContentType;
@@ -101,6 +119,7 @@ class OpenApiParameterBuilder<T extends OpenApiRoute | OpenApiRouteBuilder> {
     if (content) {
       this.content = content;
     }
+    deepFreeze(this);
   }
 
   public endParameter(): T {
@@ -138,6 +157,7 @@ class OpenApiMediaBuilder {
     if (encoding) {
       this.encoding = encoding;
     }
+    deepFreeze(this);
   }
 
   public addSchema(schema: OpenApiSchema) {
@@ -330,22 +350,6 @@ class OpenApiResponseBuilder {
     );
   }
 }
-
-type OpenApiRouteBuilderContext = {
-  routeContext: OpenApiRouteContext;
-  tags?: OpenApiTag[];
-  summary?: string;
-  description?: string;
-  externalDocs?: OpenApiExternalDocumentation;
-  operationId?: string;
-  parameters?: Set<OpenApiParameterBuilder<OpenApiRouteBuilder>>;
-  requestBody?: OpenApiRequestBody;
-  responses?: Set<OpenApiResponseBuilder>;
-  callBacks?: Map<string, OpenApiCallback>;
-  deprecated?: boolean;
-  security?: OpenApiSecurity[];
-  servers?: OpenApiServer[];
-};
 
 /**
  * Represents a single API operation on a path.

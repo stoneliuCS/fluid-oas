@@ -26,19 +26,10 @@ const userEndpoint = new OpenApiRoute("/user/{id}")
   .addParameter("id")
   .addIn("path")
   .endParameter()
+
   .addOperation("GET")
-  // Can Override these parameters specifically for the GET Operation
-  .addParameter("id")
-  .addIn("path")
-  .endParameter()
-  // Add a 200 response with a custom header.
   .addResponse("200")
   .addDescription("Get all users")
-  .addHeader("X-Rate-Limit")
-  .addHeaderObject({
-    description: "Rate limits on users",
-    schema: rateLimitHeader,
-  })
   .addContent(OpenApiContentType.JSON)
   .addSchema(successResponse)
   .endResponse()
