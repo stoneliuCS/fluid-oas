@@ -18,18 +18,22 @@ import type { OpenApiSecurity } from "./OpenApiSecurity";
  * related to the OpenApiMetadata class will construct new OpenApiMetadata classes.
  */
 export class OpenApiMetadata {
-  readonly version?: OpenApiVersion;
-  readonly info?: OpenApiInfo;
-  readonly jsonSchemaDialect?: OpenApiJsonSchemaDialect;
-  readonly servers?: OpenApiServer[];
-  readonly routes?: OpenApiRoute[];
-  readonly webhooks?: Map<string, OpenApiRoute>;
-  readonly components?: OpenApiSchema;
-  readonly security?: OpenApiSecurity[];
-  readonly tags?: OpenApiTag[];
-  readonly externalDocs?: OpenApiExternalDocumentation;
+  private readonly version?: OpenApiVersion;
+  private readonly info?: OpenApiInfo;
+  private readonly jsonSchemaDialect?: OpenApiJsonSchemaDialect;
+  private readonly servers?: OpenApiServer[];
+  private readonly routes?: OpenApiRoute[];
+  private readonly webhooks?: Map<string, OpenApiRoute>;
+  private readonly components?: OpenApiSchema;
+  private readonly security?: OpenApiSecurity[];
+  private readonly tags?: OpenApiTag[];
+  private readonly externalDocs?: OpenApiExternalDocumentation;
 
-  public constructor(
+  public static create() {
+    return new OpenApiMetadata();
+  }
+
+  private constructor(
     version?: OpenApiVersion,
     info?: OpenApiInfo,
     jsonSchemaDialect?: OpenApiJsonSchemaDialect,
@@ -73,7 +77,7 @@ export class OpenApiMetadata {
       this.externalDocs = externalDocs;
     }
     // Freezes everything inside this class to prevent mutability.
-    deepFreeze(this)
+    deepFreeze(this);
   }
 
   /**

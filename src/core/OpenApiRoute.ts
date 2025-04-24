@@ -19,6 +19,8 @@ import type { OpenApiSecurity } from "./OpenApiSecurity";
 
 // Internal Types
 
+const _createRouteFromRouteBuilder = Symbol("createRouteFromRouteBuilder");
+
 type OpenApiRouteBuilderContext = {
   routeContext: OpenApiRouteContext;
   tags?: OpenApiTag[];
@@ -509,14 +511,7 @@ class OpenApiRouteBuilder {
       copyOperations.set(this.ctx.operation, this);
       operations = copyOperations;
     }
-    return new OpenApiRoute(
-      this.ctx.uri,
-      this.ctx.summary,
-      this.ctx.description,
-      operations,
-      this.ctx.servers,
-      this.ctx.parameters,
-    );
+    return OpenApiRoute[_createRouteFromRouteBuilder](operations, this.ctx);
   }
 }
 
@@ -528,12 +523,39 @@ export class OpenApiRoute {
   private readonly servers?: Set<OpenApiServer>;
   private readonly parameters?: Set<OpenApiParameterBuilder<OpenApiRoute>>;
 
+  public static create(uri: string) {
+    return new OpenApiRoute(uri);
+  }
+    
+  /**
+   * Internal static function to create a route from a Route Builder.
+   *
+   * Intended NOT TO BE USED outside of the core package, use the create function
+   * to create a new OpenApiRoute.
+   * @param operations - 
+   * @param ctx - 
+   * @returns 
+   */
+  static [_createRouteFromRouteBuilder](
+    operations: Map<OpenApiOperation, OpenApiRouteBuilder>,
+    ctx: OpenApiRouteContext,
+  ) {
+    return new OpenApiRoute(
+      ctx.uri,
+      ctx.summary,
+      ctx.description,
+      operations,
+      ctx.servers,
+      ctx.parameters,
+    );
+  }
+
   /**
    * @param uri - Uri of the route, must be a string of the form: /foo/bar or can allow parameters such as /foo/{id}
    * @param summary - An optional summary
    * @param description - An optional description
    */
-  public constructor(
+  private constructor(
     uri: string,
     summary?: string,
     description?: string,

@@ -16,12 +16,7 @@ const errorResponse = new OpenApiSchema(
   OpenApiSchemaType.OBJECT,
 );
 
-const rateLimitHeader = new OpenApiSchema(
-  "RateLimitHeader",
-  OpenApiSchemaType.OBJECT,
-);
-
-const userEndpoint = new OpenApiRoute("/user/{id}")
+const userEndpoint = OpenApiRoute.create("/user/{id}")
   // Adds the Parameters available to the entire OpenApiRoute path
   .addParameter("id")
   .addIn("path")
@@ -57,7 +52,7 @@ const userEndpoint = new OpenApiRoute("/user/{id}")
 
   .return();
 
-const metadata = new OpenApiMetadata()
+const metadata = OpenApiMetadata.create()
   .addVersion("3.0.0")
   .addInfo({ title: "PetStore", version: "1.0.0" })
   .addRoute(userEndpoint);
