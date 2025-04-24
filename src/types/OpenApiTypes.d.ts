@@ -5,21 +5,15 @@ export type OpenApiVersion = Readonly<"3.0.0" | "3.1.0" | "3.1.1">;
 export type OpenApiEncoding = Readonly<{}>;
 
 export type OpenApiHeader = Readonly<{
-  description? : string
-  schema? : OpenApiSchema
+  description?: string;
+  schema?: OpenApiSchema;
 }>;
 
 export type OpenApiRequestBody = Readonly<{}>;
 
 export type OpenApiCallback = Readonly<{}>;
 
-export type OpenApiParameter = Readonly<{
-  name: string;
-  in: "query" | "header" | "path" | "cookie";
-  description?: string;
-  required?: boolean;
-  deprecated?: string;
-}>;
+export type OpenApiParameter = Readonly<"query" | "header" | "path" | "cookie">;
 
 export type OpenApiOperation = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 

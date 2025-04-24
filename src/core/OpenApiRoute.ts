@@ -33,10 +33,80 @@ type OpenApiRouteContext = Readonly<{
   description?: string;
   operations?: Map<OpenApiOperation, OpenApiRouteBuilder>;
   servers?: Set<OpenApiServer>;
-  parameters?: Set<OpenApiParameter>;
+  parameters?: Set<OpenApiParameterBuilder<OpenApiRoute>>;
 }>;
 
 type OpenApiExample = Readonly<{}>;
+
+class OpenApiParameterBuilder<T extends OpenApiRoute | OpenApiRouteBuilder> {
+  private readonly name: string;
+  private readonly in: OpenApiParameter;
+  private readonly fn: (builder: OpenApiParameterBuilder<T>) => T;
+  private readonly description?: string;
+  private readonly required?: boolean;
+  private readonly deprecated?: boolean;
+  private readonly style?: string;
+  private readonly explode?: string;
+  private readonly allowReserved?: boolean;
+  private readonly schema?: OpenApiSchema;
+  private readonly example?: unknown;
+  private readonly examples?: Map<string, OpenApiExample>;
+  private readonly content?: Map<OpenApiContentType, OpenApiMediaBuilder>;
+
+  public constructor(
+    name: string,
+    _in: OpenApiParameter,
+    fn: (builder: OpenApiParameterBuilder<T>) => T,
+    description?: string,
+    required?: boolean,
+    deprecated?: boolean,
+    style?: string,
+    explode?: string,
+    allowReserved?: boolean,
+    schema?: OpenApiSchema,
+    example?: unknown,
+    examples?: Map<string, OpenApiExample>,
+    content?: Map<OpenApiContentType, OpenApiMediaBuilder>,
+  ) {
+    this.name = name;
+    this.in = _in;
+    this.fn = fn;
+    if (description) {
+      this.description = description;
+    }
+    if (required) {
+      this.required = required;
+    }
+    if (deprecated) {
+      this.deprecated = deprecated;
+    }
+    if (style) {
+      this.style = style;
+    }
+    if (explode) {
+      this.explode = explode;
+    }
+    if (allowReserved) {
+      this.allowReserved = allowReserved;
+    }
+    if (schema) {
+      this.schema = schema;
+    }
+    if (example) {
+      this.example = example;
+    }
+    if (examples) {
+      this.examples = examples;
+    }
+    if (content) {
+      this.content = content;
+    }
+  }
+
+  public endParameter(): T {
+    return this.fn(this);
+  }
+}
 
 /**
  * Builds the Media object for an OpenApi operation.
@@ -268,7 +338,7 @@ type OpenApiRouteBuilderContext = {
   description?: string;
   externalDocs?: OpenApiExternalDocumentation;
   operationId?: string;
-  parameters?: Set<OpenApiParameter>;
+  parameters?: Set<OpenApiParameterBuilder<OpenApiRouteBuilder>>;
   requestBody?: OpenApiRequestBody;
   responses?: Set<OpenApiResponseBuilder>;
   callBacks?: Map<string, OpenApiCallback>;
@@ -289,7 +359,9 @@ class OpenApiRouteBuilder {
   private readonly description?: string;
   private readonly externalDocs?: OpenApiExternalDocumentation;
   private readonly operationId?: string;
-  private readonly parameters?: Set<OpenApiParameter>;
+  private readonly parameters?: Set<
+    OpenApiParameterBuilder<OpenApiRouteBuilder>
+  >;
   private readonly requestBody?: OpenApiRequestBody;
   private readonly responses?: Set<OpenApiResponseBuilder>;
   private readonly callBacks?: Map<string, OpenApiCallback>;
@@ -304,7 +376,7 @@ class OpenApiRouteBuilder {
     description?: string,
     externalDocs?: OpenApiExternalDocumentation,
     operationId?: string,
-    parameters?: Set<OpenApiParameter>,
+    parameters?: Set<OpenApiParameterBuilder<OpenApiRouteBuilder>>,
     requestBody?: OpenApiRequestBody,
     responses?: Set<OpenApiResponseBuilder>,
     callBacks?: Map<string, OpenApiCallback>,
@@ -350,6 +422,48 @@ class OpenApiRouteBuilder {
       this.servers = servers;
     }
     deepFreeze(this);
+  }
+
+  public addParameter(name: string) {
+    const builderFn = (
+      parameterBuilder: OpenApiParameterBuilder<OpenApiRouteBuilder>,
+    ) => {
+      let parameters: Set<OpenApiParameterBuilder<OpenApiRouteBuilder>>;
+      if (!this.parameters) {
+        const newParameters: Set<OpenApiParameterBuilder<OpenApiRouteBuilder>> =
+          new Set();
+        newParameters.add(parameterBuilder);
+        parameters = newParameters;
+      } else {
+        const parametersCopy = structuredClone(this.parameters);
+        parametersCopy.add(parameterBuilder);
+        parameters = parametersCopy;
+      }
+      return new OpenApiRouteBuilder(
+        this.ctx,
+        this.tags,
+        this.summary,
+        this.description,
+        this.externalDocs,
+        this.operationId,
+        parameters,
+        this.requestBody,
+        this.responses,
+        this.callBacks,
+        this.deprecated,
+        this.security,
+        this.servers,
+      );
+    };
+    return {
+      addIn: (_in: OpenApiParameter) => {
+        return new OpenApiParameterBuilder<OpenApiRouteBuilder>(
+          name,
+          _in,
+          builderFn,
+        );
+      },
+    };
   }
 
   /**
@@ -408,7 +522,7 @@ export class OpenApiRoute {
   private readonly description?: string;
   private readonly operations?: Map<OpenApiOperation, OpenApiRouteBuilder>;
   private readonly servers?: Set<OpenApiServer>;
-  private readonly parameters?: Set<OpenApiParameter>;
+  private readonly parameters?: Set<OpenApiParameterBuilder<OpenApiRoute>>;
 
   /**
    * @param uri - Uri of the route, must be a string of the form: /foo/bar or can allow parameters such as /foo/{id}
@@ -421,7 +535,7 @@ export class OpenApiRoute {
     description?: string,
     operations?: Map<OpenApiOperation, OpenApiRouteBuilder>,
     servers?: Set<OpenApiServer>,
-    parameters?: Set<OpenApiParameter>,
+    parameters?: Set<OpenApiParameterBuilder<OpenApiRoute>>,
   ) {
     if (!validatePath(uri)) {
       throw new BadPathError(`Uri is of invalid form: ${uri}`);
@@ -443,6 +557,37 @@ export class OpenApiRoute {
       this.parameters = parameters;
     }
     deepFreeze(this);
+  }
+
+  public addParameter(name: string) {
+    const builderFn = (
+      parameterBuilder: OpenApiParameterBuilder<OpenApiRoute>,
+    ) => {
+      let parameters: Set<OpenApiParameterBuilder<OpenApiRoute>>;
+      if (!this.parameters) {
+        const newParameters: Set<OpenApiParameterBuilder<OpenApiRoute>> =
+          new Set();
+        newParameters.add(parameterBuilder);
+        parameters = newParameters;
+      } else {
+        const parametersCopy = structuredClone(this.parameters);
+        parametersCopy.add(parameterBuilder);
+        parameters = parametersCopy;
+      }
+      return new OpenApiRoute(
+        this.uri,
+        this.summary,
+        this.description,
+        this.operations,
+        this.servers,
+        parameters,
+      );
+    };
+    return {
+      addIn: (_in: OpenApiParameter) => {
+        return new OpenApiParameterBuilder<OpenApiRoute>(name, _in, builderFn);
+      },
+    };
   }
 
   public addOperation(op: OpenApiOperation) {

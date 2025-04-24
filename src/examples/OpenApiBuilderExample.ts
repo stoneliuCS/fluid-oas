@@ -21,10 +21,15 @@ const rateLimitHeader = new OpenApiSchema(
   OpenApiSchemaType.OBJECT,
 );
 
-const userEndpoint = new OpenApiRoute("/users")
+const userEndpoint = new OpenApiRoute("/user/{id}")
   // Adds the Parameter to the OpenApiRoute path
+  .addParameter("id")
+  .addIn("path")
+  .endParameter()
   .addOperation("GET")
-
+  .addParameter("id")
+  .addIn("path")
+  .endParameter()
   // Add a 200 response with a custom header.
   .addResponse("200")
   .addDescription("Get all users")
