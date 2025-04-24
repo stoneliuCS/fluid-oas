@@ -22,11 +22,12 @@ const rateLimitHeader = new OpenApiSchema(
 );
 
 const userEndpoint = new OpenApiRoute("/user/{id}")
-  // Adds the Parameter to the OpenApiRoute path
+  // Adds the Parameters available to the entire OpenApiRoute path
   .addParameter("id")
   .addIn("path")
   .endParameter()
   .addOperation("GET")
+  // Can Override these parameters specifically for the GET Operation
   .addParameter("id")
   .addIn("path")
   .endParameter()
