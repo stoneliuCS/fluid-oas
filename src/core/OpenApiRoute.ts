@@ -509,7 +509,7 @@ class OpenApiRouteBuilder {
       copyOperations.set(this.ctx.operation, this);
       operations = copyOperations;
     }
-    return OpenApiRoute.createRouteFromRouteBuilder(operations, this.ctx);
+    return OpenApiRoute._createRouteFromRouteBuilder(operations, this.ctx);
   }
 }
 
@@ -525,7 +525,14 @@ export class OpenApiRoute {
     return new OpenApiRoute(uri);
   }
 
-  public static createRouteFromRouteBuilder(
+  /**
+   * Create a new OpneAPIRoute from a RouteBuilder class.
+   * NOTE: It is not recommended to call this method over the public create method.
+   * @param operations - Mappings of HTTP methods and operations.
+   * @param ctx - Route context to build the OpenApiRoute
+   * @returns A new OpenApiRoute retaining the necessary context.
+   */
+  static _createRouteFromRouteBuilder(
     operations: Map<OpenApiOperation, OpenApiRouteBuilder>,
     ctx: OpenApiRouteContext,
   ) {
