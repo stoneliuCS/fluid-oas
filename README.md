@@ -18,7 +18,7 @@ The key features of SALT is an entirely type-safe, functional and fluid API to e
 This simple example defines a way to build a health check route.
 
 ```ts
-export const HEALTHCHECK_ROUTE: OpenApiRoute = OpenApiRoute.create(
+export const HEALTHCHECK_ROUTE: OpenApiPath = OpenApiPath.create(
   "/healthcheck",
 )
   // Add Descriptions and summary for the route.

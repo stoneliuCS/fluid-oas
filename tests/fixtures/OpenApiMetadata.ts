@@ -3,13 +3,13 @@
  * that it makes testing with fixtures really easy.
  */
 
-import { OpenApiRoute } from "../../src/core/OpenApiRoute";
+import { OpenApiPath } from "../../src/core/OpenApiPath";
 import { OpenApiSchema } from "../../src/core/OpenApiSchema";
 
 const HEALTHCHECK_RESPONSE_SCHEMA = new OpenApiSchema("Success", "object");
 const HEALTHCHECK_ERROR_SCHEMA = new OpenApiSchema("Error", "object");
 
-export const HEALTHCHECK_ROUTE: OpenApiRoute = OpenApiRoute.create(
+export const HEALTHCHECK_ROUTE: OpenApiPath = OpenApiPath.create(
   "/healthcheck",
 )
   // Add Descriptions and summary for the route.

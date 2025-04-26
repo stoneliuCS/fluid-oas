@@ -7,7 +7,7 @@ import type {
   OpenApiTag,
   OpenApiVersion,
 } from "../types/OpenApiTypes";
-import type { OpenApiRoute } from "./OpenApiRoute";
+import type { OpenApiPath } from "./OpenApiPath";
 import type { OpenApiSchema } from "./OpenApiSchema";
 import type { OpenApiSecurity } from "./OpenApiSecurity";
 
@@ -22,8 +22,8 @@ export class OpenApiMetadata {
   private readonly info?: OpenApiInfo;
   private readonly jsonSchemaDialect?: OpenApiJsonSchemaDialect;
   private readonly servers?: OpenApiServer[];
-  private readonly routes?: OpenApiRoute[];
-  private readonly webhooks?: Map<string, OpenApiRoute>;
+  private readonly routes?: OpenApiPath[];
+  private readonly webhooks?: Map<string, OpenApiPath>;
   private readonly components?: OpenApiSchema;
   private readonly security?: OpenApiSecurity[];
   private readonly tags?: OpenApiTag[];
@@ -38,8 +38,8 @@ export class OpenApiMetadata {
     info?: OpenApiInfo,
     jsonSchemaDialect?: OpenApiJsonSchemaDialect,
     servers?: OpenApiServer[],
-    routes?: OpenApiRoute[],
-    webhooks?: Map<string, OpenApiRoute>,
+    routes?: OpenApiPath[],
+    webhooks?: Map<string, OpenApiPath>,
     components?: OpenApiSchema,
     security?: OpenApiSecurity[],
     tags?: OpenApiTag[],
@@ -169,7 +169,7 @@ export class OpenApiMetadata {
     );
   }
 
-  public addRoute(route: OpenApiRoute) {
+  public addRoute(route: OpenApiPath) {
     if (!this.routes) {
       return new OpenApiMetadata(
         this.version,
@@ -200,9 +200,9 @@ export class OpenApiMetadata {
     );
   }
 
-  public addWebhook(hookUrl: string, route: OpenApiRoute) {
+  public addWebhook(hookUrl: string, route: OpenApiPath) {
     if (!this.webhooks) {
-      const map = new Map<string, OpenApiRoute>();
+      const map = new Map<string, OpenApiPath>();
       map.set(hookUrl, route);
       return new OpenApiMetadata(
         this.version,

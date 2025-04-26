@@ -21,7 +21,7 @@ import type { OpenApiSecurity } from "./OpenApiSecurity";
 
 type OpenApiExample = Readonly<{}>;
 
-class OpenApiParameterBuilder<T extends OpenApiRoute | OpenApiRouteBuilder> {
+class OpenApiParameterBuilder<T extends OpenApiPath | OpenApiPathBuilder> {
   private readonly name: string;
   private readonly in: OpenApiParameter;
   private readonly fn: (builder: OpenApiParameterBuilder<T>) => T;
@@ -205,13 +205,13 @@ class OpenApiMediaBuilder {
 }
 
 class OpenApiResponseBuilder {
-  private readonly fn: (builder: OpenApiResponseBuilder) => OpenApiRouteBuilder;
+  private readonly fn: (builder: OpenApiResponseBuilder) => OpenApiPathBuilder;
   private readonly description: string;
   private readonly headers?: Map<string, OpenApiHeader>;
   private readonly content?: Map<OpenApiContentType, OpenApiMediaBuilder>;
 
   public constructor(
-    fn: (builder: OpenApiResponseBuilder) => OpenApiRouteBuilder,
+    fn: (builder: OpenApiResponseBuilder) => OpenApiPathBuilder,
     description: string,
     headers?: Map<string, OpenApiHeader>,
     content?: Map<OpenApiContentType, OpenApiMediaBuilder>,
@@ -271,7 +271,7 @@ class OpenApiResponseBuilder {
     return new OpenApiMediaBuilder(_fn);
   }
 
-  public endResponse(): OpenApiRouteBuilder {
+  public endResponse(): OpenApiPathBuilder {
     return this.fn(this);
   }
 }
@@ -281,15 +281,15 @@ class OpenApiResponseBuilder {
  *
  * See: https://swagger.io/specification/
  */
-class OpenApiRouteBuilder {
-  private readonly fn: (routeBuilder: OpenApiRouteBuilder) => OpenApiRoute;
+class OpenApiPathBuilder {
+  private readonly fn: (routeBuilder: OpenApiPathBuilder) => OpenApiPath;
   private readonly tags?: OpenApiTag[];
   private readonly summary?: string;
   private readonly description?: string;
   private readonly externalDocs?: OpenApiExternalDocumentation;
   private readonly operationId?: string;
   private readonly parameters?: Set<
-    OpenApiParameterBuilder<OpenApiRouteBuilder>
+    OpenApiParameterBuilder<OpenApiPathBuilder>
   >;
   private readonly requestBody?: OpenApiRequestBody;
   private readonly responses?: Map<OpenApiStatusCode, OpenApiResponseBuilder>;
@@ -299,13 +299,13 @@ class OpenApiRouteBuilder {
   private readonly servers?: OpenApiServer[];
 
   public constructor(
-    fn: (routeBuilder: OpenApiRouteBuilder) => OpenApiRoute,
+    fn: (routeBuilder: OpenApiPathBuilder) => OpenApiPath,
     tags?: OpenApiTag[],
     summary?: string,
     description?: string,
     externalDocs?: OpenApiExternalDocumentation,
     operationId?: string,
-    parameters?: Set<OpenApiParameterBuilder<OpenApiRouteBuilder>>,
+    parameters?: Set<OpenApiParameterBuilder<OpenApiPathBuilder>>,
     requestBody?: OpenApiRequestBody,
     responses?: Map<OpenApiStatusCode, OpenApiResponseBuilder>,
     callBacks?: Map<string, OpenApiCallback>,
@@ -355,11 +355,11 @@ class OpenApiRouteBuilder {
 
   public addParameter(name: string) {
     const builderFn = (
-      parameterBuilder: OpenApiParameterBuilder<OpenApiRouteBuilder>,
+      parameterBuilder: OpenApiParameterBuilder<OpenApiPathBuilder>,
     ) => {
-      let parameters: Set<OpenApiParameterBuilder<OpenApiRouteBuilder>>;
+      let parameters: Set<OpenApiParameterBuilder<OpenApiPathBuilder>>;
       if (!this.parameters) {
-        const newParameters: Set<OpenApiParameterBuilder<OpenApiRouteBuilder>> =
+        const newParameters: Set<OpenApiParameterBuilder<OpenApiPathBuilder>> =
           new Set();
         newParameters.add(parameterBuilder);
         parameters = newParameters;
@@ -368,7 +368,7 @@ class OpenApiRouteBuilder {
         parametersCopy.add(parameterBuilder);
         parameters = parametersCopy;
       }
-      return new OpenApiRouteBuilder(
+      return new OpenApiPathBuilder(
         this.fn,
         this.tags,
         this.summary,
@@ -386,7 +386,7 @@ class OpenApiRouteBuilder {
     };
     return {
       addIn: (_in: OpenApiParameter) => {
-        return new OpenApiParameterBuilder<OpenApiRouteBuilder>(
+        return new OpenApiParameterBuilder<OpenApiPathBuilder>(
           name,
           _in,
           builderFn,
@@ -396,7 +396,7 @@ class OpenApiRouteBuilder {
   }
 
   /**
-   * Adds a response to this OpenApiRouteBuilder
+   * Adds a response to this OpenApiPathBuilder
    * @param statusCode -- The HTTP status code.
    * @returns An object with a single method, addsDescription to continue building the response.
    */
@@ -411,7 +411,7 @@ class OpenApiRouteBuilder {
         responsesCopy.set(statusCode, responseBuilder);
         responses = responsesCopy;
       }
-      return new OpenApiRouteBuilder(
+      return new OpenApiPathBuilder(
         this.fn,
         this.tags,
         this.summary,
@@ -434,21 +434,21 @@ class OpenApiRouteBuilder {
     };
   }
 
-  public endOperation(): OpenApiRoute {
+  public endOperation(): OpenApiPath {
     return this.fn(this);
   }
 }
 
-export class OpenApiRoute {
+export class OpenApiPath {
   private readonly uri: string;
   private readonly summary?: string;
   private readonly description?: string;
-  private readonly operations?: Map<OpenApiOperation, OpenApiRouteBuilder>;
+  private readonly operations?: Map<OpenApiOperation, OpenApiPathBuilder>;
   private readonly servers?: Set<OpenApiServer>;
-  private readonly parameters?: Set<OpenApiParameterBuilder<OpenApiRoute>>;
+  private readonly parameters?: Set<OpenApiParameterBuilder<OpenApiPath>>;
 
   public static create(uri: string) {
-    return new OpenApiRoute(uri);
+    return new OpenApiPath(uri);
   }
 
   /**
@@ -460,9 +460,9 @@ export class OpenApiRoute {
     uri: string,
     summary?: string,
     description?: string,
-    operations?: Map<OpenApiOperation, OpenApiRouteBuilder>,
+    operations?: Map<OpenApiOperation, OpenApiPathBuilder>,
     servers?: Set<OpenApiServer>,
-    parameters?: Set<OpenApiParameterBuilder<OpenApiRoute>>,
+    parameters?: Set<OpenApiParameterBuilder<OpenApiPath>>,
   ) {
     if (!validatePath(uri)) {
       throw new BadPathError(`Uri is of invalid form: ${uri}`);
@@ -488,11 +488,11 @@ export class OpenApiRoute {
 
   public addParameter(name: string) {
     const builderFn = (
-      parameterBuilder: OpenApiParameterBuilder<OpenApiRoute>,
+      parameterBuilder: OpenApiParameterBuilder<OpenApiPath>,
     ) => {
-      let parameters: Set<OpenApiParameterBuilder<OpenApiRoute>>;
+      let parameters: Set<OpenApiParameterBuilder<OpenApiPath>>;
       if (!this.parameters) {
-        const newParameters: Set<OpenApiParameterBuilder<OpenApiRoute>> =
+        const newParameters: Set<OpenApiParameterBuilder<OpenApiPath>> =
           new Set();
         newParameters.add(parameterBuilder);
         parameters = newParameters;
@@ -501,7 +501,7 @@ export class OpenApiRoute {
         parametersCopy.add(parameterBuilder);
         parameters = parametersCopy;
       }
-      return new OpenApiRoute(
+      return new OpenApiPath(
         this.uri,
         this.summary,
         this.description,
@@ -512,7 +512,7 @@ export class OpenApiRoute {
     };
     return {
       addIn: (_in: OpenApiParameter) => {
-        return new OpenApiParameterBuilder<OpenApiRoute>(name, _in, builderFn);
+        return new OpenApiParameterBuilder<OpenApiPath>(name, _in, builderFn);
       },
     };
   }
@@ -533,7 +533,7 @@ export class OpenApiRoute {
       serverCopy.add(server);
       servers = serverCopy;
     }
-    return new OpenApiRoute(
+    return new OpenApiPath(
       this.uri,
       this.summary,
       this.description,
@@ -545,11 +545,11 @@ export class OpenApiRoute {
 
   /**
    * Adds a description to this route.
-   * @param description - Description for this OpenApiRoute
-   * @returns A new OpenApiRoute with the provided description.
+   * @param description - Description for this OpenApiPath
+   * @returns A new OpenApiPath with the provided description.
    */
   public addDescription(description: string) {
-    return new OpenApiRoute(
+    return new OpenApiPath(
       this.uri,
       this.summary,
       description,
@@ -561,11 +561,11 @@ export class OpenApiRoute {
 
   /**
    * Adds a summary attached to this route.
-   * @param summary - Summary for this OpenApiRoute
-   * @returns A new OpenApiRoute with the provided summary.
+   * @param summary - Summary for this OpenApiPath
+   * @returns A new OpenApiPath with the provided summary.
    */
   public addSummary(summary: string) {
-    return new OpenApiRoute(
+    return new OpenApiPath(
       this.uri,
       summary,
       this.description,
@@ -576,8 +576,8 @@ export class OpenApiRoute {
   }
 
   public addOperation(op: OpenApiOperation) {
-    const _fn = (builder: OpenApiRouteBuilder) => {
-      let operations: Map<OpenApiOperation, OpenApiRouteBuilder>;
+    const _fn = (builder: OpenApiPathBuilder) => {
+      let operations: Map<OpenApiOperation, OpenApiPathBuilder>;
       if (!this.operations) {
         operations = new Map();
         operations.set(op, builder);
@@ -586,7 +586,7 @@ export class OpenApiRoute {
         operationsCopy.set(op, builder);
         operations = operationsCopy;
       }
-      return new OpenApiRoute(
+      return new OpenApiPath(
         this.uri,
         this.summary,
         this.description,
@@ -595,6 +595,6 @@ export class OpenApiRoute {
         this.parameters,
       );
     };
-    return new OpenApiRouteBuilder(_fn);
+    return new OpenApiPathBuilder(_fn);
   }
 }
