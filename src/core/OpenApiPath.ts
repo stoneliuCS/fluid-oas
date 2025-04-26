@@ -1,4 +1,4 @@
-import { BadPathError, PropertyNotFound } from "../lib/error";
+import { BadPathError } from "../lib/error";
 import { deepFreeze } from "../lib/freeze";
 import { validatePath } from "../lib/url";
 import {
@@ -10,14 +10,13 @@ import {
   type OpenApiOperation,
   type OpenApiParameter,
   type OpenApiRequestBody,
-  type OpenApiServer,
   type OpenApiStatusCode,
   type OpenApiTag,
 } from "../types/OpenApiTypes";
 import type { OpenApiSchema } from "./OpenApiSchema";
 import type { OpenApiSecurity } from "./OpenApiSecurity";
+import type { OpenApiServer } from "./OpenApiServer";
 
-// Internal Types
 
 type OpenApiExample = Readonly<{}>;
 

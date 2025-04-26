@@ -56,17 +56,6 @@ export type OpenApiExternalDocumentation = Readonly<{
 }>;
 
 export type OpenApiJsonSchemaDialect = Readonly<string>;
-export type OpenApiServer = Readonly<{
-  url: string;
-  description?: string;
-  variables?: Map<string, OpenApiServerVariable>;
-}>;
-
-type OpenApiServerVariable = Readonly<{
-  enum?: string[];
-  default: string;
-  description?: string;
-}>;
 
 type OpenApiInfoContact = Readonly<{
   name: string;
