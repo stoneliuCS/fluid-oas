@@ -518,7 +518,7 @@ export class OpenApiPath {
 
   /**
    * Adds a server url, overriding any upstream servers defined in the root metadata.
-   * @param server - A Server route that applies to all routes for this operation.
+   * @param server - A Server route that applies to all paths for this operation.
    * @returns A new OpenAPiRoute with the specified servers.
    */
   public addServer(server: OpenApiServer) {

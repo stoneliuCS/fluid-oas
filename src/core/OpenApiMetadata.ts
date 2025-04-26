@@ -1,3 +1,4 @@
+import { PropertyNotFoundError } from "../lib/error";
 import { deepFreeze } from "../lib/freeze";
 import type {
   OpenApiExternalDocumentation,
@@ -254,8 +255,8 @@ export class OpenApiMetadata {
   private readonly version: OpenApiVersion;
   private readonly info: OpenApiInfo;
   private readonly jsonSchemaDialect?: OpenApiJsonSchemaDialect;
-  private readonly servers?: OpenApiServer[];
-  private readonly routes?: OpenApiPath[];
+  private readonly servers?: Set<OpenApiServer>;
+  private readonly paths?: Set<OpenApiPath>;
   private readonly webhooks?: Map<string, OpenApiPath>;
   private readonly components?: OpenApiSchema;
   private readonly security?: OpenApiSecurity[];
@@ -287,15 +288,41 @@ export class OpenApiMetadata {
     const json = {};
     Object.defineProperty(json, "openapi", { value: this.version });
     Object.defineProperty(json, "info", { value: this.info.toJSON() });
+    if (this.jsonSchemaDialect) {
+      Object.defineProperty(json, "jsonSchemaDialect", {
+        value: this.jsonSchemaDialect,
+      });
+    }
+    if (this.servers) {
+      Object.defineProperty(json, "servers", {
+        value: this.serializeServerJsons(),
+      });
+    }
+    if (this.paths) {
+      Object.defineProperty(json, "paths", this.paths);
+    }
     return json;
+  }
+
+  private serializeServerJsons() {
+    const serverJsons = [];
+    if (!this.servers)
+      throw new PropertyNotFoundError(
+        "Cannot invoke a serialization on this servers.",
+      );
+    for (const server of this.servers) {
+      const serverJson = server.toJSON();
+      serverJsons.push(serverJson);
+    }
+    return serverJsons;
   }
 
   private constructor(
     version: OpenApiVersion,
     info: OpenApiInfo,
     jsonSchemaDialect?: OpenApiJsonSchemaDialect,
-    servers?: OpenApiServer[],
-    routes?: OpenApiPath[],
+    servers?: Set<OpenApiServer>,
+    paths?: Set<OpenApiPath>,
     webhooks?: Map<string, OpenApiPath>,
     components?: OpenApiSchema,
     security?: OpenApiSecurity[],
@@ -307,13 +334,12 @@ export class OpenApiMetadata {
     this.info = info;
     this.jsonSchemaDialect = jsonSchemaDialect;
     this.servers = servers;
-    this.routes = routes;
+    this.paths = paths;
     this.webhooks = webhooks;
     this.components = components;
     this.security = security;
     this.tags = tags;
     this.externalDocs = externalDocs;
-    // Freezes everything inside this class to prevent mutability.
     deepFreeze(this);
   }
 
@@ -336,7 +362,7 @@ export class OpenApiMetadata {
       this.info,
       this.jsonSchemaDialect,
       this.servers,
-      this.routes,
+      this.paths,
       this.webhooks,
       this.components,
       this.security,
@@ -351,7 +377,7 @@ export class OpenApiMetadata {
       info,
       this.jsonSchemaDialect,
       this.servers,
-      this.routes,
+      this.paths,
       this.webhooks,
       this.components,
       this.security,
@@ -366,7 +392,7 @@ export class OpenApiMetadata {
       this.info,
       jsonSchemaDialect,
       this.servers,
-      this.routes,
+      this.paths,
       this.webhooks,
       this.components,
       this.security,
@@ -376,28 +402,21 @@ export class OpenApiMetadata {
   }
 
   public addServer(server: OpenApiServer) {
+    let servers: Set<OpenApiServer>;
     if (!this.servers) {
-      return new OpenApiMetadata(
-        this.version,
-        this.info,
-        this.jsonSchemaDialect,
-        [server],
-        this.routes,
-        this.webhooks,
-        this.components,
-        this.security,
-        this.tags,
-        this.externalDocs,
-      );
+      servers = new Set();
+      servers.add(server);
+    } else {
+      const serversCopy = new Set(this.servers);
+      serversCopy.add(server);
+      servers = serversCopy;
     }
-    const serversCopy = [...this.servers];
-    serversCopy.push(server);
     return new OpenApiMetadata(
       this.version,
       this.info,
       this.jsonSchemaDialect,
-      serversCopy,
-      this.routes,
+      servers,
+      this.paths,
       this.webhooks,
       this.components,
       this.security,
@@ -406,29 +425,22 @@ export class OpenApiMetadata {
     );
   }
 
-  public addRoute(route: OpenApiPath) {
-    if (!this.routes) {
-      return new OpenApiMetadata(
-        this.version,
-        this.info,
-        this.jsonSchemaDialect,
-        this.servers,
-        [route],
-        this.webhooks,
-        this.components,
-        this.security,
-        this.tags,
-        this.externalDocs,
-      );
+  public addPath(path: OpenApiPath) {
+    let paths: Set<OpenApiPath>;
+    if (!this.paths) {
+      paths = new Set();
+      paths.add(path);
+    } else {
+      const pathsCopy = new Set(this.paths);
+      pathsCopy.add(path);
+      paths = pathsCopy;
     }
-    const routesCopy = [...this.routes];
-    routesCopy.push(route);
     return new OpenApiMetadata(
       this.version,
       this.info,
       this.jsonSchemaDialect,
       this.servers,
-      routesCopy,
+      paths,
       this.webhooks,
       this.components,
       this.security,
@@ -446,7 +458,7 @@ export class OpenApiMetadata {
         this.info,
         this.jsonSchemaDialect,
         this.servers,
-        this.routes,
+        this.paths,
         map,
         this.components,
         this.security,
@@ -461,7 +473,7 @@ export class OpenApiMetadata {
       this.info,
       this.jsonSchemaDialect,
       this.servers,
-      this.routes,
+      this.paths,
       mapCopy,
       this.components,
       this.security,
@@ -476,7 +488,7 @@ export class OpenApiMetadata {
       this.info,
       this.jsonSchemaDialect,
       this.servers,
-      this.routes,
+      this.paths,
       this.webhooks,
       component,
       this.security,
@@ -492,7 +504,7 @@ export class OpenApiMetadata {
         this.info,
         this.jsonSchemaDialect,
         this.servers,
-        this.routes,
+        this.paths,
         this.webhooks,
         this.components,
         this.security,
@@ -507,7 +519,7 @@ export class OpenApiMetadata {
       this.info,
       this.jsonSchemaDialect,
       this.servers,
-      this.routes,
+      this.paths,
       this.webhooks,
       this.components,
       this.security,
@@ -522,7 +534,7 @@ export class OpenApiMetadata {
       this.info,
       this.jsonSchemaDialect,
       this.servers,
-      this.routes,
+      this.paths,
       this.webhooks,
       this.components,
       this.security,

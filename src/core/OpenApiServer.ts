@@ -102,4 +102,9 @@ export class OpenApiServer {
   public addDescription(description: string) {
     return new OpenApiServer(this.uri, description, this.variables);
   }
+
+  public toJSON() {
+    const json = {}
+    return json;
+  }
 }

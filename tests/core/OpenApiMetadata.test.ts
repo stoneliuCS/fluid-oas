@@ -24,6 +24,7 @@ describe("Construction of an OpenApi Metadata", () => {
 
   // Act
   const actualJSON = metadata.toJSON();
+  console.log(actualJSON)
 
   // Assert
   expect(actualJSON).toContainKeys(["openapi", "info"]);
