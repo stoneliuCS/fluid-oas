@@ -19,41 +19,6 @@ import type { OpenApiSecurity } from "./OpenApiSecurity";
 
 // Internal Types
 
-type OpenApiRouteBuilderContext = {
-  routeContext: OpenApiRouteContext;
-  tags?: OpenApiTag[];
-  summary?: string;
-  description?: string;
-  externalDocs?: OpenApiExternalDocumentation;
-  operationId?: string;
-  parameters?: Set<OpenApiParameterBuilder<OpenApiRouteBuilder>>;
-  requestBody?: OpenApiRequestBody;
-  responses?: Set<OpenApiResponseBuilder>;
-  callBacks?: Map<string, OpenApiCallback>;
-  deprecated?: boolean;
-  security?: OpenApiSecurity[];
-  servers?: OpenApiServer[];
-};
-
-type OpenApiResponseContext = Readonly<{
-  routeBuilderCtx: OpenApiRouteBuilderContext;
-  contentType: OpenApiContentType;
-  statusCode: OpenApiStatusCode;
-  description: string;
-  headers?: Map<string, OpenApiHeader>;
-  content?: Map<OpenApiContentType, OpenApiMediaBuilder>;
-}>;
-
-type OpenApiRouteContext = Readonly<{
-  uri: string;
-  operation: OpenApiOperation;
-  summary?: string;
-  description?: string;
-  operations?: Map<OpenApiOperation, OpenApiRouteBuilder>;
-  servers?: Set<OpenApiServer>;
-  parameters?: Set<OpenApiParameterBuilder<OpenApiRoute>>;
-}>;
-
 type OpenApiExample = Readonly<{}>;
 
 class OpenApiParameterBuilder<T extends OpenApiRoute | OpenApiRouteBuilder> {
@@ -131,20 +96,20 @@ class OpenApiParameterBuilder<T extends OpenApiRoute | OpenApiRouteBuilder> {
  * Builds the Media object for an OpenApi operation.
  */
 class OpenApiMediaBuilder {
-  private readonly ctx: OpenApiResponseContext;
+  private readonly fn: (builder: OpenApiMediaBuilder) => OpenApiResponseBuilder;
   private readonly schema?: OpenApiSchema;
   private readonly example?: unknown;
   private readonly examples?: Map<string, OpenApiExample>;
   private readonly encoding?: Map<string, OpenApiEncoding>;
 
   public constructor(
-    ctx: OpenApiResponseContext,
+    fn: (builder: OpenApiMediaBuilder) => OpenApiResponseBuilder,
     schema?: OpenApiSchema,
     example?: unknown,
     examples?: Map<string, OpenApiExample>,
     encoding?: Map<string, OpenApiEncoding>,
   ) {
-    this.ctx = ctx;
+    this.fn = fn;
     if (schema) {
       this.schema = schema;
     }
@@ -162,7 +127,7 @@ class OpenApiMediaBuilder {
 
   public addSchema(schema: OpenApiSchema) {
     return new OpenApiMediaBuilder(
-      this.ctx,
+      this.fn,
       schema,
       this.example,
       this.examples,
@@ -172,7 +137,7 @@ class OpenApiMediaBuilder {
 
   public addSingularExample(example: unknown) {
     return new OpenApiMediaBuilder(
-      this.ctx,
+      this.fn,
       this.schema,
       example,
       this.examples,
@@ -187,7 +152,7 @@ class OpenApiMediaBuilder {
           const newExamples: Map<string, OpenApiExample> = new Map();
           newExamples.set(name, example);
           return new OpenApiMediaBuilder(
-            this.ctx,
+            this.fn,
             this.schema,
             this.example,
             newExamples,
@@ -197,7 +162,7 @@ class OpenApiMediaBuilder {
         const examplesCopy = new Map(this.examples);
         examplesCopy.set(name, example);
         return new OpenApiMediaBuilder(
-          this.ctx,
+          this.fn,
           this.schema,
           this.example,
           examplesCopy,
@@ -214,7 +179,7 @@ class OpenApiMediaBuilder {
           const newEncodings: Map<string, OpenApiEncoding> = new Map();
           newEncodings.set(name, encoding);
           return new OpenApiMediaBuilder(
-            this.ctx,
+            this.fn,
             this.schema,
             this.example,
             this.examples,
@@ -224,7 +189,7 @@ class OpenApiMediaBuilder {
         const encodingCopy = new Map(this.encoding);
         encodingCopy.set(name, encoding);
         return new OpenApiMediaBuilder(
-          this.ctx,
+          this.fn,
           this.schema,
           this.example,
           this.examples,
@@ -235,48 +200,24 @@ class OpenApiMediaBuilder {
   }
 
   public endResponse() {
-    if (!this.ctx.content) {
-      const newContent: Map<OpenApiContentType, OpenApiMediaBuilder> =
-        new Map();
-      newContent.set(this.ctx.contentType, this);
-      return new OpenApiResponseBuilder(
-        this.ctx.statusCode,
-        this.ctx.description,
-        this.ctx.routeBuilderCtx,
-        this.ctx.headers,
-        newContent,
-      ).build();
-    }
-
-    const contentCopy = new Map(this.ctx.content);
-    contentCopy.set(this.ctx.contentType, this);
-    return new OpenApiResponseBuilder(
-      this.ctx.statusCode,
-      this.ctx.description,
-      this.ctx.routeBuilderCtx,
-      this.ctx.headers,
-      contentCopy,
-    ).build();
+    return this.fn(this).endResponse();
   }
 }
 
 class OpenApiResponseBuilder {
-  private readonly statusCode: OpenApiStatusCode;
-  private readonly ctx: OpenApiRouteBuilderContext;
+  private readonly fn: (builder: OpenApiResponseBuilder) => OpenApiRouteBuilder;
   private readonly description: string;
   private readonly headers?: Map<string, OpenApiHeader>;
   private readonly content?: Map<OpenApiContentType, OpenApiMediaBuilder>;
 
   public constructor(
-    statusCode: OpenApiStatusCode,
+    fn: (builder: OpenApiResponseBuilder) => OpenApiRouteBuilder,
     description: string,
-    ctx: OpenApiRouteBuilderContext,
     headers?: Map<string, OpenApiHeader>,
     content?: Map<OpenApiContentType, OpenApiMediaBuilder>,
   ) {
-    this.statusCode = statusCode;
+    this.fn = fn;
     this.description = description;
-    this.ctx = ctx;
     if (headers) {
       this.headers = headers;
     }
@@ -300,9 +241,8 @@ class OpenApiResponseBuilder {
           headers = headersCopy;
         }
         return new OpenApiResponseBuilder(
-          this.statusCode,
+          this.fn,
           this.description,
-          this.ctx,
           headers,
           this.content,
         );
@@ -311,43 +251,28 @@ class OpenApiResponseBuilder {
   }
 
   public addContent(contentType: OpenApiContentType) {
-    const ctx: OpenApiResponseContext = {
-      contentType: contentType,
-      routeBuilderCtx: this.ctx,
-      statusCode: this.statusCode,
-      description: this.description,
-      headers: this.headers,
-      content: this.content,
+    const _fn = (builder: OpenApiMediaBuilder) => {
+      let content: Map<OpenApiContentType, OpenApiMediaBuilder>;
+      if (!this.content) {
+        content = new Map();
+        content.set(contentType, builder);
+      } else {
+        const contentCopy = new Map(this.content);
+        contentCopy.set(contentType, builder);
+        content = contentCopy;
+      }
+      return new OpenApiResponseBuilder(
+        this.fn,
+        this.description,
+        this.headers,
+        content,
+      );
     };
-    return new OpenApiMediaBuilder(ctx);
+    return new OpenApiMediaBuilder(_fn);
   }
 
-  public build(): OpenApiRouteBuilder {
-    let responses: Set<OpenApiResponseBuilder>;
-    if (this.ctx.responses) {
-      const copy = new Set(this.ctx.responses);
-      copy.add(this);
-      responses = copy;
-    } else {
-      const newResponses: Set<OpenApiResponseBuilder> = new Set();
-      newResponses.add(this);
-      responses = newResponses;
-    }
-    return new OpenApiRouteBuilder(
-      this.ctx.routeContext,
-      this.ctx.tags,
-      this.ctx.summary,
-      this.ctx.description,
-      this.ctx.externalDocs,
-      this.ctx.operationId,
-      this.ctx.parameters,
-      this.ctx.requestBody,
-      responses,
-      this.ctx.callBacks,
-      this.ctx.deprecated,
-      this.ctx.security,
-      this.ctx.servers,
-    );
+  public endResponse(): OpenApiRouteBuilder {
+    return this.fn(this);
   }
 }
 
@@ -357,7 +282,7 @@ class OpenApiResponseBuilder {
  * See: https://swagger.io/specification/
  */
 class OpenApiRouteBuilder {
-  private readonly ctx: OpenApiRouteContext;
+  private readonly fn: (routeBuilder: OpenApiRouteBuilder) => OpenApiRoute;
   private readonly tags?: OpenApiTag[];
   private readonly summary?: string;
   private readonly description?: string;
@@ -367,14 +292,14 @@ class OpenApiRouteBuilder {
     OpenApiParameterBuilder<OpenApiRouteBuilder>
   >;
   private readonly requestBody?: OpenApiRequestBody;
-  private readonly responses?: Set<OpenApiResponseBuilder>;
+  private readonly responses?: Map<OpenApiStatusCode, OpenApiResponseBuilder>;
   private readonly callBacks?: Map<string, OpenApiCallback>;
   private readonly deprecated?: boolean;
   private readonly security?: OpenApiSecurity[];
   private readonly servers?: OpenApiServer[];
 
   public constructor(
-    ctx: OpenApiRouteContext,
+    fn: (routeBuilder: OpenApiRouteBuilder) => OpenApiRoute,
     tags?: OpenApiTag[],
     summary?: string,
     description?: string,
@@ -382,13 +307,13 @@ class OpenApiRouteBuilder {
     operationId?: string,
     parameters?: Set<OpenApiParameterBuilder<OpenApiRouteBuilder>>,
     requestBody?: OpenApiRequestBody,
-    responses?: Set<OpenApiResponseBuilder>,
+    responses?: Map<OpenApiStatusCode, OpenApiResponseBuilder>,
     callBacks?: Map<string, OpenApiCallback>,
     deprecated?: boolean,
     security?: OpenApiSecurity[],
     servers?: OpenApiServer[],
   ) {
-    this.ctx = ctx;
+    this.fn = fn;
     if (tags) {
       this.tags = tags;
     }
@@ -444,7 +369,7 @@ class OpenApiRouteBuilder {
         parameters = parametersCopy;
       }
       return new OpenApiRouteBuilder(
-        this.ctx,
+        this.fn,
         this.tags,
         this.summary,
         this.description,
@@ -476,40 +401,41 @@ class OpenApiRouteBuilder {
    * @returns An object with a single method, addsDescription to continue building the response.
    */
   public addResponse(statusCode: OpenApiStatusCode) {
-    const ctx: OpenApiRouteBuilderContext = {
-      routeContext: this.ctx,
-      tags: this.tags,
-      summary: this.summary,
-      description: this.description,
-      externalDocs: this.externalDocs,
-      operationId: this.operationId,
-      parameters: this.parameters,
-      requestBody: this.requestBody,
-      responses: this.responses,
-      callBacks: this.callBacks,
-      deprecated: this.deprecated,
-      security: this.security,
-      servers: this.servers,
+    const _fn = (responseBuilder: OpenApiResponseBuilder) => {
+      let responses: Map<OpenApiStatusCode, OpenApiResponseBuilder>;
+      if (!this.responses) {
+        responses = new Map();
+        responses.set(statusCode, responseBuilder);
+      } else {
+        const responsesCopy = new Map(this.responses);
+        responsesCopy.set(statusCode, responseBuilder);
+        responses = responsesCopy;
+      }
+      return new OpenApiRouteBuilder(
+        this.fn,
+        this.tags,
+        this.summary,
+        this.description,
+        this.externalDocs,
+        this.operationId,
+        this.parameters,
+        this.requestBody,
+        responses,
+        this.callBacks,
+        this.deprecated,
+        this.security,
+        this.servers,
+      );
     };
     return {
       addDescription: (description: string) => {
-        return new OpenApiResponseBuilder(statusCode, description, ctx);
+        return new OpenApiResponseBuilder(_fn, description);
       },
     };
   }
 
   public endOperation(): OpenApiRoute {
-    let operations: Map<OpenApiOperation, OpenApiRouteBuilder>;
-    if (!this.ctx.operations) {
-      const newOperations = new Map<OpenApiOperation, OpenApiRouteBuilder>();
-      newOperations.set(this.ctx.operation, this);
-      operations = newOperations;
-    } else {
-      const copyOperations = new Map(this.ctx.operations);
-      copyOperations.set(this.ctx.operation, this);
-      operations = copyOperations;
-    }
-    return OpenApiRoute._createRouteFromRouteBuilder(operations, this.ctx);
+    return this.fn(this);
   }
 }
 
@@ -523,27 +449,6 @@ export class OpenApiRoute {
 
   public static create(uri: string) {
     return new OpenApiRoute(uri);
-  }
-
-  /**
-   * Create a new OpneAPIRoute from a RouteBuilder class.
-   * NOTE: It is not recommended to call this method over the public create method.
-   * @param operations - Mappings of HTTP methods and operations.
-   * @param ctx - Route context to build the OpenApiRoute
-   * @returns A new OpenApiRoute retaining the necessary context.
-   */
-  static _createRouteFromRouteBuilder(
-    operations: Map<OpenApiOperation, OpenApiRouteBuilder>,
-    ctx: OpenApiRouteContext,
-  ) {
-    return new OpenApiRoute(
-      ctx.uri,
-      ctx.summary,
-      ctx.description,
-      operations,
-      ctx.servers,
-      ctx.parameters,
-    );
   }
 
   /**
@@ -579,45 +484,6 @@ export class OpenApiRoute {
       this.parameters = parameters;
     }
     deepFreeze(this);
-  }
-
-  public getUri() {
-    return this.uri;
-  }
-
-  public getSummary() {
-    if (!this.summary) {
-      throw new PropertyNotFound("Summary not found.");
-    }
-    return this.summary;
-  }
-
-  public getDescription() {
-    if (!this.description) {
-      throw new PropertyNotFound("Description not found.");
-    }
-    return this.description;
-  }
-
-  public getOperations() {
-    if (!this.operations) {
-      throw new PropertyNotFound("Operations not found.");
-    }
-    return this.operations;
-  }
-
-  public getServers() {
-    if (!this.servers) {
-      throw new PropertyNotFound("Servers not found.");
-    }
-    return this.servers;
-  }
-
-  public getParameters() {
-    if (!this.parameters) {
-      throw new PropertyNotFound("Parameters not found.");
-    }
-    return this.parameters;
   }
 
   public addParameter(name: string) {
@@ -710,15 +576,25 @@ export class OpenApiRoute {
   }
 
   public addOperation(op: OpenApiOperation) {
-    const ctx: OpenApiRouteContext = {
-      uri: this.uri,
-      operation: op,
-      summary: this.summary,
-      description: this.description,
-      operations: this.operations,
-      servers: this.servers,
-      parameters: this.parameters,
+    const _fn = (builder: OpenApiRouteBuilder) => {
+      let operations: Map<OpenApiOperation, OpenApiRouteBuilder>;
+      if (!this.operations) {
+        operations = new Map();
+        operations.set(op, builder);
+      } else {
+        const operationsCopy = new Map(this.operations);
+        operationsCopy.set(op, builder);
+        operations = operationsCopy;
+      }
+      return new OpenApiRoute(
+        this.uri,
+        this.summary,
+        this.description,
+        operations,
+        this.servers,
+        this.parameters,
+      );
     };
-    return new OpenApiRouteBuilder(ctx);
+    return new OpenApiRouteBuilder(_fn);
   }
 }
