@@ -1,4 +1,4 @@
-import { BadPathError } from "../lib/error";
+import { BadPathError, PropertyNotFound } from "../lib/error";
 import { deepFreeze } from "../lib/freeze";
 import { validatePath } from "../lib/url";
 import {
@@ -18,8 +18,6 @@ import type { OpenApiSchema } from "./OpenApiSchema";
 import type { OpenApiSecurity } from "./OpenApiSecurity";
 
 // Internal Types
-
-const _createRouteFromRouteBuilder = Symbol("createRouteFromRouteBuilder");
 
 type OpenApiRouteBuilderContext = {
   routeContext: OpenApiRouteContext;
@@ -511,7 +509,7 @@ class OpenApiRouteBuilder {
       copyOperations.set(this.ctx.operation, this);
       operations = copyOperations;
     }
-    return OpenApiRoute[_createRouteFromRouteBuilder](operations, this.ctx);
+    return OpenApiRoute.createRouteFromRouteBuilder(operations, this.ctx);
   }
 }
 
@@ -526,17 +524,8 @@ export class OpenApiRoute {
   public static create(uri: string) {
     return new OpenApiRoute(uri);
   }
-    
-  /**
-   * Internal static function to create a route from a Route Builder.
-   *
-   * Intended NOT TO BE USED outside of the core package, use the create function
-   * to create a new OpenApiRoute.
-   * @param operations - 
-   * @param ctx - 
-   * @returns 
-   */
-  static [_createRouteFromRouteBuilder](
+
+  public static createRouteFromRouteBuilder(
     operations: Map<OpenApiOperation, OpenApiRouteBuilder>,
     ctx: OpenApiRouteContext,
   ) {
@@ -585,6 +574,45 @@ export class OpenApiRoute {
     deepFreeze(this);
   }
 
+  public getUri() {
+    return this.uri;
+  }
+
+  public getSummary() {
+    if (!this.summary) {
+      throw new PropertyNotFound("Summary not found.");
+    }
+    return this.summary;
+  }
+
+  public getDescription() {
+    if (!this.description) {
+      throw new PropertyNotFound("Description not found.");
+    }
+    return this.description;
+  }
+
+  public getOperations() {
+    if (!this.operations) {
+      throw new PropertyNotFound("Operations not found.");
+    }
+    return this.operations;
+  }
+
+  public getServers() {
+    if (!this.servers) {
+      throw new PropertyNotFound("Servers not found.");
+    }
+    return this.servers;
+  }
+
+  public getParameters() {
+    if (!this.parameters) {
+      throw new PropertyNotFound("Parameters not found.");
+    }
+    return this.parameters;
+  }
+
   public addParameter(name: string) {
     const builderFn = (
       parameterBuilder: OpenApiParameterBuilder<OpenApiRoute>,
@@ -614,6 +642,64 @@ export class OpenApiRoute {
         return new OpenApiParameterBuilder<OpenApiRoute>(name, _in, builderFn);
       },
     };
+  }
+
+  /**
+   * Adds a server url, overriding any upstream servers defined in the root metadata.
+   * @param server - A Server route that applies to all routes for this operation.
+   * @returns A new OpenAPiRoute with the specified servers.
+   */
+  public addServer(server: OpenApiServer) {
+    let servers: Set<OpenApiServer>;
+    if (!this.servers) {
+      const newServers: Set<OpenApiServer> = new Set();
+      newServers.add(server);
+      servers = newServers;
+    } else {
+      const serverCopy = structuredClone(this.servers);
+      serverCopy.add(server);
+      servers = serverCopy;
+    }
+    return new OpenApiRoute(
+      this.uri,
+      this.summary,
+      this.description,
+      this.operations,
+      servers,
+      this.parameters,
+    );
+  }
+
+  /**
+   * Adds a description to this route.
+   * @param description - Description for this OpenApiRoute
+   * @returns A new OpenApiRoute with the provided description.
+   */
+  public addDescription(description: string) {
+    return new OpenApiRoute(
+      this.uri,
+      this.summary,
+      description,
+      this.operations,
+      this.servers,
+      this.parameters,
+    );
+  }
+
+  /**
+   * Adds a summary attached to this route.
+   * @param summary - Summary for this OpenApiRoute
+   * @returns A new OpenApiRoute with the provided summary.
+   */
+  public addSummary(summary: string) {
+    return new OpenApiRoute(
+      this.uri,
+      summary,
+      this.description,
+      this.operations,
+      this.servers,
+      this.parameters,
+    );
   }
 
   public addOperation(op: OpenApiOperation) {
