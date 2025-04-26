@@ -1,62 +1,44 @@
 # S.A.L.T
 
-A Structured Application Programming Interface Language for TypeScript APIs
+Structured Application Programming Interface Language for TypeScript.
 
-## Purpose
+## Overview
 
-S.A.L.T is an internal/embedded Domain Specific Language for expressing type-safe web APIs written in TypeScript through the OpenAPI specification.
+S.A.L.T is an embedded _domain specific language_ for expressing type-safe REST APIs written in TypeScript through the OpenAPI specification.
 
-The key features of SALT is an entirely type-safe, functional API to express an OpenAPI specification in TypeScript.
+The key features of SALT is an entirely type-safe, functional and fluid API to express an OpenAPI specification in TypeScript.
 
 - No dependencies, use as is.
-- Write the most complex OpenAPI specification you want, use whatever framework you want. Focus on business logic, have the interface logic abstracted away through 1 to 1 TypeScript type and validator generation.
-- Write the controllers you want, no frameworks to dictate how to write your APIs or controllers.
+- Write the most complex OpenAPI specification you want, use whatever framework you want. 
+- Focus on core business logic, design systems in an _API-first manner_.
+- Leverage TypeScript's advanced type-system to get autocomplete and compile-time checks for building your OpenAPI specification.
+- Build the specification through human-readable functional method chains, giving step by step assistance in creating the specification with the help of the TypeScript LSP.
 
-
-Leveraging TypeScript type system, one can chain method calls and use the power of the TypeScript LSP to quickly create easily readable API endpoints with ease!
+This simple example defines a way to build a health check route.
 ```ts
-const userEndpoint = OpenApiRoute.create("/user/{id}")
-  // Adds the Parameters available to the entire OpenApiRoute path
-  .addParameter("id")
-  .addIn("path")
-  .endParameter()
+export const HEALTHCHECK_ROUTE: OpenApiRoute = OpenApiRoute.create(
+  "/healthcheck",
+)
+  // Add Descriptions and summary for the route.
+  .addDescription("Pings the server to get the current health.")
+  .addSummary("Healthcheck server.")
 
+  // Add the GET Operation for this route.
   .addOperation("GET")
+
+  // Add a 200 Response for this GET.
   .addResponse("200")
-  .addDescription("Get all users")
-  .addContent(OpenApiContentType.JSON)
-  .addSchema(successResponse)
+  .addDescription("Successful Response")
+  .addContent("application/json")
+  .addSchema(HEALTHCHECK_RESPONSE_SCHEMA)
   .endResponse()
 
-  // Add a 401 Response
-  .addResponse("401")
-  .addDescription("Unauthorized")
-  .addContent(OpenApiContentType.JSON)
-  .addSchema(errorResponse)
-  .endResponse()
-
-  // Add a 403 Response
-  .addResponse("403")
-  .addDescription("Forbidden")
-  .addContent(OpenApiContentType.JSON)
-  .addSchema(errorResponse)
-  .endResponse()
-
-  // Add a 500 Response
+  // Add a 500 Response for this GET.
   .addResponse("500")
   .addDescription("Internal Server Error")
-  .addContent(OpenApiContentType.JSON)
-  .addSchema(errorResponse)
+  .addContent("application/json")
+  .addSchema(HEALTHCHECK_ERROR_SCHEMA)
   .endResponse()
 
-  .return();
-
-const metadata = OpenApiMetadata.create()
-  .addVersion("3.0.0")
-  .addInfo({ title: "PetStore", version: "1.0.0" })
-  .addRoute(userEndpoint);
-
-const openapi = new OpenApiBuilder(metadata);
-
-openapi.toOpenApi();
+  .endOperation();
 ```
