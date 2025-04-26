@@ -17,7 +17,6 @@ import type { OpenApiSecurity } from "./OpenApiSecurity";
 import type { OpenApiServer } from "./OpenApiServer";
 import type { OpenApiTag } from "./OpenApiTag";
 
-
 type OpenApiExample = Readonly<{}>;
 
 class OpenApiParameterBuilder<T extends OpenApiPath | OpenApiPathBuilder> {
@@ -53,36 +52,16 @@ class OpenApiParameterBuilder<T extends OpenApiPath | OpenApiPathBuilder> {
     this.name = name;
     this.in = _in;
     this.fn = fn;
-    if (description) {
-      this.description = description;
-    }
-    if (required) {
-      this.required = required;
-    }
-    if (deprecated) {
-      this.deprecated = deprecated;
-    }
-    if (style) {
-      this.style = style;
-    }
-    if (explode) {
-      this.explode = explode;
-    }
-    if (allowReserved) {
-      this.allowReserved = allowReserved;
-    }
-    if (schema) {
-      this.schema = schema;
-    }
-    if (example) {
-      this.example = example;
-    }
-    if (examples) {
-      this.examples = examples;
-    }
-    if (content) {
-      this.content = content;
-    }
+    this.description = description;
+    this.required = required;
+    this.deprecated = deprecated;
+    this.style = style;
+    this.explode = explode;
+    this.allowReserved = allowReserved;
+    this.schema = schema;
+    this.example = example;
+    this.examples = examples;
+    this.content = content;
     deepFreeze(this);
   }
 
@@ -109,18 +88,10 @@ class OpenApiMediaBuilder {
     encoding?: Map<string, OpenApiEncoding>,
   ) {
     this.fn = fn;
-    if (schema) {
-      this.schema = schema;
-    }
-    if (example) {
-      this.example = example;
-    }
-    if (examples) {
-      this.examples = examples;
-    }
-    if (encoding) {
-      this.encoding = encoding;
-    }
+    this.schema = schema;
+    this.example = example;
+    this.examples = examples;
+    this.encoding = encoding;
     deepFreeze(this);
   }
 
@@ -217,12 +188,8 @@ class OpenApiResponseBuilder {
   ) {
     this.fn = fn;
     this.description = description;
-    if (headers) {
-      this.headers = headers;
-    }
-    if (content) {
-      this.content = content;
-    }
+    this.headers = headers;
+    this.content = content;
     deepFreeze(this);
   }
 
@@ -313,42 +280,18 @@ class OpenApiPathBuilder {
     servers?: OpenApiServer[],
   ) {
     this.fn = fn;
-    if (tags) {
-      this.tags = tags;
-    }
-    if (summary) {
-      this.summary = summary;
-    }
-    if (description) {
-      this.description = description;
-    }
-    if (externalDocs) {
-      this.externalDocs = externalDocs;
-    }
-    if (operationId) {
-      this.operationId = operationId;
-    }
-    if (parameters) {
-      this.parameters = parameters;
-    }
-    if (requestBody) {
-      this.requestBody = requestBody;
-    }
-    if (responses) {
-      this.responses = responses;
-    }
-    if (callBacks) {
-      this.callBacks = callBacks;
-    }
-    if (deprecated) {
-      this.deprecated = deprecated;
-    }
-    if (security) {
-      this.security = security;
-    }
-    if (servers) {
-      this.servers = servers;
-    }
+    this.tags = tags;
+    this.summary = summary;
+    this.description = description;
+    this.externalDocs = externalDocs;
+    this.operationId = operationId;
+    this.parameters = parameters;
+    this.requestBody = requestBody;
+    this.responses = responses;
+    this.callBacks = callBacks;
+    this.deprecated = deprecated;
+    this.security = security;
+    this.servers = servers;
     deepFreeze(this);
   }
 
@@ -597,16 +540,14 @@ export class OpenApiPath {
     return new OpenApiPathBuilder(_fn);
   }
 
-  /** 
-   * Gets additional metadata related to this Path, including all used 
+  /**
+   * Gets additional metadata related to this Path, including all used
    * schemas which can be passed up in context to the OpenApiMetadata object.
    *
    **/
-  public getComponentMetadata() {
-
-  }
+  public getComponentMetadata() {}
 
   public getJSON() {
-    return {}
+    return {};
   }
 }
