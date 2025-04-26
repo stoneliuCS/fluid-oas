@@ -35,4 +35,8 @@ describe("Test static creation of OpenApiRoute.", () => {
     expect(routeWithDescription.getDescription()).toEqual("New Description");
   });
 
+  test("Adding a operation to an OpenApiRoute", () => {
+    const route: OpenApiRoute = OpenApiRoute.create("/");
+  });
+
 });

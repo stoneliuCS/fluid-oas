@@ -2,8 +2,8 @@ import { BadPathError, PropertyNotFound } from "../lib/error";
 import { deepFreeze } from "../lib/freeze";
 import { validatePath } from "../lib/url";
 import {
-  OpenApiContentType,
   type OpenApiCallback,
+  type OpenApiContentType,
   type OpenApiEncoding,
   type OpenApiExternalDocumentation,
   type OpenApiHeader,
@@ -498,7 +498,7 @@ class OpenApiRouteBuilder {
     };
   }
 
-  public return(): OpenApiRoute {
+  public endOperation(): OpenApiRoute {
     let operations: Map<OpenApiOperation, OpenApiRouteBuilder>;
     if (!this.ctx.operations) {
       const newOperations = new Map<OpenApiOperation, OpenApiRouteBuilder>();

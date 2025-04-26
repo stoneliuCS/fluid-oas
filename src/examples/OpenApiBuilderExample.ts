@@ -2,18 +2,17 @@ import { OpenApiBuilder } from "../core/OpenApiBuilder";
 import { OpenApiSchema } from "../core/OpenApiSchema";
 import { OpenApiMetadata } from "../core/OpenApiMetadata";
 import { OpenApiRoute } from "../core/OpenApiRoute";
-import { OpenApiContentType, OpenApiSchemaType } from "../types/OpenApiTypes";
 
 // Define Schemas for your OpenAPI specification:
 
 const successResponse = new OpenApiSchema(
   "SuccessResponse",
-  OpenApiSchemaType.OBJECT,
+  "object"
 );
 
 const errorResponse = new OpenApiSchema(
   "ErrorResponse",
-  OpenApiSchemaType.OBJECT,
+  "object"
 );
 
 const userEndpoint = OpenApiRoute.create("/user/{id}")
@@ -23,34 +22,35 @@ const userEndpoint = OpenApiRoute.create("/user/{id}")
   .endParameter()
 
   .addOperation("GET")
+
   .addResponse("200")
   .addDescription("Get all users")
-  .addContent(OpenApiContentType.JSON)
+  .addContent("application/json")
   .addSchema(successResponse)
   .endResponse()
 
   // Add a 401 Response
   .addResponse("401")
   .addDescription("Unauthorized")
-  .addContent(OpenApiContentType.JSON)
+  .addContent("application/json")
   .addSchema(errorResponse)
   .endResponse()
 
   // Add a 403 Response
   .addResponse("403")
   .addDescription("Forbidden")
-  .addContent(OpenApiContentType.JSON)
+  .addContent("application/json")
   .addSchema(errorResponse)
   .endResponse()
 
   // Add a 500 Response
   .addResponse("500")
   .addDescription("Internal Server Error")
-  .addContent(OpenApiContentType.JSON)
+  .addContent("application/json")
   .addSchema(errorResponse)
   .endResponse()
 
-  .return();
+  .endOperation();
 
 const metadata = OpenApiMetadata.create()
   .addVersion("3.0.0")

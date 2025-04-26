@@ -3,6 +3,34 @@
  * that it makes testing with fixtures really easy.
  */
 
-import { OpenApiMetadata } from "../../src/core/OpenApiMetadata";
+import { OpenApiRoute } from "../../src/core/OpenApiRoute";
+import { OpenApiSchema } from "../../src/core/OpenApiSchema";
 
-export const emptyMetadata: OpenApiMetadata = new OpenApiMetadata();
+const HEALTHCHECK_RESPONSE_SCHEMA = new OpenApiSchema("Success", "object");
+const HEALTHCHECK_ERROR_SCHEMA = new OpenApiSchema("Error", "object");
+
+export const HEALTHCHECK_ROUTE: OpenApiRoute = OpenApiRoute.create(
+  "/healthcheck",
+)
+  // Add Descriptions and summary for the route.
+  .addDescription("Pings the server to get the current health.")
+  .addSummary("Healthcheck server.")
+
+  // Add the GET Operation for this route.
+  .addOperation("GET")
+
+  // Add a 200 Response for this GET.
+  .addResponse("200")
+  .addDescription("Successful Response")
+  .addContent("application/json")
+  .addSchema(HEALTHCHECK_RESPONSE_SCHEMA)
+  .endResponse()
+
+  // Add a 500 Response for this GET.
+  .addResponse("500")
+  .addDescription("Internal Server Error")
+  .addContent("application/json")
+  .addSchema(HEALTHCHECK_ERROR_SCHEMA)
+  .endResponse()
+
+  .endOperation();
