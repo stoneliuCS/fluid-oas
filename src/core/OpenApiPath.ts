@@ -11,11 +11,11 @@ import {
   type OpenApiParameter,
   type OpenApiRequestBody,
   type OpenApiStatusCode,
-  type OpenApiTag,
 } from "../types/OpenApiTypes";
 import type { OpenApiSchema } from "./OpenApiSchema";
 import type { OpenApiSecurity } from "./OpenApiSecurity";
 import type { OpenApiServer } from "./OpenApiServer";
+import type { OpenApiTag } from "./OpenApiTag";
 
 
 type OpenApiExample = Readonly<{}>;

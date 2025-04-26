@@ -1,15 +1,91 @@
 import { deepFreeze } from "../lib/freeze";
 import type {
   OpenApiExternalDocumentation,
-  OpenApiInfo,
   OpenApiJsonSchemaDialect,
-  OpenApiServer,
-  OpenApiTag,
   OpenApiVersion,
 } from "../types/OpenApiTypes";
 import type { OpenApiPath } from "./OpenApiPath";
 import type { OpenApiSchema } from "./OpenApiSchema";
 import type { OpenApiSecurity } from "./OpenApiSecurity";
+import type { OpenApiServer } from "./OpenApiServer";
+import type { OpenApiTag } from "./OpenApiTag";
+
+class OpenApiLicense {}
+class OpenApiContact {}
+
+class OpenApiInfo {
+  private readonly fn: (info: OpenApiInfo) => OpenApiMetadata;
+  private readonly title: string;
+  private readonly version: string;
+  private readonly summary?: string;
+  private readonly description?: string;
+  private readonly termsOfService?: string;
+  private readonly contact?: OpenApiContact;
+  private readonly license?: OpenApiLicense;
+
+  public constructor(
+    fn: (info: OpenApiInfo) => OpenApiMetadata,
+    title: string,
+    version: string,
+    summary?: string,
+    description?: string,
+    termsOfService?: string,
+    contact?: OpenApiContact,
+    license?: OpenApiLicense,
+  ) {
+    this.fn = fn;
+    this.title = title;
+    this.version = version;
+    this.summary = summary;
+    this.description = description;
+    this.termsOfService = termsOfService;
+    this.contact = contact;
+    this.license = license;
+  }
+
+  public addTermsOfService(service: string) {
+    return new OpenApiInfo(
+      this.fn,
+      this.title,
+      this.version,
+      this.summary,
+      this.description,
+      service,
+      this.contact,
+      this.license,
+    );
+  }
+
+  public addSummary(summary: string) {
+    return new OpenApiInfo(
+      this.fn,
+      this.title,
+      this.version,
+      summary,
+      this.description,
+      this.termsOfService,
+      this.contact,
+      this.license,
+    );
+  }
+
+  public addDescription(description: string) {
+    return new OpenApiInfo(
+      this.fn,
+      this.title,
+      this.version,
+      this.summary,
+      description,
+      this.termsOfService,
+      this.contact,
+      this.license,
+    );
+  }
+
+  public endInfo() {
+    return this.fn(this);
+  }
+}
 
 /**
  * The OpenAPI metadata class holds the entire root construction of the OpenAPI specification
@@ -18,8 +94,8 @@ import type { OpenApiSecurity } from "./OpenApiSecurity";
  * related to the OpenApiMetadata class will construct new OpenApiMetadata classes.
  */
 export class OpenApiMetadata {
-  private readonly version?: OpenApiVersion;
-  private readonly info?: OpenApiInfo;
+  private readonly version: OpenApiVersion;
+  private readonly info: OpenApiInfo;
   private readonly jsonSchemaDialect?: OpenApiJsonSchemaDialect;
   private readonly servers?: OpenApiServer[];
   private readonly routes?: OpenApiPath[];
@@ -29,13 +105,26 @@ export class OpenApiMetadata {
   private readonly tags?: OpenApiTag[];
   private readonly externalDocs?: OpenApiExternalDocumentation;
 
-  public static create() {
-    return new OpenApiMetadata();
+  public static create(version: OpenApiVersion) {
+    const _fn = (info: OpenApiInfo) => {
+      return new OpenApiMetadata(version, info);
+    };
+    return {
+      beginInfo: {
+        addTitle: (title: string) => {
+          return {
+            addVersion: (version: string) => {
+              return new OpenApiInfo(_fn, title, version);
+            },
+          };
+        },
+      },
+    };
   }
 
   private constructor(
-    version?: OpenApiVersion,
-    info?: OpenApiInfo,
+    version: OpenApiVersion,
+    info: OpenApiInfo,
     jsonSchemaDialect?: OpenApiJsonSchemaDialect,
     servers?: OpenApiServer[],
     routes?: OpenApiPath[],
@@ -46,36 +135,16 @@ export class OpenApiMetadata {
     externalDocs?: OpenApiExternalDocumentation,
   ) {
     // Sets all properties.
-    if (version) {
-      this.version = version;
-    }
-    if (info) {
-      this.info = info;
-    }
-    if (jsonSchemaDialect) {
-      this.jsonSchemaDialect = jsonSchemaDialect;
-    }
-    if (servers) {
-      this.servers = servers;
-    }
-    if (routes) {
-      this.routes = routes;
-    }
-    if (webhooks) {
-      this.webhooks = webhooks;
-    }
-    if (components) {
-      this.components = components;
-    }
-    if (security) {
-      this.security = security;
-    }
-    if (tags) {
-      this.tags = tags;
-    }
-    if (externalDocs) {
-      this.externalDocs = externalDocs;
-    }
+    this.version = version;
+    this.info = info;
+    this.jsonSchemaDialect = jsonSchemaDialect;
+    this.servers = servers;
+    this.routes = routes;
+    this.webhooks = webhooks;
+    this.components = components;
+    this.security = security;
+    this.tags = tags;
+    this.externalDocs = externalDocs;
     // Freezes everything inside this class to prevent mutability.
     deepFreeze(this);
   }

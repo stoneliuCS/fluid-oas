@@ -1,5 +1,6 @@
 import { OpenApiSchema } from "../core/OpenApiSchema";
 import { OpenApiPath } from "../core/OpenApiPath";
+import { OpenApiMetadata } from "../core/OpenApiMetadata";
 
 // Define Schemas for your OpenAPI specification:
 
@@ -24,3 +25,11 @@ const userEndpoint = OpenApiPath.create("/user/{id}")
   .endResponse()
 
   .endOperation();
+
+const openApiMetadata = OpenApiMetadata.create("3.1.1")
+  .beginInfo.addTitle("My API")
+  .addVersion("1.0.0")
+  .addDescription("something")
+  .addTermsOfService("Nothing")
+  .addSummary("summary")
+  .endInfo();
