@@ -19,7 +19,7 @@ class OpenApiLicense {
     deepFreeze(this);
   }
 
-  public toJSON() {
+  public getJSON() {
     const json = {};
     if (this.name) {
       Object.defineProperty(json, "name", { value: this.name });
@@ -79,7 +79,7 @@ class OpenApiContact {
     return new OpenApiContact(this.fn, this.name, this.url, email);
   }
 
-  public toJSON() {
+  public getJSON() {
     const json = {};
     if (this.name) {
       Object.defineProperty(json, "name", { value: this.name });
@@ -131,7 +131,7 @@ export class OpenApiInfo {
     this.license = license;
   }
 
-  public toJSON() {
+  public getJSON() {
     const json = {};
     Object.defineProperty(json, "title", { value: this.title });
     if (this.summary) {
@@ -147,12 +147,12 @@ export class OpenApiInfo {
     }
     if (this.contact) {
       Object.defineProperty(json, "contact", {
-        value: this.contact.toJSON(),
+        value: this.contact.getJSON(),
       });
     }
     if (this.license) {
       Object.defineProperty(json, "license", {
-        value: this.license.toJSON(),
+        value: this.license.getJSON(),
       });
     }
     Object.defineProperty(json, "version", { value: this.version });

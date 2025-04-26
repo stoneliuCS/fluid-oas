@@ -103,7 +103,7 @@ export class OpenApiServer {
     return new OpenApiServer(this.uri, description, this.variables);
   }
 
-  public toJSON() {
+  public getJSON() {
     const json = {}
     return json;
   }

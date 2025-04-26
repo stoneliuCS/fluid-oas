@@ -24,7 +24,7 @@ describe("Construction of an OpenApi Metadata", () => {
   const metadata = OpenApiMetadata.create("3.0.0", info);
 
   // Act
-  const actualJSON = metadata.toJSON();
+  const actualJSON = metadata.getJSON();
   console.log(actualJSON);
 
   // Assert

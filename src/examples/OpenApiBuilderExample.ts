@@ -15,21 +15,11 @@ const userEndpoint = OpenApiPath.create("/user/{id}")
   .addParameter("id")
   .addIn("path")
   .endParameter()
-
   .addOperation("GET")
-
   .addResponse("200")
   .addDescription("Successful response")
   .addContent("application/json")
   .addSchema(successResponse)
   .endResponse()
 
-  .endOperation();
-
-const openApiMetadata = OpenApiMetadata.create("3.1.1")
-  .beginInfo.addTitle("My API")
-  .addVersion("1.0.0")
-  .addDescription("something")
-  .addTermsOfService("Nothing")
-  .addSummary("summary")
-  .endInfo();
+  .endOperation()

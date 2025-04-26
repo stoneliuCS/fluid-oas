@@ -38,10 +38,10 @@ export class OpenApiMetadata {
    * Converts this OpenApiMetadata into a JSON representation.
    * @returns
    */
-  public toJSON() {
+  public getJSON() {
     const json = {};
     Object.defineProperty(json, "openapi", { value: this.version });
-    Object.defineProperty(json, "info", { value: this.info.toJSON() });
+    Object.defineProperty(json, "info", { value: this.info.getJSON() });
     if (this.jsonSchemaDialect) {
       Object.defineProperty(json, "jsonSchemaDialect", {
         value: this.jsonSchemaDialect,
@@ -77,7 +77,7 @@ export class OpenApiMetadata {
         "Cannot invoke a serialization on this servers.",
       );
     for (const server of this.servers) {
-      const serverJson = server.toJSON();
+      const serverJson = server.getJSON();
       serverJsons.push(serverJson);
     }
     return serverJsons;

@@ -597,7 +597,16 @@ export class OpenApiPath {
     return new OpenApiPathBuilder(_fn);
   }
 
-  public toJSON() {
+  /** 
+   * Gets additional metadata related to this Path, including all used 
+   * schemas which can be passed up in context to the OpenApiMetadata object.
+   *
+   **/
+  public getComponentMetadata() {
+
+  }
+
+  public getJSON() {
     return {}
   }
 }
