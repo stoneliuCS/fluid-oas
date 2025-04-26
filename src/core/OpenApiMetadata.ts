@@ -10,8 +10,105 @@ import type { OpenApiSecurity } from "./OpenApiSecurity";
 import type { OpenApiServer } from "./OpenApiServer";
 import type { OpenApiTag } from "./OpenApiTag";
 
-class OpenApiLicense {}
-class OpenApiContact {}
+class OpenApiLicense {
+  private readonly fn: (contact: OpenApiLicense) => OpenApiInfo;
+  private readonly name: string;
+  private readonly identifier?: string;
+  private readonly url?: string;
+
+  public constructor(
+    fn: (contact: OpenApiLicense) => OpenApiInfo,
+    name: string,
+    identifier?: string,
+    url?: string,
+  ) {
+    this.fn = fn;
+    this.name = name;
+    this.identifier = identifier;
+    this.url = url;
+    deepFreeze(this);
+  }
+
+  public toJSON() {
+    const json = {};
+    if (this.name) {
+      Object.defineProperty(json, "name", { value: this.name });
+    }
+
+    if (this.identifier) {
+      Object.defineProperty(json, "identifier", { value: this.identifier });
+    }
+
+    if (this.url) {
+      Object.defineProperty(json, "url", { value: this.url });
+    }
+    return json;
+  }
+
+  public addIdentifier(identifier: string) {
+    return new OpenApiLicense(this.fn, this.name, identifier, this.url);
+  }
+
+  public addUrl(url: string) {
+    return new OpenApiLicense(this.fn, this.name, this.identifier, url);
+  }
+
+  public endLicense() {
+    return this.fn(this);
+  }
+}
+
+class OpenApiContact {
+  private readonly fn: (contact: OpenApiContact) => OpenApiInfo;
+  private readonly name?: string;
+  private readonly url?: string;
+  private readonly email?: string;
+
+  public constructor(
+    fn: (contact: OpenApiContact) => OpenApiInfo,
+    name?: string,
+    url?: string,
+    email?: string,
+  ) {
+    this.fn = fn;
+    this.name = name;
+    this.url = url;
+    this.email = email;
+    deepFreeze(this);
+  }
+
+  public addName(name: string) {
+    return new OpenApiContact(this.fn, name, this.url, this.email);
+  }
+
+  public addUrl(url: string) {
+    return new OpenApiContact(this.fn, this.name, url, this.email);
+  }
+
+  public addEmail(email: string) {
+    return new OpenApiContact(this.fn, this.name, this.url, email);
+  }
+
+  public toJSON() {
+    const json = {};
+    if (this.name) {
+      Object.defineProperty(json, "name", { value: this.name });
+    }
+
+    if (this.url) {
+      Object.defineProperty(json, "url", { value: this.url });
+    }
+
+    if (this.email) {
+      Object.defineProperty(json, "email", { value: this.email });
+    }
+    return json;
+  }
+
+  public endContact() {
+    return this.fn(this);
+  }
+}
 
 class OpenApiInfo {
   private readonly fn: (info: OpenApiInfo) => OpenApiMetadata;
@@ -41,6 +138,66 @@ class OpenApiInfo {
     this.termsOfService = termsOfService;
     this.contact = contact;
     this.license = license;
+  }
+
+  public toJSON() {
+    const json = {};
+    Object.defineProperty(json, "title", { value: this.title });
+    if (this.summary) {
+      Object.defineProperty(json, "summary", { value: this.summary });
+    }
+    if (this.description) {
+      Object.defineProperty(json, "description", { value: this.description });
+    }
+    if (this.termsOfService) {
+      Object.defineProperty(json, "termsOfService", {
+        value: this.termsOfService,
+      });
+    }
+    if (this.contact) {
+      Object.defineProperty(json, "contact", {
+        value: this.contact.toJSON(),
+      });
+    }
+    if (this.license) {
+      Object.defineProperty(json, "license", {
+        value: this.license.toJSON(),
+      });
+    }
+    Object.defineProperty(json, "version", { value: this.version });
+    return json;
+  }
+
+  public addContact() {
+    const _fn = (contact: OpenApiContact) => {
+      return new OpenApiInfo(
+        this.fn,
+        this.title,
+        this.version,
+        this.summary,
+        this.description,
+        this.termsOfService,
+        contact,
+        this.license,
+      );
+    };
+    return new OpenApiContact(_fn);
+  }
+
+  public addLicense(name: string) {
+    const _fn = (license: OpenApiLicense) => {
+      return new OpenApiInfo(
+        this.fn,
+        this.title,
+        this.version,
+        this.summary,
+        this.description,
+        this.termsOfService,
+        this.contact,
+        license,
+      );
+    };
+    return new OpenApiLicense(_fn, name);
   }
 
   public addTermsOfService(service: string) {
@@ -120,6 +277,17 @@ export class OpenApiMetadata {
         },
       },
     };
+  }
+
+  /**
+   * Converts this OpenApiMetadata into a JSON representation.
+   * @returns
+   */
+  public toJSON() {
+    const json = {};
+    Object.defineProperty(json, "openapi", { value: this.version });
+    Object.defineProperty(json, "info", { value: this.info.toJSON() });
+    return json;
   }
 
   private constructor(
