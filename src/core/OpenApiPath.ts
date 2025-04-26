@@ -596,4 +596,8 @@ export class OpenApiPath {
     };
     return new OpenApiPathBuilder(_fn);
   }
+
+  public toJSON() {
+    return {}
+  }
 }
