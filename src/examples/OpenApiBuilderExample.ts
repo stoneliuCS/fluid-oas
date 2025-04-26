@@ -1,4 +1,3 @@
-import { OpenApiBuilder } from "../core/OpenApiBuilder";
 import { OpenApiSchema } from "../core/OpenApiSchema";
 import { OpenApiMetadata } from "../core/OpenApiMetadata";
 import { OpenApiRoute } from "../core/OpenApiRoute";
@@ -56,7 +55,3 @@ const metadata = OpenApiMetadata.create()
   .addVersion("3.0.0")
   .addInfo({ title: "PetStore", version: "1.0.0" })
   .addRoute(userEndpoint);
-
-const openapi = new OpenApiBuilder(metadata);
-
-openapi.toOpenApi();

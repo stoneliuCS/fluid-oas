@@ -153,7 +153,7 @@ export class OpenApiMetadata {
         this.externalDocs,
       );
     }
-    const serversCopy = structuredClone(this.servers);
+    const serversCopy = [...this.servers];
     serversCopy.push(server);
     return new OpenApiMetadata(
       this.version,
@@ -184,7 +184,7 @@ export class OpenApiMetadata {
         this.externalDocs,
       );
     }
-    const routesCopy = structuredClone(this.routes);
+    const routesCopy = [...this.routes];
     routesCopy.push(route);
     return new OpenApiMetadata(
       this.version,
@@ -217,7 +217,7 @@ export class OpenApiMetadata {
         this.externalDocs,
       );
     }
-    const mapCopy = structuredClone(this.webhooks);
+    const mapCopy = new Map(this.webhooks);
     mapCopy.set(hookUrl, route);
     return new OpenApiMetadata(
       this.version,
@@ -263,7 +263,7 @@ export class OpenApiMetadata {
         this.externalDocs,
       );
     }
-    const tagsCopy = structuredClone(this.tags);
+    const tagsCopy = [...this.tags];
     tagsCopy.push(tag);
     return new OpenApiMetadata(
       this.version,

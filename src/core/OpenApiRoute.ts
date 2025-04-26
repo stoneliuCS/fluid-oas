@@ -194,7 +194,7 @@ class OpenApiMediaBuilder {
             this.encoding,
           );
         }
-        const examplesCopy = structuredClone(this.examples);
+        const examplesCopy = new Map(this.examples);
         examplesCopy.set(name, example);
         return new OpenApiMediaBuilder(
           this.ctx,
@@ -221,7 +221,7 @@ class OpenApiMediaBuilder {
             newEncodings,
           );
         }
-        const encodingCopy = structuredClone(this.encoding);
+        const encodingCopy = new Map(this.encoding);
         encodingCopy.set(name, encoding);
         return new OpenApiMediaBuilder(
           this.ctx,
@@ -248,7 +248,7 @@ class OpenApiMediaBuilder {
       ).build();
     }
 
-    const contentCopy = structuredClone(this.ctx.content);
+    const contentCopy = new Map(this.ctx.content);
     contentCopy.set(this.ctx.contentType, this);
     return new OpenApiResponseBuilder(
       this.ctx.statusCode,
@@ -295,7 +295,7 @@ class OpenApiResponseBuilder {
           newHeaders.set(name, header);
           headers = newHeaders;
         } else {
-          const headersCopy = structuredClone(this.headers);
+          const headersCopy = new Map(this.headers);
           headersCopy.set(name, header);
           headers = headersCopy;
         }
@@ -325,7 +325,7 @@ class OpenApiResponseBuilder {
   public build(): OpenApiRouteBuilder {
     let responses: Set<OpenApiResponseBuilder>;
     if (this.ctx.responses) {
-      const copy = structuredClone(this.ctx.responses);
+      const copy = new Set(this.ctx.responses);
       copy.add(this);
       responses = copy;
     } else {
@@ -439,7 +439,7 @@ class OpenApiRouteBuilder {
         newParameters.add(parameterBuilder);
         parameters = newParameters;
       } else {
-        const parametersCopy = structuredClone(this.parameters);
+        const parametersCopy = new Set(this.parameters);
         parametersCopy.add(parameterBuilder);
         parameters = parametersCopy;
       }
@@ -505,7 +505,7 @@ class OpenApiRouteBuilder {
       newOperations.set(this.ctx.operation, this);
       operations = newOperations;
     } else {
-      const copyOperations = structuredClone(this.ctx.operations);
+      const copyOperations = new Map(this.ctx.operations);
       copyOperations.set(this.ctx.operation, this);
       operations = copyOperations;
     }
@@ -631,7 +631,7 @@ export class OpenApiRoute {
         newParameters.add(parameterBuilder);
         parameters = newParameters;
       } else {
-        const parametersCopy = structuredClone(this.parameters);
+        const parametersCopy = new Set(this.parameters);
         parametersCopy.add(parameterBuilder);
         parameters = parametersCopy;
       }
@@ -663,7 +663,7 @@ export class OpenApiRoute {
       newServers.add(server);
       servers = newServers;
     } else {
-      const serverCopy = structuredClone(this.servers);
+      const serverCopy = new Set(this.servers);
       serverCopy.add(server);
       servers = serverCopy;
     }
