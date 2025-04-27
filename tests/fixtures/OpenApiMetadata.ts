@@ -4,14 +4,8 @@
  */
 
 import { OpenApiPath } from "../../src/core/OpenApiPath";
-import { OpenApiSchema } from "../../src/core/OpenApiSchema";
 
-const HEALTHCHECK_RESPONSE_SCHEMA = new OpenApiSchema("Success", "object");
-const HEALTHCHECK_ERROR_SCHEMA = new OpenApiSchema("Error", "object");
-
-export const HEALTHCHECK_ROUTE: OpenApiPath = OpenApiPath.create(
-  "/healthcheck",
-)
+export const HEALTHCHECK_ROUTE: OpenApiPath = OpenApiPath.create("/healthcheck")
   // Add Descriptions and summary for the route.
   .addDescription("Pings the server to get the current health.")
   .addSummary("Healthcheck server.")
@@ -23,14 +17,12 @@ export const HEALTHCHECK_ROUTE: OpenApiPath = OpenApiPath.create(
   .addResponse("200")
   .addDescription("Successful Response")
   .addContent("application/json")
-  .addSchema(HEALTHCHECK_RESPONSE_SCHEMA)
   .endResponse()
 
   // Add a 500 Response for this GET.
   .addResponse("500")
   .addDescription("Internal Server Error")
   .addContent("application/json")
-  .addSchema(HEALTHCHECK_ERROR_SCHEMA)
   .endResponse()
 
   .endOperation();
