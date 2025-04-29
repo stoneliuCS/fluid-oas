@@ -25,22 +25,22 @@ type SchemaTypeMap<T extends OpenApiSchemaType> = T extends "string"
 export class OpenApiSchema {
   // Use the generic type parameter and the conditional mapping type
   public static create<T extends OpenApiSchemaType>(type: T): SchemaTypeMap<T> {
-    switch (type) {
-      case "string":
-        return new OpenApiSchemaPrimitive() as SchemaTypeMap<T>;
-      case "number":
-        return new OpenApiSchemaPrimitive() as SchemaTypeMap<T>;
-      case "boolean":
-        return new OpenApiSchemaPrimitive() as SchemaTypeMap<T>;
-      case "integer":
-        return new OpenApiSchemaPrimitive() as SchemaTypeMap<T>;
-      case "object":
-        return new OpenApiSchemaObject() as SchemaTypeMap<T>;
-      case "array":
-        return new OpenApiSchemaArray() as SchemaTypeMap<T>;
-      case "null":
-        return new OpenApiSchemaArray() as SchemaTypeMap<T>;
+    if (
+      type === "string" ||
+      type === "number" ||
+      type === "boolean" ||
+      type === "boolean" ||
+      type === "null"
+    ) {
+      return new OpenApiSchemaPrimitive() as SchemaTypeMap<T>;
     }
+    if (type === "object") {
+      return new OpenApiSchemaObject() as SchemaTypeMap<T>;
+    }
+    if (type === "array") {
+      return new OpenApiSchemaArray() as SchemaTypeMap<T>;
+    }
+    throw new Error("Not Found");
   }
 }
 
