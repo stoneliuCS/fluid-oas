@@ -6,6 +6,14 @@ export class BadPathError extends Error {
   }
 }
 
+export class IllegalArgumentError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "IllegalArgumentError";
+    Object.setPrototypeOf(this, PropertyNotFoundError.prototype);
+  }
+}
+
 export class PropertyNotFoundError extends Error {
   constructor(message: string) {
     super(message);

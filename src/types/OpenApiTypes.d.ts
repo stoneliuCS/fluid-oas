@@ -31,7 +31,7 @@ export type OpenApiStatusCode = Readonly<
 >;
 
 export type OpenApiSchemaType = Readonly<
-  "string" | "number" | "integer" | "boolean" | "array" | "object"
+  "null" | "boolean" | "object" | "array" | "number" | "string" | "integer"
 >;
 
 export type OpenApiExternalDocumentation = Readonly<{
