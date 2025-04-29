@@ -4,17 +4,9 @@ class OpenApiDiscriminator {}
 class OpenApiXML {}
 
 export class OpenApiSchema {
-  readonly name: string;
-  readonly type: OpenApiSchemaType;
-  readonly discriminator?: OpenApiDiscriminator;
-  readonly xml?: OpenApiXML;
+  private readonly type: OpenApiSchemaType;
 
-  public static create(name : string, type : OpenApiSchemaType) {
-    return new OpenApiSchema(name, type)
-  }
-
-  private constructor(name: string, type: OpenApiSchemaType) {
-    this.name = name;
+  private constructor(type: OpenApiSchemaType) {
     this.type = type;
   }
 }

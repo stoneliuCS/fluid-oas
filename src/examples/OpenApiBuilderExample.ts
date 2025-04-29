@@ -1,18 +1,33 @@
-import { OpenApiPath } from "../core/OpenApiPath";
+import { OpenApiInfo } from "../core/OpenApiInfo";
+import { OpenApiMetadata } from "../core/OpenApiMetadata";
 
-// Define Schemas for your OpenAPI specification:
+/* DEFINE OPENAPI INFO OBJECT */
+let openapiInfo = OpenApiInfo.create("Pet Store", "1.0.0");
 
-const userEndpoint = OpenApiPath.create("/user/{id}")
+/* Add Contant Info */
+openapiInfo = openapiInfo
+  .addContact()
+  .addEmail("Sample Email")
+  .addUrl("Sample Url")
+  .addName("Sample Name")
+  .endContact();
 
-  .addDescription("User endpoint")
+/* Add Summary */
+openapiInfo = openapiInfo.addSummary("Sample Summary");
 
-  .addParameter("id")
-  .addIn("path")
-  .endParameter()
-  .addOperation("GET")
-  .addResponse("200")
-  .addDescription("Successful response")
-  .addContent("application/json")
-  .endResponse()
+/* Add Description */
+openapiInfo = openapiInfo.addDescription("Sample Description");
 
-  .endOperation()
+/* Add Terms of Service */
+openapiInfo = openapiInfo.addTermsOfService("Sample Terms Of Service");
+
+/* Add License */
+openapiInfo = openapiInfo
+  .addLicense("Sample License")
+  .addIdentifier("Sample Identifier")
+  .addUrl("Sample Url")
+  .endLicense();
+
+const metadata =  OpenApiMetadata.create("3.1.1", openapiInfo);
+
+metadata.toOpenApiSpecification()
