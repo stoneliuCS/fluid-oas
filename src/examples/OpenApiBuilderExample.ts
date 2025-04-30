@@ -1,5 +1,6 @@
 import { OpenApiInfo } from "../core/OpenApiInfo";
 import { OpenApiMetadata } from "../core/OpenApiMetadata";
+import { OpenApiSchema } from "../core/OpenApiSchema";
 
 /* DEFINE OPENAPI INFO OBJECT */
 let openapiInfo = OpenApiInfo.create("Pet Store", "1.0.0");
@@ -29,5 +30,8 @@ openapiInfo = openapiInfo
   .endLicense();
 
 const metadata =  OpenApiMetadata.create("3.1.1", openapiInfo);
+
+/* Define Schema */
+const userSchema = OpenApiSchema.create("boolean")
 
 metadata.toOpenApiSpecification()

@@ -4,243 +4,17 @@ import { validatePath } from "../lib/url";
 import {
   type OpenApiCallback,
   type OpenApiContentType,
-  type OpenApiEncoding,
   type OpenApiExternalDocumentation,
-  type OpenApiHeader,
   type OpenApiOperation,
-  type OpenApiParameter,
+  type OpenApiParameterInType,
   type OpenApiRequestBody,
   type OpenApiStatusCode,
 } from "../types/OpenApiTypes";
+import { OpenApiParameter } from "./OpenApiParameter";
 import type { OpenApiSchema } from "./OpenApiSchema";
 import type { OpenApiSecurity } from "./OpenApiSecurity";
 import type { OpenApiServer } from "./OpenApiServer";
 import type { OpenApiTag } from "./OpenApiTag";
-
-type OpenApiExample = Readonly<{}>;
-
-class OpenApiParameterBuilder<T extends OpenApiPath | OpenApiPathBuilder> {
-  private readonly name: string;
-  private readonly in: OpenApiParameter;
-  private readonly fn: (builder: OpenApiParameterBuilder<T>) => T;
-  private readonly description?: string;
-  private readonly required?: boolean;
-  private readonly deprecated?: boolean;
-  private readonly style?: string;
-  private readonly explode?: string;
-  private readonly allowReserved?: boolean;
-  private readonly schema?: OpenApiSchema;
-  private readonly example?: unknown;
-  private readonly examples?: Map<string, OpenApiExample>;
-  private readonly content?: Map<OpenApiContentType, OpenApiMediaBuilder>;
-
-  public constructor(
-    name: string,
-    _in: OpenApiParameter,
-    fn: (builder: OpenApiParameterBuilder<T>) => T,
-    description?: string,
-    required?: boolean,
-    deprecated?: boolean,
-    style?: string,
-    explode?: string,
-    allowReserved?: boolean,
-    schema?: OpenApiSchema,
-    example?: unknown,
-    examples?: Map<string, OpenApiExample>,
-    content?: Map<OpenApiContentType, OpenApiMediaBuilder>,
-  ) {
-    this.name = name;
-    this.in = _in;
-    this.fn = fn;
-    this.description = description;
-    this.required = required;
-    this.deprecated = deprecated;
-    this.style = style;
-    this.explode = explode;
-    this.allowReserved = allowReserved;
-    this.schema = schema;
-    this.example = example;
-    this.examples = examples;
-    this.content = content;
-    deepFreeze(this);
-  }
-
-  public endParameter(): T {
-    return this.fn(this);
-  }
-}
-
-/**
- * Builds the Media object for an OpenApi operation.
- */
-class OpenApiMediaBuilder {
-  private readonly fn: (builder: OpenApiMediaBuilder) => OpenApiResponseBuilder;
-  private readonly schema?: OpenApiSchema;
-  private readonly example?: unknown;
-  private readonly examples?: Map<string, OpenApiExample>;
-  private readonly encoding?: Map<string, OpenApiEncoding>;
-
-  public constructor(
-    fn: (builder: OpenApiMediaBuilder) => OpenApiResponseBuilder,
-    schema?: OpenApiSchema,
-    example?: unknown,
-    examples?: Map<string, OpenApiExample>,
-    encoding?: Map<string, OpenApiEncoding>,
-  ) {
-    this.fn = fn;
-    this.schema = schema;
-    this.example = example;
-    this.examples = examples;
-    this.encoding = encoding;
-    deepFreeze(this);
-  }
-
-  public addSchema(schema: OpenApiSchema) {
-    return new OpenApiMediaBuilder(
-      this.fn,
-      schema,
-      this.example,
-      this.examples,
-      this.encoding,
-    );
-  }
-
-  public addSingularExample(example: unknown) {
-    return new OpenApiMediaBuilder(
-      this.fn,
-      this.schema,
-      example,
-      this.examples,
-      this.encoding,
-    );
-  }
-
-  public addExample(name: string) {
-    return {
-      addExampleObject: (example: OpenApiExample) => {
-        if (!this.examples) {
-          const newExamples: Map<string, OpenApiExample> = new Map();
-          newExamples.set(name, example);
-          return new OpenApiMediaBuilder(
-            this.fn,
-            this.schema,
-            this.example,
-            newExamples,
-            this.encoding,
-          );
-        }
-        const examplesCopy = new Map(this.examples);
-        examplesCopy.set(name, example);
-        return new OpenApiMediaBuilder(
-          this.fn,
-          this.schema,
-          this.example,
-          examplesCopy,
-          this.encoding,
-        );
-      },
-    };
-  }
-
-  public addEncoding(name: string) {
-    return {
-      addEncoding: (encoding: OpenApiEncoding) => {
-        if (!this.encoding) {
-          const newEncodings: Map<string, OpenApiEncoding> = new Map();
-          newEncodings.set(name, encoding);
-          return new OpenApiMediaBuilder(
-            this.fn,
-            this.schema,
-            this.example,
-            this.examples,
-            newEncodings,
-          );
-        }
-        const encodingCopy = new Map(this.encoding);
-        encodingCopy.set(name, encoding);
-        return new OpenApiMediaBuilder(
-          this.fn,
-          this.schema,
-          this.example,
-          this.examples,
-          encodingCopy,
-        );
-      },
-    };
-  }
-
-  public endResponse() {
-    return this.fn(this).endResponse();
-  }
-}
-
-class OpenApiResponseBuilder {
-  private readonly fn: (builder: OpenApiResponseBuilder) => OpenApiPathBuilder;
-  private readonly description: string;
-  private readonly headers?: Map<string, OpenApiHeader>;
-  private readonly content?: Map<OpenApiContentType, OpenApiMediaBuilder>;
-
-  public constructor(
-    fn: (builder: OpenApiResponseBuilder) => OpenApiPathBuilder,
-    description: string,
-    headers?: Map<string, OpenApiHeader>,
-    content?: Map<OpenApiContentType, OpenApiMediaBuilder>,
-  ) {
-    this.fn = fn;
-    this.description = description;
-    this.headers = headers;
-    this.content = content;
-    deepFreeze(this);
-  }
-
-  public addHeader(name: string) {
-    return {
-      addHeaderObject: (header: OpenApiHeader) => {
-        let headers: Map<string, OpenApiHeader>;
-        if (!this.headers) {
-          const newHeaders: Map<string, OpenApiHeader> = new Map();
-          newHeaders.set(name, header);
-          headers = newHeaders;
-        } else {
-          const headersCopy = new Map(this.headers);
-          headersCopy.set(name, header);
-          headers = headersCopy;
-        }
-        return new OpenApiResponseBuilder(
-          this.fn,
-          this.description,
-          headers,
-          this.content,
-        );
-      },
-    };
-  }
-
-  public addContent(contentType: OpenApiContentType) {
-    const _fn = (builder: OpenApiMediaBuilder) => {
-      let content: Map<OpenApiContentType, OpenApiMediaBuilder>;
-      if (!this.content) {
-        content = new Map();
-        content.set(contentType, builder);
-      } else {
-        const contentCopy = new Map(this.content);
-        contentCopy.set(contentType, builder);
-        content = contentCopy;
-      }
-      return new OpenApiResponseBuilder(
-        this.fn,
-        this.description,
-        this.headers,
-        content,
-      );
-    };
-    return new OpenApiMediaBuilder(_fn);
-  }
-
-  public endResponse(): OpenApiPathBuilder {
-    return this.fn(this);
-  }
-}
 
 /**
  * Represents a single API operation on a path.
@@ -254,9 +28,7 @@ class OpenApiPathBuilder {
   private readonly description?: string;
   private readonly externalDocs?: OpenApiExternalDocumentation;
   private readonly operationId?: string;
-  private readonly parameters?: Set<
-    OpenApiParameterBuilder<OpenApiPathBuilder>
-  >;
+  private readonly parameters?: Set<OpenApiParameter>;
   private readonly requestBody?: OpenApiRequestBody;
   private readonly responses?: Map<OpenApiStatusCode, OpenApiResponseBuilder>;
   private readonly callBacks?: Map<string, OpenApiCallback>;
@@ -271,7 +43,7 @@ class OpenApiPathBuilder {
     description?: string,
     externalDocs?: OpenApiExternalDocumentation,
     operationId?: string,
-    parameters?: Set<OpenApiParameterBuilder<OpenApiPathBuilder>>,
+    parameters?: Set<OpenApiPathBuilder>,
     requestBody?: OpenApiRequestBody,
     responses?: Map<OpenApiStatusCode, OpenApiResponseBuilder>,
     callBacks?: Map<string, OpenApiCallback>,
@@ -381,13 +153,54 @@ class OpenApiPathBuilder {
   }
 }
 
+type _OpenApiParameterFunc = OpenApiParameter | string;
+
+class _OpenApiParameterPathWrapper_ extends OpenApiParameter {
+  private readonly supplier: (parameter: OpenApiParameter) => OpenApiPath;
+  public constructor(
+    name: string,
+    supplier: (parameter: OpenApiParameter) => OpenApiPath,
+    _in: OpenApiParameterInType,
+    description?: string,
+    required?: boolean,
+    deprecated?: boolean,
+    style?: string,
+    explode?: string,
+    allowReserved?: boolean,
+    schema?: OpenApiSchema,
+    example?: unknown,
+    examples?: Map<string, OpenApiExample>,
+    content?: Map<OpenApiContentType, OpenApiMediaBuilder>,
+  ) {
+    super(
+      name,
+      _in,
+      description,
+      required,
+      deprecated,
+      style,
+      explode,
+      allowReserved,
+      schema,
+      example,
+      examples,
+      content,
+    );
+    this.supplier = supplier;
+  }
+
+  public endParameter() {
+    return this.supplier(this);
+  }
+}
+
 export class OpenApiPath {
   private readonly uri: string;
   private readonly summary?: string;
   private readonly description?: string;
   private readonly operations?: Map<OpenApiOperation, OpenApiPathBuilder>;
   private readonly servers?: Set<OpenApiServer>;
-  private readonly parameters?: Set<OpenApiParameterBuilder<OpenApiPath>>;
+  private readonly parameters?: Set<OpenApiParameter>;
 
   public static create(uri: string) {
     return new OpenApiPath(uri);
@@ -404,7 +217,7 @@ export class OpenApiPath {
     description?: string,
     operations?: Map<OpenApiOperation, OpenApiPathBuilder>,
     servers?: Set<OpenApiServer>,
-    parameters?: Set<OpenApiParameterBuilder<OpenApiPath>>,
+    parameters?: Set<OpenApiParameter>,
   ) {
     if (!validatePath(uri)) {
       throw new BadPathError(`Uri is of invalid form: ${uri}`);
@@ -428,19 +241,46 @@ export class OpenApiPath {
     deepFreeze(this);
   }
 
-  public addParameter(name: string) {
-    const builderFn = (
-      parameterBuilder: OpenApiParameterBuilder<OpenApiPath>,
-    ) => {
-      let parameters: Set<OpenApiParameterBuilder<OpenApiPath>>;
+  public addParameter(name: string): {
+    addIn: (_in: OpenApiParameterInType) => _OpenApiParameterPathWrapper_;
+  };
+  public addParameter(parameter: OpenApiParameter): OpenApiPath;
+  public addParameter(type: _OpenApiParameterFunc) {
+    if (typeof type === "string") {
+      const builderFn = (parameterBuilder: OpenApiParameter) => {
+        let parameters: Set<OpenApiParameter>;
+        if (!this.parameters) {
+          const newParameters: Set<OpenApiParameter> = new Set();
+          newParameters.add(parameterBuilder);
+          parameters = newParameters;
+        } else {
+          const parametersCopy = new Set(this.parameters);
+          parametersCopy.add(parameterBuilder);
+          parameters = parametersCopy;
+        }
+        return new OpenApiPath(
+          this.uri,
+          this.summary,
+          this.description,
+          this.operations,
+          this.servers,
+          parameters,
+        );
+      };
+      return {
+        addIn: (_in: OpenApiParameterInType) => {
+          return new _OpenApiParameterPathWrapper_(type, builderFn, _in);
+        },
+      };
+    } else {
+      let parameters: Set<OpenApiParameter>;
       if (!this.parameters) {
-        const newParameters: Set<OpenApiParameterBuilder<OpenApiPath>> =
-          new Set();
-        newParameters.add(parameterBuilder);
+        const newParameters: Set<OpenApiParameter> = new Set();
+        newParameters.add(type);
         parameters = newParameters;
       } else {
         const parametersCopy = new Set(this.parameters);
-        parametersCopy.add(parameterBuilder);
+        parametersCopy.add(type);
         parameters = parametersCopy;
       }
       return new OpenApiPath(
@@ -451,12 +291,7 @@ export class OpenApiPath {
         this.servers,
         parameters,
       );
-    };
-    return {
-      addIn: (_in: OpenApiParameter) => {
-        return new OpenApiParameterBuilder<OpenApiPath>(name, _in, builderFn);
-      },
-    };
+    }
   }
 
   /**

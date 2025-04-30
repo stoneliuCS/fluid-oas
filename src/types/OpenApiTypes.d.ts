@@ -13,7 +13,7 @@ export type OpenApiRequestBody = Readonly<{}>;
 
 export type OpenApiCallback = Readonly<{}>;
 
-export type OpenApiParameter = Readonly<"query" | "header" | "path" | "cookie">;
+export type OpenApiParameterInType = Readonly<"query" | "header" | "path" | "cookie">;
 
 export type OpenApiOperation = Readonly<
   "GET" | "POST" | "PUT" | "DELETE" | "PATCH"
@@ -31,7 +31,7 @@ export type OpenApiStatusCode = Readonly<
 >;
 
 export type OpenApiSchemaType = Readonly<
-  "null" | "boolean" | "object" | "array" | "number" | "string" | "integer"
+  "boolean" | "object" | "array" | "number" | "string" | "integer"
 >;
 
 export type OpenApiExternalDocumentation = Readonly<{
