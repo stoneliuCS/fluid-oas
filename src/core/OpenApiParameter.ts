@@ -6,6 +6,7 @@ import type { OpenApiSchema } from "./OpenApiSchema";
 class OpenApiMediaBuilder {}
 
 export class OpenApiParameter {
+
   private readonly name: string;
   private readonly in: OpenApiParameterInType;
   private readonly description?: string;
@@ -47,5 +48,7 @@ export class OpenApiParameter {
     this.content = content;
     deepFreeze(this);
   }
+
+
 
 }

@@ -10,11 +10,55 @@ import {
   type OpenApiRequestBody,
   type OpenApiStatusCode,
 } from "../types/OpenApiTypes";
+import type { OpenApiExample } from "./OpenApiExample";
+import type { OpenApiMedia } from "./OpenApiMedia";
 import { OpenApiParameter } from "./OpenApiParameter";
+import type { OpenApiResponse } from "./OpenApiResponse";
 import type { OpenApiSchema } from "./OpenApiSchema";
 import type { OpenApiSecurity } from "./OpenApiSecurity";
 import type { OpenApiServer } from "./OpenApiServer";
 import type { OpenApiTag } from "./OpenApiTag";
+
+type OpenApiParameterFunc = OpenApiParameter | string;
+
+class OpenApiParameterWrapper<T> extends OpenApiParameter {
+  private readonly supplier: (parameter: OpenApiParameter) => T;
+  public constructor(
+    name: string,
+    supplier: (parameter: OpenApiParameter) => T,
+    _in: OpenApiParameterInType,
+    description?: string,
+    required?: boolean,
+    deprecated?: boolean,
+    style?: string,
+    explode?: string,
+    allowReserved?: boolean,
+    schema?: OpenApiSchema,
+    example?: unknown,
+    examples?: Map<string, OpenApiExample>,
+    content?: Map<OpenApiContentType, OpenApiMedia>,
+  ) {
+    super(
+      name,
+      _in,
+      description,
+      required,
+      deprecated,
+      style,
+      explode,
+      allowReserved,
+      schema,
+      example,
+      examples,
+      content,
+    );
+    this.supplier = supplier;
+  }
+
+  public endParameter() {
+    return this.supplier(this);
+  }
+}
 
 /**
  * Represents a single API operation on a path.
@@ -30,7 +74,7 @@ class OpenApiPathBuilder {
   private readonly operationId?: string;
   private readonly parameters?: Set<OpenApiParameter>;
   private readonly requestBody?: OpenApiRequestBody;
-  private readonly responses?: Map<OpenApiStatusCode, OpenApiResponseBuilder>;
+  private readonly responses?: Map<OpenApiStatusCode, OpenApiResponse>;
   private readonly callBacks?: Map<string, OpenApiCallback>;
   private readonly deprecated?: boolean;
   private readonly security?: OpenApiSecurity[];
@@ -43,9 +87,9 @@ class OpenApiPathBuilder {
     description?: string,
     externalDocs?: OpenApiExternalDocumentation,
     operationId?: string,
-    parameters?: Set<OpenApiPathBuilder>,
+    parameters?: Set<OpenApiParameter>,
     requestBody?: OpenApiRequestBody,
-    responses?: Map<OpenApiStatusCode, OpenApiResponseBuilder>,
+    responses?: Map<OpenApiStatusCode, OpenApiResponse>,
     callBacks?: Map<string, OpenApiCallback>,
     deprecated?: boolean,
     security?: OpenApiSecurity[],
@@ -67,19 +111,59 @@ class OpenApiPathBuilder {
     deepFreeze(this);
   }
 
-  public addParameter(name: string) {
-    const builderFn = (
-      parameterBuilder: OpenApiParameterBuilder<OpenApiPathBuilder>,
-    ) => {
-      let parameters: Set<OpenApiParameterBuilder<OpenApiPathBuilder>>;
+  public addParameter(name: string): {
+    addIn: (
+      _in: OpenApiParameterInType,
+    ) => OpenApiParameterWrapper<OpenApiPathBuilder>;
+  };
+  public addParameter(parameter: OpenApiParameter): OpenApiPathBuilder;
+  public addParameter(type: OpenApiParameterFunc) {
+    if (typeof type === "string") {
+      const builderFn = (parameterBuilder: OpenApiParameter) => {
+        let parameters: Set<OpenApiParameter>;
+        if (!this.parameters) {
+          const newParameters: Set<OpenApiParameter> = new Set();
+          newParameters.add(parameterBuilder);
+          parameters = newParameters;
+        } else {
+          const parametersCopy = new Set(this.parameters);
+          parametersCopy.add(parameterBuilder);
+          parameters = parametersCopy;
+        }
+        return new OpenApiPathBuilder(
+          this.fn,
+          this.tags,
+          this.summary,
+          this.description,
+          this.externalDocs,
+          this.operationId,
+          parameters,
+          this.requestBody,
+          this.responses,
+          this.callBacks,
+          this.deprecated,
+          this.security,
+          this.servers,
+        );
+      };
+      return {
+        addIn: (_in: OpenApiParameterInType) => {
+          return new OpenApiParameterWrapper<OpenApiPathBuilder>(
+            type,
+            builderFn,
+            _in,
+          );
+        },
+      };
+    } else {
+      let parameters: Set<OpenApiParameter>;
       if (!this.parameters) {
-        const newParameters: Set<OpenApiParameterBuilder<OpenApiPathBuilder>> =
-          new Set();
-        newParameters.add(parameterBuilder);
+        const newParameters: Set<OpenApiParameter> = new Set();
+        newParameters.add(type);
         parameters = newParameters;
       } else {
         const parametersCopy = new Set(this.parameters);
-        parametersCopy.add(parameterBuilder);
+        parametersCopy.add(type);
         parameters = parametersCopy;
       }
       return new OpenApiPathBuilder(
@@ -97,16 +181,7 @@ class OpenApiPathBuilder {
         this.security,
         this.servers,
       );
-    };
-    return {
-      addIn: (_in: OpenApiParameter) => {
-        return new OpenApiParameterBuilder<OpenApiPathBuilder>(
-          name,
-          _in,
-          builderFn,
-        );
-      },
-    };
+    }
   }
 
   /**
@@ -115,8 +190,8 @@ class OpenApiPathBuilder {
    * @returns An object with a single method, addsDescription to continue building the response.
    */
   public addResponse(statusCode: OpenApiStatusCode) {
-    const _fn = (responseBuilder: OpenApiResponseBuilder) => {
-      let responses: Map<OpenApiStatusCode, OpenApiResponseBuilder>;
+    const _fn = (responseBuilder: OpenApiResponse) => {
+      let responses: Map<OpenApiStatusCode, OpenApiResponse>;
       if (!this.responses) {
         responses = new Map();
         responses.set(statusCode, responseBuilder);
@@ -143,54 +218,13 @@ class OpenApiPathBuilder {
     };
     return {
       addDescription: (description: string) => {
-        return new OpenApiResponseBuilder(_fn, description);
+        return null as any; // FIX
       },
     };
   }
 
   public endOperation(): OpenApiPath {
     return this.fn(this);
-  }
-}
-
-type _OpenApiParameterFunc = OpenApiParameter | string;
-
-class _OpenApiParameterPathWrapper_ extends OpenApiParameter {
-  private readonly supplier: (parameter: OpenApiParameter) => OpenApiPath;
-  public constructor(
-    name: string,
-    supplier: (parameter: OpenApiParameter) => OpenApiPath,
-    _in: OpenApiParameterInType,
-    description?: string,
-    required?: boolean,
-    deprecated?: boolean,
-    style?: string,
-    explode?: string,
-    allowReserved?: boolean,
-    schema?: OpenApiSchema,
-    example?: unknown,
-    examples?: Map<string, OpenApiExample>,
-    content?: Map<OpenApiContentType, OpenApiMediaBuilder>,
-  ) {
-    super(
-      name,
-      _in,
-      description,
-      required,
-      deprecated,
-      style,
-      explode,
-      allowReserved,
-      schema,
-      example,
-      examples,
-      content,
-    );
-    this.supplier = supplier;
-  }
-
-  public endParameter() {
-    return this.supplier(this);
   }
 }
 
@@ -242,10 +276,10 @@ export class OpenApiPath {
   }
 
   public addParameter(name: string): {
-    addIn: (_in: OpenApiParameterInType) => _OpenApiParameterPathWrapper_;
+    addIn: (_in: OpenApiParameterInType) => OpenApiParameterWrapper<OpenApiPath>;
   };
   public addParameter(parameter: OpenApiParameter): OpenApiPath;
-  public addParameter(type: _OpenApiParameterFunc) {
+  public addParameter(type: OpenApiParameterFunc) {
     if (typeof type === "string") {
       const builderFn = (parameterBuilder: OpenApiParameter) => {
         let parameters: Set<OpenApiParameter>;
@@ -269,7 +303,7 @@ export class OpenApiPath {
       };
       return {
         addIn: (_in: OpenApiParameterInType) => {
-          return new _OpenApiParameterPathWrapper_(type, builderFn, _in);
+          return new OpenApiParameterWrapper(type, builderFn, _in);
         },
       };
     } else {
