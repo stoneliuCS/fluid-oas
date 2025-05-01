@@ -55,6 +55,42 @@ class OpenApiParameterWrapper<T> extends OpenApiParameter {
     this.supplier = supplier;
   }
 
+  public addRequired(required: boolean): OpenApiParameterWrapper<T> {
+    return new OpenApiParameterWrapper(
+      this.name,
+      this.supplier,
+      this.in,
+      this.description,
+      required,
+      this.deprecated,
+      this.style,
+      this.explode,
+      this.allowReserved,
+      this.schema,
+      this.example,
+      this.examples,
+      this.content,
+    );
+  }
+
+  public addDescription(description: string): OpenApiParameterWrapper<T> {
+    return new OpenApiParameterWrapper(
+      this.name,
+      this.supplier,
+      this.in,
+      description,
+      this.required,
+      this.deprecated,
+      this.style,
+      this.explode,
+      this.allowReserved,
+      this.schema,
+      this.example,
+      this.examples,
+      this.content,
+    );
+  }
+
   public endParameter() {
     return this.supplier(this);
   }
@@ -276,7 +312,9 @@ export class OpenApiPath {
   }
 
   public addParameter(name: string): {
-    addIn: (_in: OpenApiParameterInType) => OpenApiParameterWrapper<OpenApiPath>;
+    addIn: (
+      _in: OpenApiParameterInType,
+    ) => OpenApiParameterWrapper<OpenApiPath>;
   };
   public addParameter(parameter: OpenApiParameter): OpenApiPath;
   public addParameter(type: OpenApiParameterFunc) {

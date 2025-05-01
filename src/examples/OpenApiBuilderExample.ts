@@ -1,5 +1,6 @@
 import { OpenApiInfo } from "../core/OpenApiInfo";
 import { OpenApiMetadata } from "../core/OpenApiMetadata";
+import { OpenApiPath } from "../core/OpenApiPath";
 import { OpenApiSchema } from "../core/OpenApiSchema";
 
 /* DEFINE OPENAPI INFO OBJECT */
@@ -29,9 +30,12 @@ openapiInfo = openapiInfo
   .addUrl("Sample Url")
   .endLicense();
 
-const metadata =  OpenApiMetadata.create("3.1.1", openapiInfo);
+const metadata = OpenApiMetadata.create("3.1.1", openapiInfo);
 
-/* Define Schema */
-const userSchema = OpenApiSchema.create("boolean")
+const route = OpenApiPath.create("/users/{id}")
+  .addParameter("id")
+  .addIn("path")
+  .addDescription("stone")
+  
 
-metadata.toOpenApiSpecification()
+metadata.toOpenApiSpecification();

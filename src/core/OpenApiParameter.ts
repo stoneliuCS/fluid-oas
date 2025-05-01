@@ -1,26 +1,36 @@
 import { deepFreeze } from "../lib/freeze";
-import type { OpenApiContentType, OpenApiParameterInType } from "../types/OpenApiTypes";
+import type {
+  OpenApiContentType,
+  OpenApiParameterInType,
+} from "../types/OpenApiTypes";
 import type { OpenApiExample } from "./OpenApiExample";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
 class OpenApiMediaBuilder {}
 
 export class OpenApiParameter {
+  protected readonly name: string;
+  protected readonly in: OpenApiParameterInType;
+  protected readonly description?: string;
+  protected readonly required?: boolean;
+  protected readonly deprecated?: boolean;
+  protected readonly style?: string;
+  protected readonly explode?: string;
+  protected readonly allowReserved?: boolean;
+  protected readonly schema?: OpenApiSchema;
+  protected readonly example?: unknown;
+  protected readonly examples?: Map<string, OpenApiExample>;
+  protected readonly content?: Map<OpenApiContentType, OpenApiMediaBuilder>;
 
-  private readonly name: string;
-  private readonly in: OpenApiParameterInType;
-  private readonly description?: string;
-  private readonly required?: boolean;
-  private readonly deprecated?: boolean;
-  private readonly style?: string;
-  private readonly explode?: string;
-  private readonly allowReserved?: boolean;
-  private readonly schema?: OpenApiSchema;
-  private readonly example?: unknown;
-  private readonly examples?: Map<string, OpenApiExample>;
-  private readonly content?: Map<OpenApiContentType, OpenApiMediaBuilder>;
+  public static create(name: string) {
+    return {
+      addIn(_in: OpenApiParameterInType) {
+        return new OpenApiParameter(name, _in);
+      },
+    };
+  }
 
-  public constructor(
+  protected constructor(
     name: string,
     _in: OpenApiParameterInType,
     description?: string,
@@ -49,6 +59,37 @@ export class OpenApiParameter {
     deepFreeze(this);
   }
 
+  public addDescription(description: string) {
+    return new OpenApiParameter(
+      this.name,
+      this.in,
+      description,
+      this.required,
+      this.deprecated,
+      this.style,
+      this.explode,
+      this.allowReserved,
+      this.schema,
+      this.example,
+      this.examples,
+      this.content,
+    );
+  }
 
-
+  public addRequired(required: boolean) {
+    return new OpenApiParameter(
+      this.name,
+      this.in,
+      this.description,
+      required,
+      this.deprecated,
+      this.style,
+      this.explode,
+      this.allowReserved,
+      this.schema,
+      this.example,
+      this.examples,
+      this.content,
+    );
+  }
 }
