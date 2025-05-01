@@ -55,6 +55,78 @@ class OpenApiParameterWrapper<T> extends OpenApiParameter {
     this.supplier = supplier;
   }
 
+  public addAllowReserved(allowReserved: boolean) {
+    return new OpenApiParameterWrapper(
+      this.name,
+      this.supplier,
+      this.in,
+      this.description,
+      this.required,
+      this.deprecated,
+      this.style,
+      this.explode,
+      allowReserved,
+      this.schema,
+      this.example,
+      this.examples,
+      this.content,
+    );
+  }
+
+  public addExplode(explode: string) {
+    return new OpenApiParameterWrapper(
+      this.name,
+      this.supplier,
+      this.in,
+      this.description,
+      this.required,
+      this.deprecated,
+      this.style,
+      explode,
+      this.allowReserved,
+      this.schema,
+      this.example,
+      this.examples,
+      this.content,
+    );
+  }
+
+  public addStyle(style: string) {
+    return new OpenApiParameterWrapper(
+      this.name,
+      this.supplier,
+      this.in,
+      this.description,
+      this.required,
+      this.deprecated,
+      style,
+      this.explode,
+      this.allowReserved,
+      this.schema,
+      this.example,
+      this.examples,
+      this.content,
+    );
+  }
+
+  public addDeprecated(deprecated: boolean) {
+    return new OpenApiParameterWrapper(
+      this.name,
+      this.supplier,
+      this.in,
+      this.description,
+      this.required,
+      deprecated,
+      this.style,
+      this.explode,
+      this.allowReserved,
+      this.schema,
+      this.example,
+      this.examples,
+      this.content,
+    );
+  }
+
   public addRequired(required: boolean): OpenApiParameterWrapper<T> {
     return new OpenApiParameterWrapper(
       this.name,

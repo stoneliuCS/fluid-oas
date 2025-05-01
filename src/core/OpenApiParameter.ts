@@ -92,4 +92,21 @@ export class OpenApiParameter {
       this.content,
     );
   }
+
+  public addDeprecated(deprecated: boolean) {
+    return new OpenApiParameter(
+      this.name,
+      this.in,
+      this.description,
+      this.required,
+      deprecated,
+      this.style,
+      this.explode,
+      this.allowReserved,
+      this.schema,
+      this.example,
+      this.examples,
+      this.content,
+    );
+  }
 }
