@@ -24,7 +24,7 @@ export abstract class OpenApiSchema {
       case "string":
         return new OpenApiSchemaString();
       case "number":
-        return new OpenApiSchemaNumber();
+        return new OpenApiSchemaNumber("number");
       case "boolean":
         return new OpenApiSchemaBoolean();
       case "object":
@@ -32,7 +32,9 @@ export abstract class OpenApiSchema {
       case "array":
         return new OpenApiSchemaArray();
       case "integer":
-        return new OpenApiSchemaInteger();
+        return new OpenApiSchemaNumber("integer");
+      default:
+        throw new Error(`Unknown type : ${type} given.`);
     }
   }
 
@@ -59,11 +61,142 @@ export abstract class OpenApiSchema {
   public abstract toJSON(): unknown;
 }
 
-class OpenApiSchemaNumber extends OpenApiSchema {}
+type OpenApiSchemaNumberFormat = "float" | "double" | "int32" | "int64";
+
+class OpenApiSchemaNumber extends OpenApiSchema {
+  private readonly minimum?: number;
+  private readonly maximum?: number;
+  private readonly exclusiveMinimum?: boolean;
+  private readonly exclusiveMaximum?: boolean;
+  private readonly format?: OpenApiSchemaNumberFormat;
+
+  public constructor(
+    type: OpenApiSchemaType,
+    xml?: OpenApiXML,
+    externalDocs?: OpenApiExternalDocumentation,
+    example?: OpenApiExample,
+    minimum?: number,
+    maximum?: number,
+    exclusiveMinimum?: boolean,
+    exclusiveMaximum?: boolean,
+    format?: OpenApiSchemaNumberFormat,
+  ) {
+    super(type, xml, externalDocs, example);
+    this.minimum = minimum;
+    this.maximum = maximum;
+    this.exclusiveMinimum = exclusiveMinimum;
+    this.exclusiveMaximum = exclusiveMaximum;
+    this.format = format;
+  }
+
+  public addFormat(format: OpenApiSchemaNumberFormat) {
+    if (
+      (this.type === "integer" && format === "float") ||
+      (this.type === "integer" && format === "double") ||
+      (this.type === "number" && format === "int32") ||
+      (this.type === "number" && format === "int64")
+    ) {
+      throw new Error(`Cannot assign ${format} if the type is ${this.type}`);
+    }
+    return new OpenApiSchemaNumber(
+      this.type,
+      this.xml,
+      this.externalDocs,
+      this.example,
+      this.minimum,
+      this.maximum,
+      this.exclusiveMinimum,
+      this.exclusiveMaximum,
+      format,
+    );
+  }
+
+  public addExclusiveMaximum(exclusiveMaximum: boolean) {
+    return new OpenApiSchemaNumber(
+      this.type,
+      this.xml,
+      this.externalDocs,
+      this.example,
+      this.minimum,
+      this.maximum,
+      this.exclusiveMinimum,
+      exclusiveMaximum,
+      this.format,
+    );
+  }
+
+  public addExclusiveMinimum(exclusiveMinimum: boolean) {
+    return new OpenApiSchemaNumber(
+      this.type,
+      this.xml,
+      this.externalDocs,
+      this.example,
+      this.minimum,
+      this.maximum,
+      exclusiveMinimum,
+      this.exclusiveMaximum,
+      this.format,
+    );
+  }
+
+  public addMaximum(maximum: number) {
+    if (this.minimum && this.minimum > maximum) {
+      throw new Error(
+        `${maximum} is smaller than the current minimum ${this.minimum}`,
+      );
+    }
+    return new OpenApiSchemaNumber(
+      this.type,
+      this.xml,
+      this.externalDocs,
+      this.example,
+      this.minimum,
+      maximum,
+      this.exclusiveMinimum,
+      this.exclusiveMaximum,
+      this.format,
+    );
+  }
+
+  public addMinimum(minimum: number) {
+    if (this.maximum && this.maximum < minimum) {
+      throw new Error(
+        `${minimum} is larger than the current maximum ${this.maximum}`,
+      );
+    }
+    return new OpenApiSchemaNumber(
+      this.type,
+      this.xml,
+      this.externalDocs,
+      this.example,
+      minimum,
+      this.maximum,
+      this.exclusiveMinimum,
+      this.exclusiveMaximum,
+      this.format,
+    );
+  }
+
+  public addXML(xml: OpenApiXML): OpenApiSchemaNumber {
+    throw new Error("Method not implemented.");
+  }
+  public addExternalDocs(
+    externalDocs: OpenApiExternalDocumentation,
+  ): OpenApiSchemaNumber {
+    throw new Error("Method not implemented.");
+  }
+  public addExample(example: OpenApiExample): OpenApiSchemaNumber {
+    throw new Error("Method not implemented.");
+  }
+  public addDescription(description: string): OpenApiSchemaNumber {
+    throw new Error("Method not implemented.");
+  }
+  public toJSON(): unknown {
+    throw new Error("Method not implemented.");
+  }
+}
 
 class OpenApiSchemaBoolean extends OpenApiSchema {}
-
-class OpenApiSchemaInteger extends OpenApiSchema {}
 
 class OpenApiSchemaString extends OpenApiSchema {
   private readonly minLength?: number;
@@ -88,7 +221,7 @@ class OpenApiSchemaString extends OpenApiSchema {
     this.pattern = pattern;
   }
 
-  public addPattern(pattern : RegExp) {
+  public addPattern(pattern: RegExp) {
     return new OpenApiSchemaString(
       this.xml,
       this.externalDocs,
