@@ -1,2 +1,5 @@
 
-export class OpenApiXML {}
+export class OpenApiXML {
+
+  public toJSON() : unknown {}
+}
