@@ -152,31 +152,35 @@ class OpenApiSchemaNumber extends OpenApiSchema {
     );
   }
 
-  public enum(enumVal: number): OpenApiSchemaNumber {
-    let enums: Set<number | null>;
-    if (this._enums) {
-      enums = new Set(this._enums);
-      enums.add(enumVal);
-    } else {
-      enums = new Set();
-      enums.add(enumVal);
+  public enum(...enumVal: (number | null)[]): OpenApiSchemaNumber {
+    let schema: OpenApiSchemaNumber = this;
+    for (const _enum of enumVal) {
+      let enums: Set<number | null>;
+      if (schema._enums) {
+        enums = new Set(schema._enums);
+        enums.add(_enum);
+      } else {
+        enums = new Set();
+        enums.add(_enum);
+      }
+      return new OpenApiSchemaNumber(
+        schema._type,
+        schema._xml,
+        schema._docs,
+        schema._example,
+        schema._description,
+        schema._nullable,
+        schema._default,
+        schema._min,
+        schema._max,
+        schema._exMin,
+        schema._exMax,
+        schema._format,
+        schema._mult,
+        enums,
+      );
     }
-    return new OpenApiSchemaNumber(
-      this._type,
-      this._xml,
-      this._docs,
-      this._example,
-      this._description,
-      this._nullable,
-      this._default,
-      this._min,
-      this._max,
-      this._exMin,
-      this._exMax,
-      this._format,
-      this._mult,
-      enums,
-    );
+    return schema;
   }
 
   public nullable(): OpenApiSchemaNumber {
@@ -566,28 +570,32 @@ class OpenApiSchemaString extends OpenApiSchema {
     );
   }
 
-  public enum(enumVal: string | null) {
-    let enums: Set<string | null>;
-    if (this._enums) {
-      enums = new Set(this._enums);
-      enums.add(enumVal);
-    } else {
-      enums = new Set();
-      enums.add(enumVal);
+  public enum(...enumVal: (string | null)[]) {
+    let schema: OpenApiSchemaString = this;
+    for (const _enum of enumVal) {
+      let enums: Set<string | null>;
+      if (schema._enums) {
+        enums = new Set(schema._enums);
+        enums.add(_enum);
+      } else {
+        enums = new Set();
+        enums.add(_enum);
+      }
+      schema = new OpenApiSchemaString(
+        schema._xml,
+        schema._docs,
+        schema._example,
+        schema._description,
+        schema._nullable,
+        schema._default,
+        schema._min,
+        schema._max,
+        schema._format,
+        schema._pattern,
+        enums,
+      );
     }
-    return new OpenApiSchemaString(
-      this._xml,
-      this._docs,
-      this._example,
-      this._description,
-      this._nullable,
-      this._default,
-      this._min,
-      this._max,
-      this._format,
-      this._pattern,
-      enums,
-    );
+    return schema
   }
 
   public nullable(): OpenApiSchema {
@@ -827,25 +835,29 @@ class OpenApiSchemaObject extends OpenApiSchema {
     throw new Error("Method not implemented.");
   }
 
-  public requiredProperty(propertyName: string) {
-    let requiredProperties: Set<string>;
-    if (this.requiredProperties) {
-      requiredProperties = new Set(this.requiredProperties);
-    } else {
-      requiredProperties = new Set();
+  public required(...propertyName: string[]) {
+    let schema: OpenApiSchemaObject = this;
+    for (const name of propertyName) {
+      let requiredProperties: Set<string>;
+      if (schema.requiredProperties) {
+        requiredProperties = new Set(schema.requiredProperties);
+      } else {
+        requiredProperties = new Set();
+      }
+      requiredProperties.add(name);
+      schema = new OpenApiSchemaObject(
+        schema.properties,
+        schema._xml,
+        schema._docs,
+        schema._example,
+        schema._description,
+        requiredProperties,
+        schema.additionalProperties,
+        schema.minProperties,
+        schema.maxProperties,
+      );
     }
-    requiredProperties.add(propertyName);
-    return new OpenApiSchemaObject(
-      this.properties,
-      this._xml,
-      this._docs,
-      this._example,
-      this._description,
-      requiredProperties,
-      this.additionalProperties,
-      this.minProperties,
-      this.maxProperties,
-    );
+    return schema;
   }
 
   public description(description: string): OpenApiSchemaObject {

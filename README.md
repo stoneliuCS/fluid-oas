@@ -18,29 +18,17 @@ The key features of SALT is an entirely type-safe, functional and fluid API to e
 This simple example defines a way to build a health check route.
 
 ```ts
-export const HEALTHCHECK_ROUTE: OpenApiPath = OpenApiPath.create(
-  "/healthcheck",
-)
-  // Add Descriptions and summary for the route.
-  .addDescription("Pings the server to get the current health.")
-  .addSummary("Healthcheck server.")
-
-  // Add the GET Operation for this route.
-  .addOperation("GET")
-
-  // Add a 200 Response for this GET.
-  .addResponse("200")
-  .addDescription("Successful Response")
-  .addContent("application/json")
-  .addSchema(HEALTHCHECK_RESPONSE_SCHEMA)
-  .endResponse()
-
-  // Add a 500 Response for this GET.
-  .addResponse("500")
-  .addDescription("Internal Server Error")
-  .addContent("application/json")
-  .addSchema(HEALTHCHECK_ERROR_SCHEMA)
-  .endResponse()
-
-  .endOperation();
+const userSchema = OpenApiObject.description("A representation of a User.")
+  .property("name", OpenApiString.description("Name of the User."))
+  .property("username", OpenApiString.description("Display name of the user."))
+  .property(
+    "id",
+    OpenApiString.format("uuid").example(
+      "5e91507e-5630-4efd-9fd4-799178870b10",
+    ),
+  )
+  .property("mode", OpenApiString.enum("BASIC", "ADVANCED", null))
+  .property("profilePhoto", OpenApiString.description("Url.").nullable())
+  .property("bio", OpenApiString.description("Bio for the user.").nullable())
+  .required("name", "username", "id");
 ```
