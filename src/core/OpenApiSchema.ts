@@ -1,17 +1,16 @@
 import type { OpenApiSchemaType } from "../types/OpenApiTypes";
-import type { OpenApiDiscriminator } from "./OpenApiDiscriminator";
 import type { OpenApiExample } from "./OpenApiExample";
 import type { OpenApiDocumentation } from "./OpenApiDocumentation";
 import type { OpenApiXML } from "./OpenApiXML";
 
 abstract class OpenApiSchema {
-  protected readonly type: OpenApiSchemaType;
-  protected readonly description?: string;
-  protected readonly xml?: OpenApiXML;
-  protected readonly docs?: OpenApiDocumentation;
-  protected readonly example?: OpenApiExample;
-  protected readonly nullable?: boolean;
-  protected readonly default?: unknown;
+  protected readonly _type: OpenApiSchemaType;
+  protected readonly _description?: string;
+  protected readonly _xml?: OpenApiXML;
+  protected readonly _docs?: OpenApiDocumentation;
+  protected readonly _example?: OpenApiExample;
+  protected readonly _nullable?: boolean;
+  protected readonly _default?: unknown;
 
   public static create(type: "array"): OpenApiSchemaArray;
   public static create(type: "object"): OpenApiSchemaObject;
@@ -53,45 +52,45 @@ abstract class OpenApiSchema {
     nullable?: boolean,
     defaultVal?: unknown,
   ) {
-    this.type = type;
-    this.xml = xml;
-    this.docs = docs;
-    this.example = example;
-    this.description = description;
-    this.nullable = nullable;
-    this.default = defaultVal;
+    this._type = type;
+    this._xml = xml;
+    this._docs = docs;
+    this._example = example;
+    this._description = description;
+    this._nullable = nullable;
+    this._default = defaultVal;
   }
 
-  public abstract addXML(xml: OpenApiXML): OpenApiSchema;
-  public abstract addExternalDocs(docs: OpenApiDocumentation): OpenApiSchema;
-  public abstract addExample(example: OpenApiExample): OpenApiSchema;
-  public abstract addDescription(description: string): OpenApiSchema;
-  public abstract addNullable(nullable: boolean): OpenApiSchema;
-  public abstract addDefault(defaultVal: unknown): OpenApiSchema;
+  public abstract xml(xml: OpenApiXML): OpenApiSchema;
+  public abstract externalDocs(docs: OpenApiDocumentation): OpenApiSchema;
+  public abstract example(example: OpenApiExample): OpenApiSchema;
+  public abstract description(description: string): OpenApiSchema;
+  public abstract nullable(): OpenApiSchema;
+  public abstract default(defaultVal: unknown): OpenApiSchema;
   public abstract toJSON(): unknown;
 
   protected commonJSON(): unknown {
     const json = {};
-    Object.defineProperty(json, "type", { value: this.type });
-    if (this.docs !== undefined) {
+    Object.defineProperty(json, "type", { value: this._type });
+    if (this._docs !== undefined) {
       Object.defineProperty(json, "docs", {
-        value: this.docs.toJSON(),
+        value: this._docs.toJSON(),
       });
     }
-    if (this.description !== undefined) {
-      Object.defineProperty(json, "description", { value: this.description });
+    if (this._description !== undefined) {
+      Object.defineProperty(json, "description", { value: this._description });
     }
-    if (this.example !== undefined) {
-      Object.defineProperty(json, "example", { value: this.example });
+    if (this._example !== undefined) {
+      Object.defineProperty(json, "example", { value: this._example });
     }
-    if (this.xml !== undefined) {
-      Object.defineProperty(json, "xml", { value: this.xml.toJSON() });
+    if (this._xml !== undefined) {
+      Object.defineProperty(json, "xml", { value: this._xml.toJSON() });
     }
-    if (this.nullable !== undefined) {
-      Object.defineProperty(json, "nullable", { value: this.nullable });
+    if (this._nullable !== undefined) {
+      Object.defineProperty(json, "nullable", { value: this._nullable });
     }
-    if (this.default !== undefined) {
-      Object.defineProperty(json, "default", { value: this.default });
+    if (this._default !== undefined) {
+      Object.defineProperty(json, "default", { value: this._default });
     }
     return json;
   }
@@ -100,13 +99,13 @@ abstract class OpenApiSchema {
 type OpenApiSchemaNumberFormat = "float" | "double" | "int32" | "int64";
 
 class OpenApiSchemaNumber extends OpenApiSchema {
-  private readonly minimum?: number;
-  private readonly maximum?: number;
-  private readonly exclusiveMinimum?: boolean;
-  private readonly exclusiveMaximum?: boolean;
-  private readonly format?: OpenApiSchemaNumberFormat;
-  private readonly multipleOf?: number;
-  private readonly enums?: Set<number | null>;
+  private readonly _min?: number;
+  private readonly _max?: number;
+  private readonly _exMin?: boolean;
+  private readonly _exMax?: boolean;
+  private readonly _format?: OpenApiSchemaNumberFormat;
+  private readonly _mult?: number;
+  private readonly _enums?: Set<number | null>;
 
   public constructor(
     type: OpenApiSchemaType,
@@ -125,321 +124,321 @@ class OpenApiSchemaNumber extends OpenApiSchema {
     enums?: Set<number | null>,
   ) {
     super(type, xml, docs, example, description, nullable, defaultVal);
-    this.minimum = minimum;
-    this.maximum = maximum;
-    this.exclusiveMinimum = exclusiveMinimum;
-    this.exclusiveMaximum = exclusiveMaximum;
-    this.format = format;
-    this.multipleOf = multipleOf;
-    this.enums = enums;
+    this._min = minimum;
+    this._max = maximum;
+    this._exMin = exclusiveMinimum;
+    this._exMax = exclusiveMaximum;
+    this._format = format;
+    this._mult = multipleOf;
+    this._enums = enums;
   }
 
-  public addDefault(defaultVal: number): OpenApiSchema {
+  public default(defaultVal: number): OpenApiSchema {
     return new OpenApiSchemaNumber(
-      this.type,
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
+      this._type,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
       defaultVal,
-      this.minimum,
-      this.maximum,
-      this.exclusiveMinimum,
-      this.exclusiveMaximum,
-      this.format,
-      this.multipleOf,
-      this.enums,
+      this._min,
+      this._max,
+      this._exMin,
+      this._exMax,
+      this._format,
+      this._mult,
+      this._enums,
     );
   }
 
-  public addEnum(enumVal: number): OpenApiSchemaNumber {
+  public enum(enumVal: number): OpenApiSchemaNumber {
     let enums: Set<number | null>;
-    if (this.enums) {
-      enums = new Set(this.enums);
+    if (this._enums) {
+      enums = new Set(this._enums);
       enums.add(enumVal);
     } else {
       enums = new Set();
       enums.add(enumVal);
     }
     return new OpenApiSchemaNumber(
-      this.type,
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minimum,
-      this.maximum,
-      this.exclusiveMinimum,
-      this.exclusiveMaximum,
-      this.format,
-      this.multipleOf,
+      this._type,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._exMin,
+      this._exMax,
+      this._format,
+      this._mult,
       enums,
     );
   }
 
-  public addNullable(bool: boolean): OpenApiSchemaNumber {
+  public nullable(): OpenApiSchemaNumber {
     return new OpenApiSchemaNumber(
-      this.type,
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      bool,
-      this.default,
-      this.minimum,
-      this.maximum,
-      this.exclusiveMinimum,
-      this.exclusiveMaximum,
-      this.format,
-      this.multipleOf,
-      this.enums,
+      this._type,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      true,
+      this._default,
+      this._min,
+      this._max,
+      this._exMin,
+      this._exMax,
+      this._format,
+      this._mult,
+      this._enums,
     );
   }
 
   public addMultipleOf(multiple: number) {
     return new OpenApiSchemaNumber(
-      this.type,
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minimum,
-      this.maximum,
-      this.exclusiveMinimum,
-      this.exclusiveMaximum,
-      this.format,
+      this._type,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._exMin,
+      this._exMax,
+      this._format,
       multiple,
-      this.enums,
+      this._enums,
     );
   }
 
-  public addFormat(format: OpenApiSchemaNumberFormat) {
+  public format(format: OpenApiSchemaNumberFormat) {
     if (
-      (this.type === "integer" && format === "float") ||
-      (this.type === "integer" && format === "double") ||
-      (this.type === "number" && format === "int32") ||
-      (this.type === "number" && format === "int64")
+      (this._type === "integer" && format === "float") ||
+      (this._type === "integer" && format === "double") ||
+      (this._type === "number" && format === "int32") ||
+      (this._type === "number" && format === "int64")
     ) {
-      throw new Error(`Cannot assign ${format} if the type is ${this.type}`);
+      throw new Error(`Cannot assign ${format} if the type is ${this._type}`);
     }
     return new OpenApiSchemaNumber(
-      this.type,
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minimum,
-      this.maximum,
-      this.exclusiveMinimum,
-      this.exclusiveMaximum,
+      this._type,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._exMin,
+      this._exMax,
       format,
-      this.multipleOf,
-      this.enums,
+      this._mult,
+      this._enums,
     );
   }
 
-  public addExclusiveMaximum(exclusiveMaximum: boolean) {
-    if (!this.maximum) {
+  public exclusiveMax() {
+    if (!this._max) {
       throw new Error(
         `Cannot add an exclusive maximum as a maximum has not been added yet.`,
       );
     }
     return new OpenApiSchemaNumber(
-      this.type,
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minimum,
-      this.maximum,
-      this.exclusiveMinimum,
-      exclusiveMaximum,
-      this.format,
-      this.multipleOf,
-      this.enums,
+      this._type,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._exMin,
+      true,
+      this._format,
+      this._mult,
+      this._enums,
     );
   }
 
-  public addExclusiveMinimum(exclusiveMinimum: boolean) {
-    if (!this.minimum) {
+  public exclusiveMin() {
+    if (!this._min) {
       throw new Error(
         `Cannot add an exclusive minimum as a minimum has not been added yet.`,
       );
     }
     return new OpenApiSchemaNumber(
-      this.type,
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minimum,
-      this.maximum,
-      exclusiveMinimum,
-      this.exclusiveMaximum,
-      this.format,
-      this.multipleOf,
-      this.enums,
+      this._type,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      true,
+      this._exMax,
+      this._format,
+      this._mult,
+      this._enums,
     );
   }
 
-  public addMaximum(maximum: number) {
-    if (this.minimum && this.minimum > maximum) {
+  public maximum(maximum: number) {
+    if (this._min && this._min > maximum) {
       throw new Error(
-        `${maximum} is smaller than the current minimum ${this.minimum}`,
+        `${maximum} is smaller than the current minimum ${this._min}`,
       );
     }
     return new OpenApiSchemaNumber(
-      this.type,
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minimum,
+      this._type,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
       maximum,
-      this.exclusiveMinimum,
-      this.exclusiveMaximum,
-      this.format,
-      this.multipleOf,
-      this.enums,
+      this._exMin,
+      this._exMax,
+      this._format,
+      this._mult,
+      this._enums,
     );
   }
 
   public addMinimum(minimum: number) {
-    if (this.maximum && this.maximum < minimum) {
+    if (this._max && this._max < minimum) {
       throw new Error(
-        `${minimum} is larger than the current maximum ${this.maximum}`,
+        `${minimum} is larger than the current maximum ${this._max}`,
       );
     }
     return new OpenApiSchemaNumber(
-      this.type,
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
+      this._type,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
       minimum,
-      this.maximum,
-      this.exclusiveMinimum,
-      this.exclusiveMaximum,
-      this.format,
-      this.multipleOf,
-      this.enums,
+      this._max,
+      this._exMin,
+      this._exMax,
+      this._format,
+      this._mult,
+      this._enums,
     );
   }
 
-  public addXML(xml: OpenApiXML): OpenApiSchemaNumber {
+  public xml(xml: OpenApiXML): OpenApiSchemaNumber {
     return new OpenApiSchemaNumber(
-      this.type,
+      this._type,
       xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minimum,
-      this.maximum,
-      this.exclusiveMinimum,
-      this.exclusiveMaximum,
-      this.format,
-      this.multipleOf,
-      this.enums,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._exMin,
+      this._exMax,
+      this._format,
+      this._mult,
+      this._enums,
     );
   }
-  public addExternalDocs(docs: OpenApiDocumentation): OpenApiSchemaNumber {
+  public externalDocs(docs: OpenApiDocumentation): OpenApiSchemaNumber {
     return new OpenApiSchemaNumber(
-      this.type,
-      this.xml,
+      this._type,
+      this._xml,
       docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minimum,
-      this.maximum,
-      this.exclusiveMinimum,
-      this.exclusiveMaximum,
-      this.format,
-      this.multipleOf,
-      this.enums,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._exMin,
+      this._exMax,
+      this._format,
+      this._mult,
+      this._enums,
     );
   }
-  public addExample(example: OpenApiExample): OpenApiSchemaNumber {
+  public example(example: OpenApiExample): OpenApiSchemaNumber {
     return new OpenApiSchemaNumber(
-      this.type,
-      this.xml,
-      this.docs,
+      this._type,
+      this._xml,
+      this._docs,
       example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minimum,
-      this.maximum,
-      this.exclusiveMinimum,
-      this.exclusiveMaximum,
-      this.format,
-      this.multipleOf,
-      this.enums,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._exMin,
+      this._exMax,
+      this._format,
+      this._mult,
+      this._enums,
     );
   }
-  public addDescription(description: string): OpenApiSchemaNumber {
+  public description(description: string): OpenApiSchemaNumber {
     return new OpenApiSchemaNumber(
-      this.type,
-      this.xml,
-      this.docs,
-      this.example,
+      this._type,
+      this._xml,
+      this._docs,
+      this._example,
       description,
-      this.nullable,
-      this.default,
-      this.minimum,
-      this.maximum,
-      this.exclusiveMinimum,
-      this.exclusiveMaximum,
-      this.format,
-      this.multipleOf,
-      this.enums,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._exMin,
+      this._exMax,
+      this._format,
+      this._mult,
+      this._enums,
     );
   }
   public toJSON(): unknown {
     const json = this.commonJSON();
-    Object.defineProperty(json, "type", { value: this.type });
-    if (this.minimum !== undefined) {
-      Object.defineProperty(json, "minimum", { value: this.minimum });
+    Object.defineProperty(json, "type", { value: this._type });
+    if (this._min !== undefined) {
+      Object.defineProperty(json, "minimum", { value: this._min });
     }
-    if (this.maximum !== undefined) {
-      Object.defineProperty(json, "maximum", { value: this.maximum });
+    if (this._max !== undefined) {
+      Object.defineProperty(json, "maximum", { value: this._max });
     }
-    if (this.exclusiveMinimum !== undefined) {
+    if (this._exMin !== undefined) {
       Object.defineProperty(json, "exclusiveMinimum", {
-        value: this.exclusiveMinimum,
+        value: this._exMin,
       });
     }
-    if (this.exclusiveMaximum !== undefined) {
+    if (this._exMax !== undefined) {
       Object.defineProperty(json, "exclusiveMaximum", {
-        value: this.exclusiveMaximum,
+        value: this._exMax,
       });
     }
-    if (this.format !== undefined) {
-      Object.defineProperty(json, "format", { value: this.format });
+    if (this._format !== undefined) {
+      Object.defineProperty(json, "format", { value: this._format });
     }
-    if (this.multipleOf !== undefined) {
-      Object.defineProperty(json, "multipleOf", { value: this.multipleOf });
+    if (this._mult !== undefined) {
+      Object.defineProperty(json, "multipleOf", { value: this._mult });
     }
-    if (this.enums !== undefined) {
-      Object.defineProperty(json, "enum", { value: Array.from(this.enums) });
+    if (this._enums !== undefined) {
+      Object.defineProperty(json, "enum", { value: Array.from(this._enums) });
     }
     return json;
   }
@@ -457,65 +456,65 @@ class OpenApiSchemaBoolean extends OpenApiSchema {
     super("boolean", xml, docs, example, description, nullable, defaultVal);
   }
 
-  public addDefault(defaultVal: boolean): OpenApiSchemaBoolean {
+  public default(defaultVal: boolean): OpenApiSchemaBoolean {
     return new OpenApiSchemaBoolean(
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
       defaultVal,
     );
   }
 
-  public addXML(xml: OpenApiXML): OpenApiSchemaBoolean {
+  public xml(xml: OpenApiXML): OpenApiSchemaBoolean {
     return new OpenApiSchemaBoolean(
       xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
     );
   }
-  public addExternalDocs(docs: OpenApiDocumentation): OpenApiSchemaBoolean {
+  public externalDocs(docs: OpenApiDocumentation): OpenApiSchemaBoolean {
     return new OpenApiSchemaBoolean(
-      this.xml,
+      this._xml,
       docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
     );
   }
-  public addExample(example: OpenApiExample): OpenApiSchemaBoolean {
+  public example(example: OpenApiExample): OpenApiSchemaBoolean {
     return new OpenApiSchemaBoolean(
-      this.xml,
-      this.docs,
+      this._xml,
+      this._docs,
       example,
-      this.description,
-      this.nullable,
-      this.default,
+      this._description,
+      this._nullable,
+      this._default,
     );
   }
-  public addDescription(description: string): OpenApiSchemaBoolean {
+  public description(description: string): OpenApiSchemaBoolean {
     return new OpenApiSchemaBoolean(
-      this.xml,
-      this.docs,
-      this.example,
+      this._xml,
+      this._docs,
+      this._example,
       description,
-      this.nullable,
-      this.default,
+      this._nullable,
+      this._default,
     );
   }
-  public addNullable(nullable: boolean): OpenApiSchemaBoolean {
+  public nullable(): OpenApiSchemaBoolean {
     return new OpenApiSchemaBoolean(
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      nullable,
-      this.default,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      true,
+      this._default,
     );
   }
   public toJSON(): unknown {
@@ -524,11 +523,11 @@ class OpenApiSchemaBoolean extends OpenApiSchema {
 }
 
 class OpenApiSchemaString extends OpenApiSchema {
-  private readonly minLength?: number;
-  private readonly maxLength?: number;
-  private readonly format?: string;
-  private readonly pattern?: RegExp;
-  private readonly enums?: Set<string | null>;
+  private readonly _min?: number;
+  private readonly _max?: number;
+  private readonly _format?: string;
+  private readonly _pattern?: RegExp;
+  private readonly _enums?: Set<string | null>;
 
   public constructor(
     xml?: OpenApiXML,
@@ -544,230 +543,230 @@ class OpenApiSchemaString extends OpenApiSchema {
     enums?: Set<string | null>,
   ) {
     super("string", xml, docs, example, description, nullable, defaultVal);
-    this.minLength = minLength;
-    this.maxLength = maxLength;
-    this.format = format;
-    this.pattern = pattern;
-    this.enums = enums;
+    this._min = minLength;
+    this._max = maxLength;
+    this._format = format;
+    this._pattern = pattern;
+    this._enums = enums;
   }
 
-  public addDefault(defaultVal: string): OpenApiSchema {
+  public default(defaultVal: string): OpenApiSchema {
     return new OpenApiSchemaString(
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
       defaultVal,
-      this.minLength,
-      this.maxLength,
-      this.format,
-      this.pattern,
-      this.enums,
+      this._min,
+      this._max,
+      this._format,
+      this._pattern,
+      this._enums,
     );
   }
 
-  public addEnum(enumVal: string | null) {
+  public enum(enumVal: string | null) {
     let enums: Set<string | null>;
-    if (this.enums) {
-      enums = new Set(this.enums);
+    if (this._enums) {
+      enums = new Set(this._enums);
       enums.add(enumVal);
     } else {
       enums = new Set();
       enums.add(enumVal);
     }
     return new OpenApiSchemaString(
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minLength,
-      this.maxLength,
-      this.format,
-      this.pattern,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._format,
+      this._pattern,
       enums,
     );
   }
 
-  public addNullable(bool: boolean): OpenApiSchema {
+  public nullable(): OpenApiSchema {
     return new OpenApiSchemaString(
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      bool,
-      this.default,
-      this.minLength,
-      this.maxLength,
-      this.format,
-      this.pattern,
-      this.enums,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      true,
+      this._default,
+      this._min,
+      this._max,
+      this._format,
+      this._pattern,
+      this._enums,
     );
   }
 
-  public addPattern(pattern: RegExp) {
+  public pattern(pattern: RegExp) {
     return new OpenApiSchemaString(
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minLength,
-      this.maxLength,
-      this.format,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._format,
       pattern,
-      this.enums,
+      this._enums,
     );
   }
 
-  public addFormat(format: string) {
+  public format(format: string) {
     return new OpenApiSchemaString(
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minLength,
-      this.maxLength,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
       format,
-      this.pattern,
-      this.enums,
+      this._pattern,
+      this._enums,
     );
   }
 
-  public addMaxLength(maxLength: number) {
-    if (this.minLength && maxLength < this.minLength) {
+  public max(max: number) {
+    if (this._min && max < this._min) {
       throw new Error(
-        `Maximum length: ${maxLength} is smaller than min length: ${this.minLength}`,
+        `Maximum length: ${max} is smaller than min length: ${this._min}`,
       );
-    } else if (!Number.isInteger(maxLength) || maxLength < 0) {
+    } else if (!Number.isInteger(max) || max < 0) {
       throw new Error(
-        `${maxLength} is not positive integer greater than or equal to zero.`,
+        `${max} is not positive integer greater than or equal to zero.`,
       );
     }
     return new OpenApiSchemaString(
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minLength,
-      maxLength,
-      this.format,
-      this.pattern,
-      this.enums,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      max,
+      this._format,
+      this._pattern,
+      this._enums,
     );
   }
-  public addMinLength(minLength: number) {
-    if (this.maxLength && this.maxLength < minLength) {
+  public min(min: number) {
+    if (this._max && this._max < min) {
       throw new Error(
-        `Minimum length: ${minLength} is greater than max length: ${this.maxLength}`,
+        `Minimum length: ${min} is greater than max length: ${this._max}`,
       );
-    } else if (!Number.isInteger(minLength) || minLength < 0) {
+    } else if (!Number.isInteger(min) || min < 0) {
       throw new Error(
-        `${minLength} is not positive integer greater than or equal to zero.`,
+        `${min} is not positive integer greater than or equal to zero.`,
       );
     }
     return new OpenApiSchemaString(
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      minLength,
-      this.maxLength,
-      this.format,
-      this.pattern,
-      this.enums,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      min,
+      this._max,
+      this._format,
+      this._pattern,
+      this._enums,
     );
   }
 
-  public addXML(xml: OpenApiXML): OpenApiSchemaString {
+  public xml(xml: OpenApiXML): OpenApiSchemaString {
     return new OpenApiSchemaString(
       xml,
-      this.docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minLength,
-      this.maxLength,
-      this.format,
-      this.pattern,
-      this.enums,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._format,
+      this._pattern,
+      this._enums,
     );
   }
 
-  public addExternalDocs(docs: OpenApiDocumentation): OpenApiSchemaString {
+  public externalDocs(docs: OpenApiDocumentation): OpenApiSchemaString {
     return new OpenApiSchemaString(
-      this.xml,
+      this._xml,
       docs,
-      this.example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minLength,
-      this.maxLength,
-      this.format,
-      this.pattern,
-      this.enums,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._format,
+      this._pattern,
+      this._enums,
     );
   }
-  public addExample(example: OpenApiExample): OpenApiSchemaString {
+  public example(example: OpenApiExample): OpenApiSchemaString {
     return new OpenApiSchemaString(
-      this.xml,
-      this.docs,
+      this._xml,
+      this._docs,
       example,
-      this.description,
-      this.nullable,
-      this.default,
-      this.minLength,
-      this.maxLength,
-      this.format,
-      this.pattern,
-      this.enums,
+      this._description,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._format,
+      this._pattern,
+      this._enums,
     );
   }
-  public addDescription(description: string): OpenApiSchemaString {
+  public description(description: string): OpenApiSchemaString {
     return new OpenApiSchemaString(
-      this.xml,
-      this.docs,
-      this.example,
+      this._xml,
+      this._docs,
+      this._example,
       description,
-      this.nullable,
-      this.default,
-      this.minLength,
-      this.maxLength,
-      this.format,
-      this.pattern,
-      this.enums,
+      this._nullable,
+      this._default,
+      this._min,
+      this._max,
+      this._format,
+      this._pattern,
+      this._enums,
     );
   }
 
   public toJSON(): unknown {
     const json = this.commonJSON();
-    if (this.minLength !== undefined) {
+    if (this._min !== undefined) {
       Object.defineProperty(json, "minLength", {
-        value: this.minLength,
+        value: this._min,
       });
     }
-    if (this.maxLength !== undefined) {
-      Object.defineProperty(json, "maxLength", { value: this.maxLength });
+    if (this._max !== undefined) {
+      Object.defineProperty(json, "maxLength", { value: this._max });
     }
-    if (this.format !== undefined) {
-      Object.defineProperty(json, "format", { value: this.format });
+    if (this._format !== undefined) {
+      Object.defineProperty(json, "format", { value: this._format });
     }
-    if (this.pattern !== undefined) {
-      Object.defineProperty(json, "pattern", { value: this.pattern });
+    if (this._pattern !== undefined) {
+      Object.defineProperty(json, "pattern", { value: this._pattern });
     }
-    if (this.enums !== undefined) {
-      Object.defineProperty(json, "enum", { value: Array.from(this.enums) });
+    if (this._enums !== undefined) {
+      Object.defineProperty(json, "enum", { value: Array.from(this._enums) });
     }
     return json;
   }
@@ -781,9 +780,7 @@ class OpenApiSchemaObject extends OpenApiSchema {
   private readonly maxProperties?: number;
 
   public constructor(
-    type: OpenApiSchemaType,
     properties?: Map<string, OpenApiSchema>,
-    discriminator?: OpenApiDiscriminator,
     xml?: OpenApiXML,
     docs?: OpenApiDocumentation,
     example?: OpenApiExample,
@@ -793,7 +790,7 @@ class OpenApiSchemaObject extends OpenApiSchema {
     minProperties?: number,
     maxProperties?: number,
   ) {
-    super(type, discriminator, xml, docs, example, description);
+    super("object", xml, docs, example, description);
     this.properties = properties;
     this.requiredProperties = requiredProperties;
     this.additionalProperties = additionalProperties;
@@ -801,39 +798,36 @@ class OpenApiSchemaObject extends OpenApiSchema {
     this.maxProperties = maxProperties;
   }
 
-  public addAdditionalProperty(propertyName: string) {
-    return {
-      addPropertyValue: (propertyValue: OpenApiSchema) => {
-        let additionalProperties: Map<string, OpenApiSchema>;
-        if (!this.additionalProperties) {
-          additionalProperties = new Map();
-          additionalProperties.set(propertyName, propertyValue);
-        } else {
-          additionalProperties = new Map(this.additionalProperties);
-          additionalProperties.set(propertyName, propertyValue);
-        }
-        return new OpenApiSchemaObject(
-          this.type,
-          this.properties,
-          this.discriminator,
-          this.xml,
-          this.docs,
-          this.example,
-          this.description,
-          this.requiredProperties,
-          this.additionalProperties,
-          this.minProperties,
-          this.maxProperties,
-        );
-      },
-    };
+  public additionalProperty(
+    propertyName: string,
+    propertyValue: OpenApiSchema,
+  ) {
+    let additionalProperties: Map<string, OpenApiSchema>;
+    if (!this.additionalProperties) {
+      additionalProperties = new Map();
+      additionalProperties.set(propertyName, propertyValue);
+    } else {
+      additionalProperties = new Map(this.additionalProperties);
+      additionalProperties.set(propertyName, propertyValue);
+    }
+    return new OpenApiSchemaObject(
+      this.properties,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this.requiredProperties,
+      this.additionalProperties,
+      this.minProperties,
+      this.maxProperties,
+    );
   }
 
   public toJSON(): unknown {
     throw new Error("Method not implemented.");
   }
 
-  public addRequiredProperty(propertyName: string) {
+  public requiredProperty(propertyName: string) {
     let requiredProperties: Set<string>;
     if (this.requiredProperties) {
       requiredProperties = new Set(this.requiredProperties);
@@ -842,13 +836,11 @@ class OpenApiSchemaObject extends OpenApiSchema {
     }
     requiredProperties.add(propertyName);
     return new OpenApiSchemaObject(
-      this.type,
       this.properties,
-      this.discriminator,
-      this.xml,
-      this.docs,
-      this.example,
-      this.description,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
       requiredProperties,
       this.additionalProperties,
       this.minProperties,
@@ -856,14 +848,12 @@ class OpenApiSchemaObject extends OpenApiSchema {
     );
   }
 
-  public addDescription(description: string): OpenApiSchemaObject {
+  public description(description: string): OpenApiSchemaObject {
     return new OpenApiSchemaObject(
-      this.type,
       this.properties,
-      this.discriminator,
-      this.xml,
-      this.docs,
-      this.example,
+      this._xml,
+      this._docs,
+      this._example,
       description,
       this.requiredProperties,
       this.additionalProperties,
@@ -872,32 +862,26 @@ class OpenApiSchemaObject extends OpenApiSchema {
     );
   }
 
-  public addProperty(propertyName: string) {
-    return {
-      addPropertyValue: (propertyValue: OpenApiSchema) => {
-        let properties: Map<string, OpenApiSchema>;
-        if (!this.properties) {
-          properties = new Map();
-          properties.set(propertyName, propertyValue);
-        } else {
-          properties = new Map(this.properties);
-          properties.set(propertyName, propertyValue);
-        }
-        return new OpenApiSchemaObject(
-          this.type,
-          properties,
-          this.discriminator,
-          this.xml,
-          this.docs,
-          this.example,
-          this.description,
-          this.requiredProperties,
-          this.additionalProperties,
-          this.minProperties,
-          this.maxProperties,
-        );
-      },
-    };
+  public property(propertyName: string, propertyValue: OpenApiSchema) {
+    let properties: Map<string, OpenApiSchema>;
+    if (!this.properties) {
+      properties = new Map();
+      properties.set(propertyName, propertyValue);
+    } else {
+      properties = new Map(this.properties);
+      properties.set(propertyName, propertyValue);
+    }
+    return new OpenApiSchemaObject(
+      properties,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this.requiredProperties,
+      this.additionalProperties,
+      this.minProperties,
+      this.maxProperties,
+    );
   }
 }
 
