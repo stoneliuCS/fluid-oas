@@ -12,6 +12,7 @@ export abstract class OpenApiSchema {
   protected readonly xml?: OpenApiXML;
   protected readonly externalDocs?: OpenApiExternalDocumentation;
   protected readonly example?: OpenApiExample;
+  protected readonly nullable?: boolean;
 
   public static create(type: "array"): OpenApiSchemaArray;
   public static create(type: "object"): OpenApiSchemaObject;
@@ -43,12 +44,14 @@ export abstract class OpenApiSchema {
     externalDocs?: OpenApiExternalDocumentation,
     example?: OpenApiExample,
     description?: string,
+    nullable?: boolean,
   ) {
     this.type = type;
     this.xml = xml;
     this.externalDocs = externalDocs;
     this.example = example;
     this.description = description;
+    this.nullable = nullable;
   }
 
   public abstract addXML(xml: OpenApiXML): OpenApiSchema;
@@ -57,10 +60,11 @@ export abstract class OpenApiSchema {
   ): OpenApiSchema;
   public abstract addExample(example: OpenApiExample): OpenApiSchema;
   public abstract addDescription(description: string): OpenApiSchema;
+  public abstract addNullable(bool: boolean): OpenApiSchema;
   public abstract toJSON(): unknown;
 
   protected commonJSON(): unknown {
-    const json = {}
+    const json = {};
     Object.defineProperty(json, "type", { value: this.type });
     if (this.externalDocs !== undefined) {
       Object.defineProperty(json, "externalDocs", {
@@ -76,7 +80,10 @@ export abstract class OpenApiSchema {
     if (this.xml !== undefined) {
       Object.defineProperty(json, "xml", { value: this.xml.toJSON() });
     }
-    return json
+    if (this.nullable !== undefined) {
+      Object.defineProperty(json, "nullable", { value: this.nullable });
+    }
+    return json;
   }
 }
 
@@ -88,6 +95,7 @@ class OpenApiSchemaNumber extends OpenApiSchema {
   private readonly exclusiveMinimum?: boolean;
   private readonly exclusiveMaximum?: boolean;
   private readonly format?: OpenApiSchemaNumberFormat;
+  private readonly multipleOf?: number;
 
   public constructor(
     type: OpenApiSchemaType,
@@ -95,18 +103,55 @@ class OpenApiSchemaNumber extends OpenApiSchema {
     externalDocs?: OpenApiExternalDocumentation,
     example?: OpenApiExample,
     description?: string,
+    nullable?: boolean,
     minimum?: number,
     maximum?: number,
     exclusiveMinimum?: boolean,
     exclusiveMaximum?: boolean,
     format?: OpenApiSchemaNumberFormat,
+    multipleOf?: number,
   ) {
-    super(type, xml, externalDocs, example, description);
+    super(type, xml, externalDocs, example, description, nullable);
     this.minimum = minimum;
     this.maximum = maximum;
     this.exclusiveMinimum = exclusiveMinimum;
     this.exclusiveMaximum = exclusiveMaximum;
     this.format = format;
+    this.multipleOf = multipleOf;
+  }
+
+  public addNullable(bool: boolean): OpenApiSchemaNumber {
+    return new OpenApiSchemaNumber(
+      this.type,
+      this.xml,
+      this.externalDocs,
+      this.example,
+      this.description,
+      bool,
+      this.minimum,
+      this.maximum,
+      this.exclusiveMinimum,
+      this.exclusiveMaximum,
+      this.format,
+      this.multipleOf,
+    );
+  }
+
+  public addMultipleOf(multiple: number) {
+    return new OpenApiSchemaNumber(
+      this.type,
+      this.xml,
+      this.externalDocs,
+      this.example,
+      this.description,
+      this.nullable,
+      this.minimum,
+      this.maximum,
+      this.exclusiveMinimum,
+      this.exclusiveMaximum,
+      this.format,
+      multiple,
+    );
   }
 
   public addFormat(format: OpenApiSchemaNumberFormat) {
@@ -124,41 +169,57 @@ class OpenApiSchemaNumber extends OpenApiSchema {
       this.externalDocs,
       this.example,
       this.description,
+      this.nullable,
       this.minimum,
       this.maximum,
       this.exclusiveMinimum,
       this.exclusiveMaximum,
       format,
+      this.multipleOf,
     );
   }
 
   public addExclusiveMaximum(exclusiveMaximum: boolean) {
+    if (!this.maximum) {
+      throw new Error(
+        `Cannot add an exclusive maximum as a maximum has not been added yet.`,
+      );
+    }
     return new OpenApiSchemaNumber(
       this.type,
       this.xml,
       this.externalDocs,
       this.example,
       this.description,
+      this.nullable,
       this.minimum,
       this.maximum,
       this.exclusiveMinimum,
       exclusiveMaximum,
       this.format,
+      this.multipleOf,
     );
   }
 
   public addExclusiveMinimum(exclusiveMinimum: boolean) {
+    if (!this.minimum) {
+      throw new Error(
+        `Cannot add an exclusive minimum as a minimum has not been added yet.`,
+      );
+    }
     return new OpenApiSchemaNumber(
       this.type,
       this.xml,
       this.externalDocs,
       this.example,
       this.description,
+      this.nullable,
       this.minimum,
       this.maximum,
       exclusiveMinimum,
       this.exclusiveMaximum,
       this.format,
+      this.multipleOf,
     );
   }
 
@@ -174,11 +235,13 @@ class OpenApiSchemaNumber extends OpenApiSchema {
       this.externalDocs,
       this.example,
       this.description,
+      this.nullable,
       this.minimum,
       maximum,
       this.exclusiveMinimum,
       this.exclusiveMaximum,
       this.format,
+      this.multipleOf,
     );
   }
 
@@ -194,11 +257,13 @@ class OpenApiSchemaNumber extends OpenApiSchema {
       this.externalDocs,
       this.example,
       this.description,
+      this.nullable,
       minimum,
       this.maximum,
       this.exclusiveMinimum,
       this.exclusiveMaximum,
       this.format,
+      this.multipleOf,
     );
   }
 
@@ -209,11 +274,13 @@ class OpenApiSchemaNumber extends OpenApiSchema {
       this.externalDocs,
       this.example,
       this.description,
+      this.nullable,
       this.minimum,
       this.maximum,
       this.exclusiveMinimum,
       this.exclusiveMaximum,
       this.format,
+      this.multipleOf,
     );
   }
   public addExternalDocs(
@@ -225,11 +292,13 @@ class OpenApiSchemaNumber extends OpenApiSchema {
       externalDocs,
       this.example,
       this.description,
+      this.nullable,
       this.minimum,
       this.maximum,
       this.exclusiveMinimum,
       this.exclusiveMaximum,
       this.format,
+      this.multipleOf,
     );
   }
   public addExample(example: OpenApiExample): OpenApiSchemaNumber {
@@ -239,11 +308,13 @@ class OpenApiSchemaNumber extends OpenApiSchema {
       this.externalDocs,
       example,
       this.description,
+      this.nullable,
       this.minimum,
       this.maximum,
       this.exclusiveMinimum,
       this.exclusiveMaximum,
       this.format,
+      this.multipleOf,
     );
   }
   public addDescription(description: string): OpenApiSchemaNumber {
@@ -253,15 +324,17 @@ class OpenApiSchemaNumber extends OpenApiSchema {
       this.externalDocs,
       this.example,
       description,
+      this.nullable,
       this.minimum,
       this.maximum,
       this.exclusiveMinimum,
       this.exclusiveMaximum,
       this.format,
+      this.multipleOf,
     );
   }
   public toJSON(): unknown {
-    const json = this.commonJSON()
+    const json = this.commonJSON();
     Object.defineProperty(json, "type", { value: this.type });
     if (this.minimum !== undefined) {
       Object.defineProperty(json, "minimum", { value: this.minimum });
@@ -270,7 +343,20 @@ class OpenApiSchemaNumber extends OpenApiSchema {
       Object.defineProperty(json, "maximum", { value: this.maximum });
     }
     if (this.exclusiveMinimum !== undefined) {
-      Object.defineProperty(json, "exclusiveMinimum", { value: this.minimum });
+      Object.defineProperty(json, "exclusiveMinimum", {
+        value: this.exclusiveMinimum,
+      });
+    }
+    if (this.exclusiveMaximum !== undefined) {
+      Object.defineProperty(json, "exclusiveMaximum", {
+        value: this.exclusiveMaximum,
+      });
+    }
+    if (this.format !== undefined) {
+      Object.defineProperty(json, "format", { value: this.format });
+    }
+    if (this.multipleOf !== undefined) {
+      Object.defineProperty(json, "multipleOf", { value: this.multipleOf });
     }
     return json;
   }
@@ -289,12 +375,13 @@ class OpenApiSchemaString extends OpenApiSchema {
     externalDocs?: OpenApiExternalDocumentation,
     example?: OpenApiExample,
     description?: string,
+    nullable?: boolean,
     minLength?: number,
     maxLength?: number,
     format?: string,
     pattern?: RegExp,
   ) {
-    super("string", xml, externalDocs, example, description);
+    super("string", xml, externalDocs, example, description, nullable);
     this.minLength = minLength;
     this.maxLength = maxLength;
     this.format = format;
@@ -307,6 +394,7 @@ class OpenApiSchemaString extends OpenApiSchema {
       this.externalDocs,
       this.example,
       this.description,
+      this.nullable,
       this.minLength,
       this.maxLength,
       this.format,
@@ -320,6 +408,7 @@ class OpenApiSchemaString extends OpenApiSchema {
       this.externalDocs,
       this.example,
       this.description,
+      this.nullable,
       this.minLength,
       this.maxLength,
       format,
@@ -342,6 +431,7 @@ class OpenApiSchemaString extends OpenApiSchema {
       this.externalDocs,
       this.example,
       this.description,
+      this.nullable,
       this.minLength,
       maxLength,
       this.format,
@@ -363,6 +453,7 @@ class OpenApiSchemaString extends OpenApiSchema {
       this.externalDocs,
       this.example,
       this.description,
+      this.nullable,
       minLength,
       this.maxLength,
       this.format,
@@ -376,6 +467,7 @@ class OpenApiSchemaString extends OpenApiSchema {
       this.externalDocs,
       this.example,
       this.description,
+      this.nullable,
       this.minLength,
       this.maxLength,
       this.format,
@@ -391,6 +483,7 @@ class OpenApiSchemaString extends OpenApiSchema {
       externalDocs,
       this.example,
       this.description,
+      this.nullable,
       this.minLength,
       this.maxLength,
       this.format,
@@ -403,6 +496,7 @@ class OpenApiSchemaString extends OpenApiSchema {
       this.externalDocs,
       example,
       this.description,
+      this.nullable,
       this.minLength,
       this.maxLength,
       this.format,
@@ -415,6 +509,7 @@ class OpenApiSchemaString extends OpenApiSchema {
       this.externalDocs,
       this.example,
       description,
+      this.nullable,
       this.minLength,
       this.maxLength,
       this.format,
@@ -423,7 +518,7 @@ class OpenApiSchemaString extends OpenApiSchema {
   }
 
   public toJSON(): unknown {
-    const json = this.commonJSON()
+    const json = this.commonJSON();
     if (this.minLength !== undefined) {
       Object.defineProperty(json, "minLength", {
         value: this.minLength,
