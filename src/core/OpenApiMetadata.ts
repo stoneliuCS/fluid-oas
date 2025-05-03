@@ -1,7 +1,7 @@
 import { PropertyNotFoundError } from "../lib/error";
 import { deepFreeze } from "../lib/freeze";
 import type {
-  OpenApiExternalDocumentation,
+  OpenApiDocumentation,
   OpenApiJsonSchemaDialect,
   OpenApiVersion,
 } from "../types/OpenApiTypes";
@@ -28,7 +28,7 @@ export class OpenApiMetadata {
   private readonly components?: OpenApiSchema;
   private readonly security?: OpenApiSecurity[];
   private readonly tags?: OpenApiTag[];
-  private readonly externalDocs?: OpenApiExternalDocumentation;
+  private readonly docs?: OpenApiDocumentation;
 
   public static create(version: OpenApiVersion, info: OpenApiInfo) {
     return new OpenApiMetadata(version, info);
@@ -93,7 +93,7 @@ export class OpenApiMetadata {
     components?: OpenApiSchema,
     security?: OpenApiSecurity[],
     tags?: OpenApiTag[],
-    externalDocs?: OpenApiExternalDocumentation,
+    docs?: OpenApiDocumentation,
   ) {
     // Sets all properties.
     this.version = version;
@@ -105,7 +105,7 @@ export class OpenApiMetadata {
     this.components = components;
     this.security = security;
     this.tags = tags;
-    this.externalDocs = externalDocs;
+    this.docs = docs;
     deepFreeze(this);
   }
 
@@ -133,7 +133,7 @@ export class OpenApiMetadata {
       this.components,
       this.security,
       this.tags,
-      this.externalDocs,
+      this.docs,
     );
   }
 
@@ -148,7 +148,7 @@ export class OpenApiMetadata {
       this.components,
       this.security,
       this.tags,
-      this.externalDocs,
+      this.docs,
     );
   }
 
@@ -163,7 +163,7 @@ export class OpenApiMetadata {
       this.components,
       this.security,
       this.tags,
-      this.externalDocs,
+      this.docs,
     );
   }
 
@@ -187,7 +187,7 @@ export class OpenApiMetadata {
       this.components,
       this.security,
       this.tags,
-      this.externalDocs,
+      this.docs,
     );
   }
 
@@ -211,7 +211,7 @@ export class OpenApiMetadata {
       this.components,
       this.security,
       this.tags,
-      this.externalDocs,
+      this.docs,
     );
   }
 
@@ -229,7 +229,7 @@ export class OpenApiMetadata {
         this.components,
         this.security,
         this.tags,
-        this.externalDocs,
+        this.docs,
       );
     }
     const mapCopy = new Map(this.webhooks);
@@ -244,7 +244,7 @@ export class OpenApiMetadata {
       this.components,
       this.security,
       this.tags,
-      this.externalDocs,
+      this.docs,
     );
   }
 
@@ -259,7 +259,7 @@ export class OpenApiMetadata {
       component,
       this.security,
       this.tags,
-      this.externalDocs,
+      this.docs,
     );
   }
 
@@ -275,7 +275,7 @@ export class OpenApiMetadata {
         this.components,
         this.security,
         [tag],
-        this.externalDocs,
+        this.docs,
       );
     }
     const tagsCopy = [...this.tags];
@@ -290,11 +290,11 @@ export class OpenApiMetadata {
       this.components,
       this.security,
       tagsCopy,
-      this.externalDocs,
+      this.docs,
     );
   }
 
-  public addExternalDocumentation(externalDocs: OpenApiExternalDocumentation) {
+  public addExternalDocumentation(docs: OpenApiDocumentation) {
     return new OpenApiMetadata(
       this.version,
       this.info,
@@ -305,7 +305,7 @@ export class OpenApiMetadata {
       this.components,
       this.security,
       this.tags,
-      externalDocs,
+      docs,
     );
   }
 }

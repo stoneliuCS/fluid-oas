@@ -1,8 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import { OpenApiSchema } from "../../src/core/OpenApiSchema";
+import {
+  OpenApiInteger,
+  OpenApiNumber,
+  OpenApiString,
+} from "../../src/core/OpenApiSchema";
 
 describe("OpenAPI schema String tests", () => {
-  const openapiString = OpenApiSchema.create("string");
+  const openapiString = OpenApiString;
 
   test("Test instantiating an openapi string schema", () => {
     const actualJSON = openapiString.toJSON();
@@ -58,8 +62,8 @@ describe("OpenAPI schema String tests", () => {
 });
 
 describe("OpenAPI Schema Number tests.", () => {
-  const openapiInteger = OpenApiSchema.create("integer");
-  const openapiNumber = OpenApiSchema.create("number");
+  const openapiInteger = OpenApiInteger;
+  const openapiNumber = OpenApiNumber;
 
   test("Test add minimum", () => {
     const actualInteger = openapiInteger.addMinimum(2).toJSON();

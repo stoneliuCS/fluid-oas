@@ -4,7 +4,7 @@ import { validatePath } from "../lib/url";
 import {
   type OpenApiCallback,
   type OpenApiContentType,
-  type OpenApiExternalDocumentation,
+  type OpenApiDocumentation,
   type OpenApiOperation,
   type OpenApiParameterInType,
   type OpenApiRequestBody,
@@ -178,7 +178,7 @@ class OpenApiPathBuilder {
   private readonly tags?: OpenApiTag[];
   private readonly summary?: string;
   private readonly description?: string;
-  private readonly externalDocs?: OpenApiExternalDocumentation;
+  private readonly docs?: OpenApiDocumentation;
   private readonly operationId?: string;
   private readonly parameters?: Set<OpenApiParameter>;
   private readonly requestBody?: OpenApiRequestBody;
@@ -193,7 +193,7 @@ class OpenApiPathBuilder {
     tags?: OpenApiTag[],
     summary?: string,
     description?: string,
-    externalDocs?: OpenApiExternalDocumentation,
+    docs?: OpenApiDocumentation,
     operationId?: string,
     parameters?: Set<OpenApiParameter>,
     requestBody?: OpenApiRequestBody,
@@ -207,7 +207,7 @@ class OpenApiPathBuilder {
     this.tags = tags;
     this.summary = summary;
     this.description = description;
-    this.externalDocs = externalDocs;
+    this.docs = docs;
     this.operationId = operationId;
     this.parameters = parameters;
     this.requestBody = requestBody;
@@ -243,7 +243,7 @@ class OpenApiPathBuilder {
           this.tags,
           this.summary,
           this.description,
-          this.externalDocs,
+          this.docs,
           this.operationId,
           parameters,
           this.requestBody,
@@ -279,7 +279,7 @@ class OpenApiPathBuilder {
         this.tags,
         this.summary,
         this.description,
-        this.externalDocs,
+        this.docs,
         this.operationId,
         parameters,
         this.requestBody,
@@ -313,7 +313,7 @@ class OpenApiPathBuilder {
         this.tags,
         this.summary,
         this.description,
-        this.externalDocs,
+        this.docs,
         this.operationId,
         this.parameters,
         this.requestBody,
