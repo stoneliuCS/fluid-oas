@@ -1,17 +1,12 @@
 import { OpenApiObject, OpenApiString } from "../core/OpenApiSchema";
 
-const uuidSchema = OpenApiString.addFormat("uuid")
-  .addExample("5e91507e-5630-4efd-9fd4-799178870b10")
-  .addDescription("A unique format for the user.");
+const uuidSchema = OpenApiString.format("uuid").example(
+  "5e91507e-5630-4efd-9fd4-799178870b10",
+);
 
-const nameSchema = OpenApiString.addMinLength(1);
+const minString = OpenApiString.min(1);
 
-const modeSchema = OpenApiString.addEnum("BASIC")
-  .addEnum("NORMAL")
-  .addEnum(null);
-
-const userSchema = OpenApiObject.addProperty("username")
-  .addPropertyValue(nameSchema)
-  .addProperty("id")
-  .addPropertyValue(uuidSchema)
-  .addProperty()
+const userSchema = OpenApiObject.description("A representation of a User.")
+  .property("name", minString.description("Name of the User."))
+  .property("username", minString.description("Display name of the user."))
+  .property("id", uuidSchema.description("Unique identifier for the user."));

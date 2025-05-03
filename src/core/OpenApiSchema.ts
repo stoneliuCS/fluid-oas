@@ -198,7 +198,7 @@ class OpenApiSchemaNumber extends OpenApiSchema {
     );
   }
 
-  public addMultipleOf(multiple: number) {
+  public multipleOf(multiple: number) {
     return new OpenApiSchemaNumber(
       this._type,
       this._xml,
@@ -292,7 +292,7 @@ class OpenApiSchemaNumber extends OpenApiSchema {
     );
   }
 
-  public maximum(maximum: number) {
+  public max(maximum: number) {
     if (this._min && this._min > maximum) {
       throw new Error(
         `${maximum} is smaller than the current minimum ${this._min}`,
@@ -316,7 +316,7 @@ class OpenApiSchemaNumber extends OpenApiSchema {
     );
   }
 
-  public addMinimum(minimum: number) {
+  public min(minimum: number) {
     if (this._max && this._max < minimum) {
       throw new Error(
         `${minimum} is larger than the current maximum ${this._max}`,
