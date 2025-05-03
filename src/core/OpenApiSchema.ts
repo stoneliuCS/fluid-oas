@@ -1,4 +1,3 @@
-import { deepFreeze } from "../lib/freeze";
 import type { OpenApiSchemaType } from "../types/OpenApiTypes";
 import type { OpenApiDiscriminator } from "./OpenApiDiscriminator";
 import type { OpenApiExample } from "./OpenApiExample";
@@ -59,6 +58,26 @@ export abstract class OpenApiSchema {
   public abstract addExample(example: OpenApiExample): OpenApiSchema;
   public abstract addDescription(description: string): OpenApiSchema;
   public abstract toJSON(): unknown;
+
+  protected commonJSON(): unknown {
+    const json = {}
+    Object.defineProperty(json, "type", { value: this.type });
+    if (this.externalDocs !== undefined) {
+      Object.defineProperty(json, "externalDocs", {
+        value: this.externalDocs.toJSON(),
+      });
+    }
+    if (this.description !== undefined) {
+      Object.defineProperty(json, "description", { value: this.description });
+    }
+    if (this.example !== undefined) {
+      Object.defineProperty(json, "example", { value: this.example });
+    }
+    if (this.xml !== undefined) {
+      Object.defineProperty(json, "xml", { value: this.xml.toJSON() });
+    }
+    return json
+  }
 }
 
 type OpenApiSchemaNumberFormat = "float" | "double" | "int32" | "int64";
@@ -75,13 +94,14 @@ class OpenApiSchemaNumber extends OpenApiSchema {
     xml?: OpenApiXML,
     externalDocs?: OpenApiExternalDocumentation,
     example?: OpenApiExample,
+    description?: string,
     minimum?: number,
     maximum?: number,
     exclusiveMinimum?: boolean,
     exclusiveMaximum?: boolean,
     format?: OpenApiSchemaNumberFormat,
   ) {
-    super(type, xml, externalDocs, example);
+    super(type, xml, externalDocs, example, description);
     this.minimum = minimum;
     this.maximum = maximum;
     this.exclusiveMinimum = exclusiveMinimum;
@@ -103,6 +123,7 @@ class OpenApiSchemaNumber extends OpenApiSchema {
       this.xml,
       this.externalDocs,
       this.example,
+      this.description,
       this.minimum,
       this.maximum,
       this.exclusiveMinimum,
@@ -117,6 +138,7 @@ class OpenApiSchemaNumber extends OpenApiSchema {
       this.xml,
       this.externalDocs,
       this.example,
+      this.description,
       this.minimum,
       this.maximum,
       this.exclusiveMinimum,
@@ -131,6 +153,7 @@ class OpenApiSchemaNumber extends OpenApiSchema {
       this.xml,
       this.externalDocs,
       this.example,
+      this.description,
       this.minimum,
       this.maximum,
       exclusiveMinimum,
@@ -150,6 +173,7 @@ class OpenApiSchemaNumber extends OpenApiSchema {
       this.xml,
       this.externalDocs,
       this.example,
+      this.description,
       this.minimum,
       maximum,
       this.exclusiveMinimum,
@@ -169,6 +193,7 @@ class OpenApiSchemaNumber extends OpenApiSchema {
       this.xml,
       this.externalDocs,
       this.example,
+      this.description,
       minimum,
       this.maximum,
       this.exclusiveMinimum,
@@ -178,21 +203,76 @@ class OpenApiSchemaNumber extends OpenApiSchema {
   }
 
   public addXML(xml: OpenApiXML): OpenApiSchemaNumber {
-    throw new Error("Method not implemented.");
+    return new OpenApiSchemaNumber(
+      this.type,
+      xml,
+      this.externalDocs,
+      this.example,
+      this.description,
+      this.minimum,
+      this.maximum,
+      this.exclusiveMinimum,
+      this.exclusiveMaximum,
+      this.format,
+    );
   }
   public addExternalDocs(
     externalDocs: OpenApiExternalDocumentation,
   ): OpenApiSchemaNumber {
-    throw new Error("Method not implemented.");
+    return new OpenApiSchemaNumber(
+      this.type,
+      this.xml,
+      externalDocs,
+      this.example,
+      this.description,
+      this.minimum,
+      this.maximum,
+      this.exclusiveMinimum,
+      this.exclusiveMaximum,
+      this.format,
+    );
   }
   public addExample(example: OpenApiExample): OpenApiSchemaNumber {
-    throw new Error("Method not implemented.");
+    return new OpenApiSchemaNumber(
+      this.type,
+      this.xml,
+      this.externalDocs,
+      example,
+      this.description,
+      this.minimum,
+      this.maximum,
+      this.exclusiveMinimum,
+      this.exclusiveMaximum,
+      this.format,
+    );
   }
   public addDescription(description: string): OpenApiSchemaNumber {
-    throw new Error("Method not implemented.");
+    return new OpenApiSchemaNumber(
+      this.type,
+      this.xml,
+      this.externalDocs,
+      this.example,
+      description,
+      this.minimum,
+      this.maximum,
+      this.exclusiveMinimum,
+      this.exclusiveMaximum,
+      this.format,
+    );
   }
   public toJSON(): unknown {
-    throw new Error("Method not implemented.");
+    const json = this.commonJSON()
+    Object.defineProperty(json, "type", { value: this.type });
+    if (this.minimum !== undefined) {
+      Object.defineProperty(json, "minimum", { value: this.minimum });
+    }
+    if (this.maximum !== undefined) {
+      Object.defineProperty(json, "maximum", { value: this.maximum });
+    }
+    if (this.exclusiveMinimum !== undefined) {
+      Object.defineProperty(json, "exclusiveMinimum", { value: this.minimum });
+    }
+    return json;
   }
 }
 
@@ -343,9 +423,7 @@ class OpenApiSchemaString extends OpenApiSchema {
   }
 
   public toJSON(): unknown {
-    const json = {
-      type: this.type,
-    };
+    const json = this.commonJSON()
     if (this.minLength !== undefined) {
       Object.defineProperty(json, "minLength", {
         value: this.minLength,
@@ -359,20 +437,6 @@ class OpenApiSchemaString extends OpenApiSchema {
     }
     if (this.pattern !== undefined) {
       Object.defineProperty(json, "pattern", { value: this.pattern });
-    }
-    if (this.externalDocs !== undefined) {
-      Object.defineProperty(json, "externalDocs", {
-        value: this.externalDocs.toJSON(),
-      });
-    }
-    if (this.description !== undefined) {
-      Object.defineProperty(json, "description", { value: this.description });
-    }
-    if (this.example !== undefined) {
-      Object.defineProperty(json, "example", { value: this.example });
-    }
-    if (this.xml !== undefined) {
-      Object.defineProperty(json, "xml", { value: this.xml.toJSON() });
     }
     return json;
   }
