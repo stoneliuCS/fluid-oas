@@ -144,6 +144,7 @@ class OpenApiSchemaNumber<
     this._format = format;
     this._mult = multipleOf;
     this._enums = enums;
+    deepFreeze(this)
   }
 
   public default(defaultVal: number): OpenApiSchemaNumberReturn<T> {
@@ -469,6 +470,7 @@ class OpenApiSchemaBoolean extends AbstractOpenApiSchema {
     defaultVal?: unknown,
   ) {
     super("boolean", xml, docs, example, description, nullable, defaultVal);
+    deepFreeze(this)
   }
 
   public default(defaultVal: boolean): OpenApiSchemaBoolean {
@@ -563,6 +565,7 @@ class OpenApiSchemaString extends AbstractOpenApiSchema {
     this._format = format;
     this._pattern = pattern;
     this._enums = enums;
+    deepFreeze(this)
   }
 
   public default(defaultVal: string): AbstractOpenApiSchema {
