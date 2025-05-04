@@ -36,7 +36,6 @@ const booleanSchema = OpenApiBoolean.description("I am a OpenAPI boolean!")
   .default(false)
   .nullable();
 
-console.log(booleanSchema.toJSON())
 
 const userSchema: OpenApiSchema = OpenApiObject.properties({
   name: OpenApiString.min(1).description("Display name of the user."),
@@ -59,3 +58,5 @@ const userSchema: OpenApiSchema = OpenApiObject.properties({
     "Number of posts for this user.",
   ),
 }).required("username", "mode");
+
+console.log(userSchema.toJSON())
