@@ -1,12 +1,44 @@
 import {
+  OpenApiBoolean,
   OpenApiInteger,
+  OpenApiNumber,
   OpenApiObject,
   OpenApiString,
-  type OpenApiComponentSchema,
+  type OpenApiSchema,
 } from "../core/OpenApiSchema";
-import type { OpenApiSchemaType } from "../types/OpenApiTypes";
 
-const userSchema: OpenApiComponentSchema = OpenApiObject.properties({
+// Define a number schema
+const numberSchema = OpenApiNumber.description("I am a OpenAPI Number!")
+  .default(1.5)
+  .format("double")
+  .min(0.5)
+  .max(2.5)
+  .exclusiveMin();
+
+// Define a integer schema
+const integerSchema = OpenApiInteger.description("I am a OpenAPI Integer!")
+  .default(2)
+  .format("int64")
+  .min(0)
+  .max(99)
+  .exclusiveMax();
+
+// Define a string schema
+const uuidSchema = OpenApiString.description("Unique identifier")
+  .format("uuid")
+  .pattern(
+    /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/,
+  )
+  .example("643ad75f-0514-49f1-a68e-18a87ba017f0");
+
+// Define a boolean schema
+const booleanSchema = OpenApiBoolean.description("I am a OpenAPI boolean!")
+  .default(false)
+  .nullable();
+
+console.log(booleanSchema.toJSON())
+
+const userSchema: OpenApiSchema = OpenApiObject.properties({
   name: OpenApiString.min(1).description("Display name of the user."),
   username: OpenApiString.min(1).description("The username of the user."),
   id: OpenApiString.format("uuid")
@@ -27,5 +59,3 @@ const userSchema: OpenApiComponentSchema = OpenApiObject.properties({
     "Number of posts for this user.",
   ),
 }).required("username", "mode");
-
-console.log(userSchema.toJSON());
