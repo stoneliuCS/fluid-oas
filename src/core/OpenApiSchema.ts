@@ -17,7 +17,8 @@ abstract class AbstractOpenApiSchema {
   public static create(type: "object"): OpenApiSchemaObject;
   public static create(type: "string"): OpenApiSchemaString;
   public static create(type: "boolean"): OpenApiSchemaBoolean;
-  public static create(type: "integer" | "number"): OpenApiSchemaNumber;
+  public static create(type: "integer"): OpenApiSchemaNumber<"integer">;
+  public static create(type: "number"): OpenApiSchemaNumber<"number">;
   public static create(type: "any"): OpenApiSchemaAny;
   public static create(type: "allOf"): OpenApiSchemaAllOf;
   public static create(type: "oneOf"): OpenApiSchemaOneOf;
@@ -28,11 +29,11 @@ abstract class AbstractOpenApiSchema {
       case "string":
         return new OpenApiSchemaString();
       case "number":
-        return new OpenApiSchemaNumber("number");
+        return new OpenApiSchemaNumber<"number">("number");
       case "boolean":
         return new OpenApiSchemaBoolean();
       case "integer":
-        return new OpenApiSchemaNumber("integer");
+        return new OpenApiSchemaNumber<"integer">("integer");
       case "object":
         return new OpenApiSchemaObject();
       case "array":
@@ -101,7 +102,16 @@ abstract class AbstractOpenApiSchema {
 
 type OpenApiSchemaNumberFormat = "float" | "double" | "int32" | "int64";
 
-class OpenApiSchemaNumber extends AbstractOpenApiSchema {
+type OpenApiSchemaNumberReturn<T extends "number" | "integer"> =
+  T extends "integer"
+    ? OpenApiSchemaNumber<"integer">
+    : T extends "number"
+      ? OpenApiSchemaNumber<"number">
+      : never;
+
+class OpenApiSchemaNumber<
+  T extends "integer" | "number",
+> extends AbstractOpenApiSchema {
   private readonly _min?: number;
   private readonly _max?: number;
   private readonly _exMin?: boolean;
@@ -136,7 +146,7 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
     this._enums = enums;
   }
 
-  public default(defaultVal: number): OpenApiSchemaNumber {
+  public default(defaultVal: number): OpenApiSchemaNumberReturn<T> {
     return new OpenApiSchemaNumber(
       this._type,
       this._xml,
@@ -152,11 +162,11 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
       this._format,
       this._mult,
       this._enums,
-    );
+    ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public enum(...enumVal: (number | null)[]): OpenApiSchemaNumber {
-    let schema: OpenApiSchemaNumber = this;
+  public enum(...enumVal: (number | null)[]) : OpenApiSchemaNumberReturn<T> {
+    let schema: OpenApiSchemaNumber<T> = this;
     for (const _enum of enumVal) {
       let enums: Set<number | null>;
       if (schema._enums) {
@@ -181,12 +191,12 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
         schema._format,
         schema._mult,
         enums,
-      );
+      ) as OpenApiSchemaNumberReturn<T>;
     }
-    return schema;
+    return schema as OpenApiSchemaNumberReturn<T>;
   }
 
-  public nullable(): OpenApiSchemaNumber {
+  public nullable() : OpenApiSchemaNumberReturn<T> {
     return new OpenApiSchemaNumber(
       this._type,
       this._xml,
@@ -202,10 +212,10 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
       this._format,
       this._mult,
       this._enums,
-    );
+    ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public multipleOf(multiple: number) {
+  public multipleOf(multiple: number) : OpenApiSchemaNumberReturn<T> {
     return new OpenApiSchemaNumber(
       this._type,
       this._xml,
@@ -221,18 +231,16 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
       this._format,
       multiple,
       this._enums,
-    );
+    ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public format(format: OpenApiSchemaNumberFormat) {
-    if (
-      (this._type === "integer" && format === "float") ||
-      (this._type === "integer" && format === "double") ||
-      (this._type === "number" && format === "int32") ||
-      (this._type === "number" && format === "int64")
-    ) {
-      throw new Error(`Cannot assign ${format} if the type is ${this._type}`);
-    }
+  public format(
+    format: T extends "number"
+      ? "float" | "double"
+      : T extends "integer"
+        ? "int32" | "int64"
+        : never,
+  ): OpenApiSchemaNumberReturn<T> {
     return new OpenApiSchemaNumber(
       this._type,
       this._xml,
@@ -248,10 +256,10 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
       format,
       this._mult,
       this._enums,
-    );
+    ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public exclusiveMax() {
+  public exclusiveMax() : OpenApiSchemaNumberReturn<T> {
     if (!this._max) {
       throw new Error(
         `Cannot add an exclusive maximum as a maximum has not been added yet.`,
@@ -272,10 +280,10 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
       this._format,
       this._mult,
       this._enums,
-    );
+    ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public exclusiveMin() {
+  public exclusiveMin(): OpenApiSchemaNumberReturn<T> {
     if (!this._min) {
       throw new Error(
         `Cannot add an exclusive minimum as a minimum has not been added yet.`,
@@ -296,10 +304,10 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
       this._format,
       this._mult,
       this._enums,
-    );
+    ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public max(maximum: number) {
+  public max(maximum: number) : OpenApiSchemaNumberReturn<T> {
     if (this._min && this._min > maximum) {
       throw new Error(
         `${maximum} is smaller than the current minimum ${this._min}`,
@@ -320,10 +328,10 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
       this._format,
       this._mult,
       this._enums,
-    );
+    ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public min(minimum: number) {
+  public min(minimum: number) : OpenApiSchemaNumberReturn<T> {
     if (this._max && this._max < minimum) {
       throw new Error(
         `${minimum} is larger than the current maximum ${this._max}`,
@@ -344,10 +352,10 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
       this._format,
       this._mult,
       this._enums,
-    );
+    ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public xml(xml: OpenApiXML): OpenApiSchemaNumber {
+  public xml(xml: OpenApiXML) :OpenApiSchemaNumberReturn<T> {
     return new OpenApiSchemaNumber(
       this._type,
       xml,
@@ -363,9 +371,9 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
       this._format,
       this._mult,
       this._enums,
-    );
+    )as OpenApiSchemaNumberReturn<T>;
   }
-  public externalDocs(docs: OpenApiDocumentation): OpenApiSchemaNumber {
+  public externalDocs(docs: OpenApiDocumentation): OpenApiSchemaNumberReturn<T> {
     return new OpenApiSchemaNumber(
       this._type,
       this._xml,
@@ -381,9 +389,9 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
       this._format,
       this._mult,
       this._enums,
-    );
+    ) as OpenApiSchemaNumberReturn<T>;
   }
-  public example(example: OpenApiExample): OpenApiSchemaNumber {
+  public example(example: OpenApiExample) : OpenApiSchemaNumberReturn<T> {
     return new OpenApiSchemaNumber(
       this._type,
       this._xml,
@@ -399,10 +407,10 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
       this._format,
       this._mult,
       this._enums,
-    );
+    ) as OpenApiSchemaNumberReturn<T>;
   }
-  public description(description: string): OpenApiSchemaNumber {
-    return new OpenApiSchemaNumber(
+  public description(description: string): OpenApiSchemaNumberReturn<T> {
+    return new OpenApiSchemaNumber<T>(
       this._type,
       this._xml,
       this._docs,
@@ -417,7 +425,7 @@ class OpenApiSchemaNumber extends AbstractOpenApiSchema {
       this._format,
       this._mult,
       this._enums,
-    );
+    ) as OpenApiSchemaNumberReturn<T>;
   }
   public toJSON(): unknown {
     const json = this.commonJSON();
