@@ -122,6 +122,115 @@ describe("OpenAPI Schema Number tests.", () => {
 
 describe("OpenApi Object tests", () => {
   const object = OpenApiObject;
+
+  test("object properties test", () => {
+    const schema = OpenApiObject.properties({
+      name: OpenApiString.min(1).description("Display name of the user."),
+      username: OpenApiString.min(1).description("The username of the user."),
+      id: OpenApiString.format("uuid")
+        .example("5e91507e-5630-4efd-9fd4-799178870b10")
+        .description("Unique identifier for the user."),
+      mode: OpenApiString.enum("BASIC", "ADVANCED", null).description(
+        "Mode for the user.",
+      ),
+      profilePhoto: OpenApiString.nullable().description(
+        "A URL to the users profile photo.",
+      ),
+      bio: OpenApiString.nullable().description("A bio for the users profile."),
+      birthday: OpenApiString.nullable()
+        .format("date")
+        .description("Birthday of the user."),
+      timezone: OpenApiString.nullable().description("Timezone for the user."),
+      postCount: OpenApiInteger.nullable().description(
+        "Number of posts for this user.",
+      ),
+    }).required("username", "mode");
+    expect(schema.toJSON()).toMatchObject({
+      type: "object",
+      required: ["username", "mode"],
+      properties: {
+        name: {
+          type: "string",
+          description: "Display name of the user.",
+          minLength: 1,
+        },
+        username: {
+          type: "string",
+          description: "The username of the user.",
+          minLength: 1,
+        },
+        id: {
+          type: "string",
+          description: "Unique identifier for the user.",
+          example: "5e91507e-5630-4efd-9fd4-799178870b10",
+          format: "uuid",
+        },
+        mode: {
+          type: "string",
+          description: "Mode for the user.",
+          enum: ["BASIC", "ADVANCED", null],
+        },
+        profilePhoto: {
+          type: "string",
+          description: "A URL to the users profile photo.",
+          nullable: true,
+        },
+        bio: {
+          type: "string",
+          description: "A bio for the users profile.",
+          nullable: true,
+        },
+        birthday: {
+          type: "string",
+          description: "Birthday of the user.",
+          nullable: true,
+          format: "date",
+        },
+        timezone: {
+          type: "string",
+          description: "Timezone for the user.",
+          nullable: true,
+        },
+        postCount: {
+          type: "integer",
+          description: "Number of posts for this user.",
+          nullable: true,
+        },
+      },
+    });
+  });
+
+  test("max is smaller than min or min is greater than max", () => {
+    expect(() => object.min(2).max(0)).toThrowError();
+    expect(() => object.max(30).min(31)).toThrowError();
+  });
+
+  test("test max properties", () => {
+    const actual = object.max(2);
+    expect(actual.toJSON()).toMatchObject({
+      type: "object",
+      maxProperties: 2,
+    });
+    expect(() => object.max(-2)).toThrowError();
+  });
+
+  test("test min properties", () => {
+    const actual = object.min(2);
+    expect(actual.toJSON()).toMatchObject({
+      type: "object",
+      minProperties: 2,
+    });
+    expect(() => object.min(-2)).toThrowError();
+  });
+
+  test("test adding nullable", () => {
+    const actual = object.nullable();
+    expect(actual.toJSON()).toMatchObject({
+      type: "object",
+      nullable: true,
+    });
+  });
+
   test("test adding additional properties", () => {
     const actualTrue = object.additionalProperty(true);
     const actualFalse = object.additionalProperty(false);

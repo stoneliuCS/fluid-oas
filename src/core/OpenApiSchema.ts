@@ -825,6 +825,8 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
       throw new Error(
         `Given ${maxProperties} which is smaller than current min ${this._minProperties}`,
       );
+    } else if (maxProperties < 0) {
+      throw new Error("Cannot be less than zero.");
     }
     return new OpenApiSchemaObject(
       this._properties,
@@ -846,6 +848,8 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
       throw new Error(
         `Given ${minProperties} which exceeds current max ${this._maxProperties}`,
       );
+    } else if (minProperties < 0) {
+      throw new Error(`Minimum cannot be less than zero.`);
     }
     return new OpenApiSchemaObject(
       this._properties,
@@ -980,7 +984,7 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
       this._docs,
       this._example,
       this._description,
-      this._nullable,
+      true,
       this._default,
       this._requiredProperties,
       this._additionalProperties,
