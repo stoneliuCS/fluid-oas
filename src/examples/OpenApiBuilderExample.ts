@@ -1,7 +1,6 @@
 import { OpenApiInfo } from "../core/OpenApiInfo";
 import { OpenApiMetadata } from "../core/OpenApiMetadata";
 import { OpenApiPath } from "../core/OpenApiPath";
-import { OpenApiSchema } from "../core/OpenApiSchema";
 
 /* DEFINE OPENAPI INFO OBJECT */
 let openapiInfo = OpenApiInfo.create("Pet Store", "1.0.0");

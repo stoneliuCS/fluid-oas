@@ -2,6 +2,7 @@ import type { OpenApiSchemaType } from "../types/OpenApiTypes";
 import type { OpenApiExample } from "./OpenApiExample";
 import type { OpenApiDocumentation } from "./OpenApiDocumentation";
 import type { OpenApiXML } from "./OpenApiXML";
+import { deepFreeze } from "../lib/freeze";
 
 abstract class OpenApiSchema {
   protected readonly _type: OpenApiSchemaType;
@@ -782,41 +783,46 @@ class OpenApiSchemaString extends OpenApiSchema {
 
 class OpenApiSchemaObject extends OpenApiSchema {
   private readonly _properties?: Map<string, OpenApiSchema>;
-  private readonly requiredProperties?: Set<string>;
-  private readonly additionalProperties?: Map<string, OpenApiSchema>;
-  private readonly minProperties?: number;
-  private readonly maxProperties?: number;
+  private readonly _requiredProperties?: Set<string>;
+  private readonly _additionalProperties?: Map<string, OpenApiSchema>;
+  private readonly _minProperties?: number;
+  private readonly _maxProperties?: number;
 
   public constructor(
-    properties?: Map<string, OpenApiSchema>,
-    xml?: OpenApiXML,
-    docs?: OpenApiDocumentation,
-    example?: OpenApiExample,
-    description?: string,
-    requiredProperties?: Set<string>,
-    additionalProperties?: Map<string, OpenApiSchema>,
-    minProperties?: number,
-    maxProperties?: number,
+    _properties?: Map<string, OpenApiSchema>,
+    _xml?: OpenApiXML,
+    _docs?: OpenApiDocumentation,
+    _example?: OpenApiExample,
+    _description?: string,
+    _nullable?: boolean,
+    _defaultVal?: unknown,
+    _requiredProperties?: Set<string>,
+    _additionalProperties?: Map<string, OpenApiSchema>,
+    _minProperties?: number,
+    _maxProperties?: number,
   ) {
-    super("object", xml, docs, example, description);
-    this._properties = properties;
-    this.requiredProperties = requiredProperties;
-    this.additionalProperties = additionalProperties;
-    this.minProperties = minProperties;
-    this.maxProperties = maxProperties;
+    super(
+      "object",
+      _xml,
+      _docs,
+      _example,
+      _description,
+      _nullable,
+      _defaultVal,
+    );
+    this._properties = _properties;
+    this._requiredProperties = _requiredProperties;
+    this._additionalProperties = _additionalProperties;
+    this._minProperties = _minProperties;
+    this._maxProperties = _maxProperties;
+    deepFreeze(this);
   }
 
-  public additionalProperty(
-    propertyName: string,
-    propertyValue: OpenApiSchema,
-  ) {
-    let additionalProperties: Map<string, OpenApiSchema>;
-    if (!this.additionalProperties) {
-      additionalProperties = new Map();
-      additionalProperties.set(propertyName, propertyValue);
-    } else {
-      additionalProperties = new Map(this.additionalProperties);
-      additionalProperties.set(propertyName, propertyValue);
+  public max(maxProperties: number) {
+    if (this._minProperties && maxProperties < this._minProperties) {
+      throw new Error(
+        `Given ${maxProperties} which is smaller than current min ${this._minProperties}`,
+      );
     }
     return new OpenApiSchemaObject(
       this._properties,
@@ -824,37 +830,203 @@ class OpenApiSchemaObject extends OpenApiSchema {
       this._docs,
       this._example,
       this._description,
-      this.requiredProperties,
-      this.additionalProperties,
-      this.minProperties,
-      this.maxProperties,
+      this._nullable,
+      this._default,
+      this._requiredProperties,
+      this._additionalProperties,
+      this._minProperties,
+      maxProperties,
     );
   }
 
+  public min(minProperties: number) {
+    if (this._maxProperties && minProperties > this._maxProperties) {
+      throw new Error(
+        `Given ${minProperties} which exceeds current max ${this._maxProperties}`,
+      );
+    }
+    return new OpenApiSchemaObject(
+      this._properties,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._requiredProperties,
+      this._additionalProperties,
+      minProperties,
+      this._maxProperties,
+    );
+  }
+
+  public additionalProperty(properties: { [key: string]: OpenApiSchema }) {
+    let mappedSchemas: Map<string, OpenApiSchema>;
+    if (this._additionalProperties) {
+      mappedSchemas = new Map(this._additionalProperties);
+    } else {
+      mappedSchemas = new Map();
+    }
+    for (const key in properties) {
+      if (properties[key]) {
+        const openapiSchema = properties[key];
+        mappedSchemas.set(key, openapiSchema);
+      }
+    }
+    return new OpenApiSchemaObject(
+      this._properties,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._requiredProperties,
+      mappedSchemas,
+      this._minProperties,
+      this._maxProperties,
+    );
+  }
+
+  private stringifyProperties(properties: Map<string, OpenApiSchema>): unknown {
+    const mapper: { [key: string]: unknown } = {};
+    for (const key of properties.keys()) {
+      const val = properties.get(key);
+      if (val) {
+        mapper[key] = val.toJSON();
+      }
+    }
+    return mapper;
+  }
+
   public toJSON(): unknown {
-    throw new Error("Method not implemented.");
+    const json = this.commonJSON();
+    if (this._requiredProperties) {
+      Object.defineProperty(json, "required", {
+        value: Array.from(this._requiredProperties),
+      });
+    }
+    if (this._additionalProperties) {
+      Object.defineProperty(json, "additionalProperties", {
+        value: Array.from(this._additionalProperties),
+      });
+    }
+    if (this._properties) {
+      Object.defineProperty(json, "properties", {
+        value: this.stringifyProperties(this._properties),
+      });
+    }
+    if (this._minProperties) {
+      Object.defineProperty(json, "minProperties", {
+        value: this._minProperties,
+      });
+    }
+    if (this._maxProperties) {
+      Object.defineProperty(json, "maxProperties", {
+        value: this._maxProperties,
+      });
+    }
+    return json;
+  }
+
+  public xml(xml: OpenApiXML): OpenApiSchemaObject {
+    return new OpenApiSchemaObject(
+      this._properties,
+      xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._requiredProperties,
+      this._additionalProperties,
+      this._minProperties,
+      this._maxProperties,
+    );
+  }
+  public externalDocs(docs: OpenApiDocumentation): OpenApiSchemaObject {
+    return new OpenApiSchemaObject(
+      this._properties,
+      this._xml,
+      docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._requiredProperties,
+      this._additionalProperties,
+      this._minProperties,
+      this._maxProperties,
+    );
+  }
+  public example(example: OpenApiExample): OpenApiSchemaObject {
+    return new OpenApiSchemaObject(
+      this._properties,
+      this._xml,
+      this._docs,
+      example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._requiredProperties,
+      this._additionalProperties,
+      this._minProperties,
+      this._maxProperties,
+    );
+  }
+  public nullable(): OpenApiSchemaObject {
+    return new OpenApiSchemaObject(
+      this._properties,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._requiredProperties,
+      this._additionalProperties,
+      this._minProperties,
+      this._maxProperties,
+    );
+  }
+  public default(defaultVal: unknown): OpenApiSchemaObject {
+    return new OpenApiSchemaObject(
+      this._properties,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      defaultVal,
+      this._requiredProperties,
+      this._additionalProperties,
+      this._minProperties,
+      this._maxProperties,
+    );
   }
 
   public required(...propertyName: string[]) {
     let schema: OpenApiSchemaObject = this;
     for (const name of propertyName) {
-      let requiredProperties: Set<string>;
-      if (schema.requiredProperties) {
-        requiredProperties = new Set(schema.requiredProperties);
+      let _requiredProperties: Set<string>;
+      if (schema._requiredProperties) {
+        _requiredProperties = new Set(schema._requiredProperties);
       } else {
-        requiredProperties = new Set();
+        _requiredProperties = new Set();
       }
-      requiredProperties.add(name);
+      _requiredProperties.add(name);
       schema = new OpenApiSchemaObject(
         schema._properties,
         schema._xml,
         schema._docs,
         schema._example,
         schema._description,
-        requiredProperties,
-        schema.additionalProperties,
-        schema.minProperties,
-        schema.maxProperties,
+        schema._nullable,
+        schema._default,
+        _requiredProperties,
+        schema._additionalProperties,
+        schema._minProperties,
+        schema._maxProperties,
       );
     }
     return schema;
@@ -867,15 +1039,41 @@ class OpenApiSchemaObject extends OpenApiSchema {
       this._docs,
       this._example,
       description,
-      this.requiredProperties,
-      this.additionalProperties,
-      this.minProperties,
-      this.maxProperties,
+      this._nullable,
+      this._default,
+      this._requiredProperties,
+      this._additionalProperties,
+      this._minProperties,
+      this._maxProperties,
     );
   }
 
   public properties(properties: { [key: string]: OpenApiSchema }) {
-    return this;
+    let mappedSchemas: Map<string, OpenApiSchema>;
+    if (this._properties) {
+      mappedSchemas = new Map(this._properties);
+    } else {
+      mappedSchemas = new Map();
+    }
+    for (const key in properties) {
+      if (properties[key]) {
+        const openapiSchema = properties[key];
+        mappedSchemas.set(key, openapiSchema);
+      }
+    }
+    return new OpenApiSchemaObject(
+      mappedSchemas,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
+      this._nullable,
+      this._default,
+      this._requiredProperties,
+      this._additionalProperties,
+      this._minProperties,
+      this._maxProperties,
+    );
   }
 }
 
