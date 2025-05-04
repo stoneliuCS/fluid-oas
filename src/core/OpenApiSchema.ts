@@ -595,10 +595,10 @@ class OpenApiSchemaString extends OpenApiSchema {
         enums,
       );
     }
-    return schema
+    return schema;
   }
 
-  public nullable(): OpenApiSchema {
+  public nullable(): OpenApiSchemaString {
     return new OpenApiSchemaString(
       this._xml,
       this._docs,
@@ -781,7 +781,7 @@ class OpenApiSchemaString extends OpenApiSchema {
 }
 
 class OpenApiSchemaObject extends OpenApiSchema {
-  private readonly properties?: Map<string, OpenApiSchema>;
+  private readonly _properties?: Map<string, OpenApiSchema>;
   private readonly requiredProperties?: Set<string>;
   private readonly additionalProperties?: Map<string, OpenApiSchema>;
   private readonly minProperties?: number;
@@ -799,7 +799,7 @@ class OpenApiSchemaObject extends OpenApiSchema {
     maxProperties?: number,
   ) {
     super("object", xml, docs, example, description);
-    this.properties = properties;
+    this._properties = properties;
     this.requiredProperties = requiredProperties;
     this.additionalProperties = additionalProperties;
     this.minProperties = minProperties;
@@ -819,7 +819,7 @@ class OpenApiSchemaObject extends OpenApiSchema {
       additionalProperties.set(propertyName, propertyValue);
     }
     return new OpenApiSchemaObject(
-      this.properties,
+      this._properties,
       this._xml,
       this._docs,
       this._example,
@@ -846,7 +846,7 @@ class OpenApiSchemaObject extends OpenApiSchema {
       }
       requiredProperties.add(name);
       schema = new OpenApiSchemaObject(
-        schema.properties,
+        schema._properties,
         schema._xml,
         schema._docs,
         schema._example,
@@ -862,7 +862,7 @@ class OpenApiSchemaObject extends OpenApiSchema {
 
   public description(description: string): OpenApiSchemaObject {
     return new OpenApiSchemaObject(
-      this.properties,
+      this._properties,
       this._xml,
       this._docs,
       this._example,
@@ -874,26 +874,8 @@ class OpenApiSchemaObject extends OpenApiSchema {
     );
   }
 
-  public property(propertyName: string, propertyValue: OpenApiSchema) {
-    let properties: Map<string, OpenApiSchema>;
-    if (!this.properties) {
-      properties = new Map();
-      properties.set(propertyName, propertyValue);
-    } else {
-      properties = new Map(this.properties);
-      properties.set(propertyName, propertyValue);
-    }
-    return new OpenApiSchemaObject(
-      properties,
-      this._xml,
-      this._docs,
-      this._example,
-      this._description,
-      this.requiredProperties,
-      this.additionalProperties,
-      this.minProperties,
-      this.maxProperties,
-    );
+  public properties(properties: { [key: string]: OpenApiSchema }) {
+    return this;
   }
 }
 
