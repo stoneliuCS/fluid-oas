@@ -134,7 +134,7 @@ class OpenApiSchemaNumber extends OpenApiSchema {
     this._enums = enums;
   }
 
-  public default(defaultVal: number): OpenApiSchema {
+  public default(defaultVal: number): OpenApiSchemaNumber {
     return new OpenApiSchemaNumber(
       this._type,
       this._xml,
