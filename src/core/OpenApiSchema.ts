@@ -63,7 +63,9 @@ abstract class AbstractOpenApiSchema {
   }
 
   public abstract xml(xml: OpenApiXML): AbstractOpenApiSchema;
-  public abstract externalDocs(docs: OpenApiDocumentation): AbstractOpenApiSchema;
+  public abstract externalDocs(
+    docs: OpenApiDocumentation,
+  ): AbstractOpenApiSchema;
   public abstract example(example: OpenApiExample): AbstractOpenApiSchema;
   public abstract description(description: string): AbstractOpenApiSchema;
   public abstract nullable(): AbstractOpenApiSchema;
@@ -784,7 +786,7 @@ class OpenApiSchemaString extends AbstractOpenApiSchema {
 class OpenApiSchemaObject extends AbstractOpenApiSchema {
   private readonly _properties?: Map<string, AbstractOpenApiSchema>;
   private readonly _requiredProperties?: Set<string>;
-  private readonly _additionalProperties?: Map<string, AbstractOpenApiSchema>;
+  private readonly _additionalProperties?: AbstractOpenApiSchema | boolean;
   private readonly _minProperties?: number;
   private readonly _maxProperties?: number;
 
@@ -797,7 +799,7 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
     _nullable?: boolean,
     _defaultVal?: unknown,
     _requiredProperties?: Set<string>,
-    _additionalProperties?: Map<string, AbstractOpenApiSchema>,
+    _additionalProperties?: AbstractOpenApiSchema | boolean,
     _minProperties?: number,
     _maxProperties?: number,
   ) {
@@ -860,19 +862,7 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
     );
   }
 
-  public additionalProperty(properties: { [key: string]: AbstractOpenApiSchema }) {
-    let mappedSchemas: Map<string, AbstractOpenApiSchema>;
-    if (this._additionalProperties) {
-      mappedSchemas = new Map(this._additionalProperties);
-    } else {
-      mappedSchemas = new Map();
-    }
-    for (const key in properties) {
-      if (properties[key]) {
-        const openapiSchema = properties[key];
-        mappedSchemas.set(key, openapiSchema);
-      }
-    }
+  public additionalProperty(value: AbstractOpenApiSchema | boolean) {
     return new OpenApiSchemaObject(
       this._properties,
       this._xml,
@@ -882,13 +872,15 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
       this._nullable,
       this._default,
       this._requiredProperties,
-      mappedSchemas,
+      value,
       this._minProperties,
       this._maxProperties,
     );
   }
 
-  private stringifyProperties(properties: Map<string, AbstractOpenApiSchema>): unknown {
+  private stringifyProperties(
+    properties: Map<string, AbstractOpenApiSchema>,
+  ): unknown {
     const mapper: { [key: string]: unknown } = {};
     for (const key of properties.keys()) {
       const val = properties.get(key);
@@ -906,10 +898,17 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
         value: Array.from(this._requiredProperties),
       });
     }
-    if (this._additionalProperties) {
-      Object.defineProperty(json, "additionalProperties", {
-        value: Array.from(this._additionalProperties),
-      });
+
+    if (this._additionalProperties !== undefined) {
+      if (typeof this._additionalProperties === "object") {
+        Object.defineProperty(json, "additionalProperties", {
+          value: this._additionalProperties.toJSON(),
+        });
+      } else {
+        Object.defineProperty(json, "additionalProperties", {
+          value: this._additionalProperties,
+        });
+      }
     }
     if (this._properties) {
       Object.defineProperty(json, "properties", {
@@ -1089,4 +1088,4 @@ export const OpenApiInteger = AbstractOpenApiSchema.create("integer");
 export const OpenApiNumber = AbstractOpenApiSchema.create("number");
 export const OpenApiBoolean = AbstractOpenApiSchema.create("boolean");
 export const OpenApiObject = AbstractOpenApiSchema.create("object");
-export type OpenApiSchema = AbstractOpenApiSchema
+export type OpenApiSchema = AbstractOpenApiSchema;

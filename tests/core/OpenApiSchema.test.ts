@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   OpenApiInteger,
   OpenApiNumber,
+  OpenApiObject,
   OpenApiString,
 } from "../../src/core/OpenApiSchema";
 
@@ -40,7 +41,7 @@ describe("OpenAPI schema String tests", () => {
 
   test("Test adding pattern", () => {
     const actual = openapiString.pattern(/hello/).toJSON();
-    expect(actual).toMatchObject({ type: "string", pattern: /hello/ });
+    expect(actual).toMatchObject({ type: "string", pattern: "hello" });
   });
 
   test("Test that min length and max length cannot have contridicting values", () => {
@@ -76,14 +77,8 @@ describe("OpenAPI Schema Number tests.", () => {
   });
 
   test("Test add exclusiveMaximum", () => {
-    const actualInteger = openapiInteger
-      .max(2)
-      .exclusiveMax()
-      .toJSON();
-    const actualNumber = openapiNumber
-      .max(30)
-      .exclusiveMax()
-      .toJSON();
+    const actualInteger = openapiInteger.max(2).exclusiveMax().toJSON();
+    const actualNumber = openapiNumber.max(30).exclusiveMax().toJSON();
     expect(actualInteger).toMatchObject({
       type: "integer",
       maximum: 2,
@@ -97,14 +92,8 @@ describe("OpenAPI Schema Number tests.", () => {
   });
 
   test("Test add exclusiveMinimum", () => {
-    const actualInteger = openapiInteger
-      .min(2)
-      .exclusiveMin()
-      .toJSON();
-    const actualNumber = openapiNumber
-      .min(30)
-      .exclusiveMin()
-      .toJSON();
+    const actualInteger = openapiInteger.min(2).exclusiveMin().toJSON();
+    const actualNumber = openapiNumber.min(30).exclusiveMin().toJSON();
     expect(actualInteger).toMatchObject({
       type: "integer",
       minimum: 2,
@@ -127,6 +116,46 @@ describe("OpenAPI Schema Number tests.", () => {
     expect(actualNumber).toMatchObject({
       type: "number",
       multipleOf: 10,
+    });
+  });
+});
+
+describe("OpenApi Object tests", () => {
+  const object = OpenApiObject;
+  test("test adding additional properties", () => {
+    const actualTrue = object.additionalProperty(true);
+    const actualFalse = object.additionalProperty(false);
+    const actualStringSchema = object.additionalProperty(OpenApiString);
+    const actualObjectSchema = object.additionalProperty(
+      OpenApiObject.properties({ id: OpenApiString }),
+    );
+    expect(actualTrue.toJSON()).toMatchObject({
+      type: "object",
+      additionalProperties: true,
+    });
+
+    expect(actualFalse.toJSON()).toMatchObject({
+      type: "object",
+      additionalProperties: false,
+    });
+
+    expect(actualStringSchema.toJSON()).toMatchObject({
+      type: "object",
+      additionalProperties: {
+        type: "string",
+      },
+    });
+
+    expect(actualObjectSchema.toJSON()).toMatchObject({
+      type: "object",
+      additionalProperties: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+          },
+        },
+      },
     });
   });
 });
