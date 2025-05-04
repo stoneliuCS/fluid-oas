@@ -2,9 +2,11 @@ import {
   OpenApiInteger,
   OpenApiObject,
   OpenApiString,
+  type OpenApiComponentSchema,
 } from "../core/OpenApiSchema";
+import type { OpenApiSchemaType } from "../types/OpenApiTypes";
 
-const userSchema = OpenApiObject.properties({
+const userSchema: OpenApiComponentSchema = OpenApiObject.properties({
   name: OpenApiString.min(1).description("Display name of the user."),
   username: OpenApiString.min(1).description("The username of the user."),
   id: OpenApiString.format("uuid")

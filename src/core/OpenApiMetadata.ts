@@ -7,7 +7,7 @@ import type {
 } from "../types/OpenApiTypes";
 import type { OpenApiInfo } from "./OpenApiInfo";
 import type { OpenApiPath } from "./OpenApiPath";
-import type { OpenApiSchema } from "./OpenApiSchema";
+import type { OpenApiSchemaType } from "./OpenApiSchema";
 import type { OpenApiSecurity } from "./OpenApiSecurity";
 import type { OpenApiServer } from "./OpenApiServer";
 import type { OpenApiTag } from "./OpenApiTag";
@@ -25,7 +25,7 @@ export class OpenApiMetadata {
   private readonly servers?: Set<OpenApiServer>;
   private readonly paths?: Set<OpenApiPath>;
   private readonly webhooks?: Map<string, OpenApiPath>;
-  private readonly components?: OpenApiSchema;
+  private readonly components?: OpenApiSchemaType;
   private readonly security?: OpenApiSecurity[];
   private readonly tags?: OpenApiTag[];
   private readonly docs?: OpenApiDocumentation;

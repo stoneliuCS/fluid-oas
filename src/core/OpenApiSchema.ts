@@ -1089,3 +1089,4 @@ export const OpenApiInteger = OpenApiSchema.create("integer");
 export const OpenApiNumber = OpenApiSchema.create("number");
 export const OpenApiBoolean = OpenApiSchema.create("boolean");
 export const OpenApiObject = OpenApiSchema.create("object");
+export type OpenApiComponentSchema = OpenApiSchema

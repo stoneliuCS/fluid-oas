@@ -1,35 +1,101 @@
 import { OpenApiNumber } from "../core/OpenApiSchema";
 
-export function randomInteger(min: number, max: number) {
+const randomInteger = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
+const randomString = () => (Math.random() + 1).toString(36).substring(7);
 
-export const randomString = () => (Math.random() + 1).toString(36).substring(7);
+const randomNumberArray = (min: number, max: number) => {
+  return Array.from({ length: randomInteger(min, max) }, () =>
+    randomInteger(min, max),
+  );
+};
 
-export const generateOpenApiNumber = () => {
-  let number = OpenApiNumber;
-  const randomIntegerVal = () => randomInteger(0, 10000);
-  const functionMappings = {
-    minimum: () => {
-      number = number.min(randomIntegerVal());
-    },
-    default: () => {
-      number = number.default(randomIntegerVal());
-    },
-    nullable: () => {
-      number = number.nullable();
-    },
-    exampleFn: () => {
-      number = number.example(randomIntegerVal());
-    },
-    descriptionFn: () => {
-      number = number.description(randomString());
-    },
+const getRandomElement = (array: any[]) => {
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+};
+
+const LOWER_BOUND = 0;
+const UPPER_BOUND = 1000000;
+
+const generateOpenApiNumber = () => {
+  const randomIntegerVal = () => randomInteger(LOWER_BOUND, UPPER_BOUND);
+  const mappings: Map<string, () => void> = new Map();
+  // Create a mapping of EXPECTED JSON PROPERTY NAMES AND METHODS THAT GENERATE THEM
+  let numberSchema = OpenApiNumber;
+
+  const defaultFn = () => {
+    numberSchema = numberSchema.default(randomIntegerVal());
   };
 
-  for (const fn of Object.values(functionMappings)) {
-    fn();
-  }
+  const enumFn = () => {
+    const numbers = randomNumberArray(0, 10);
+    numberSchema = numberSchema.enum(...numbers);
+  };
 
-  return number;
+  const nullableFn = () => {
+    numberSchema = numberSchema.nullable();
+  };
+
+  const multipleFn = () => {
+    numberSchema = numberSchema.multipleOf(randomIntegerVal());
+  };
+
+  const formatFn = () => {
+    const formats = ["float", "double"];
+    numberSchema = numberSchema.format(getRandomElement(formats));
+  };
+
+  const exclusiveMaxFn = () => {
+    if (Object.hasOwn(numberSchema, "maximum")) {
+      numberSchema = numberSchema.exclusiveMax();
+    }
+  };
+
+  const exclusiveMinFn = () => {
+    if (Object.hasOwn(numberSchema, "minimum")) {
+      numberSchema = numberSchema.exclusiveMin();
+    }
+  };
+
+  const maxFn = () => {
+    numberSchema = numberSchema.max(
+      randomInteger(UPPER_BOUND + 1, UPPER_BOUND + UPPER_BOUND),
+    );
+  };
+
+  const minFn = () => {
+    numberSchema = numberSchema.min(randomInteger(LOWER_BOUND, UPPER_BOUND));
+  };
+
+  const descriptionFn = () => {
+    numberSchema = numberSchema.description(randomString());
+  };
+
+  mappings.set("default", defaultFn);
+  mappings.set("enum", enumFn);
+  mappings.set("nullable", nullableFn);
+  mappings.set("multipleOf", multipleFn);
+  mappings.set("format", formatFn);
+  mappings.set("exclusiveMaximum", exclusiveMaxFn);
+  mappings.set("exclusiveMinimum", exclusiveMinFn);
+  mappings.set("minimum", minFn);
+  mappings.set("maximum", maxFn);
+  mappings.set("description", descriptionFn);
+
+  mappings.forEach((fn) => {
+    fn();
+  });
+
+  return numberSchema;
+};
+
+export const createRandomOpenApiNumberSchemas = (numToCreate: number) => {
+  const nums = [];
+  for (let i = 0; i < numToCreate; i++) {
+    const schema = generateOpenApiNumber();
+    nums.push(schema);
+  }
+  return nums;
 };
