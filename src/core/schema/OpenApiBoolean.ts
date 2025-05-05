@@ -2,9 +2,9 @@ import { deepFreeze } from "../../lib/freeze";
 import type { OpenApiDocumentation } from "../OpenApiDocumentation";
 import type { OpenApiExample } from "../OpenApiExample";
 import type { OpenApiXML } from "../OpenApiXML";
-import { AbstractOpenApiSchema } from "./OpenApiSchema";
+import { OpenApiSchema } from "./OpenApiSchema";
 
-class OpenApiSchemaBoolean extends AbstractOpenApiSchema {
+class OpenApiSchemaBoolean extends OpenApiSchema {
   public constructor(
     xml?: OpenApiXML,
     docs?: OpenApiDocumentation,

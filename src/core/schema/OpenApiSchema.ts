@@ -3,7 +3,7 @@ import type { OpenApiDocumentation } from "../OpenApiDocumentation";
 import type { OpenApiExample } from "../OpenApiExample";
 import type { OpenApiXML } from "../OpenApiXML";
 
-export abstract class AbstractOpenApiSchema {
+export abstract class OpenApiSchema {
   protected readonly _type: OpenApiSchemaType;
   protected readonly _description?: string;
   protected readonly _xml?: OpenApiXML;
@@ -30,14 +30,14 @@ export abstract class AbstractOpenApiSchema {
     this._default = defaultVal;
   }
 
-  public abstract xml(xml: OpenApiXML): AbstractOpenApiSchema;
+  public abstract xml(xml: OpenApiXML): OpenApiSchema;
   public abstract externalDocs(
     docs: OpenApiDocumentation,
-  ): AbstractOpenApiSchema;
-  public abstract example(example: OpenApiExample): AbstractOpenApiSchema;
-  public abstract description(description: string): AbstractOpenApiSchema;
-  public abstract nullable(): AbstractOpenApiSchema;
-  public abstract default(defaultVal: unknown): AbstractOpenApiSchema;
+  ): OpenApiSchema;
+  public abstract example(example: OpenApiExample): OpenApiSchema;
+  public abstract description(description: string): OpenApiSchema;
+  public abstract nullable(): OpenApiSchema;
+  public abstract default(defaultVal: unknown): OpenApiSchema;
   public abstract toJSON(): unknown;
 
   protected commonJSON(): unknown {

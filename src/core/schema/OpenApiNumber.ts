@@ -3,7 +3,7 @@ import type { OpenApiSchemaType } from "../../types/OpenApiTypes";
 import type { OpenApiDocumentation } from "../OpenApiDocumentation";
 import type { OpenApiExample } from "../OpenApiExample";
 import type { OpenApiXML } from "../OpenApiXML";
-import { AbstractOpenApiSchema } from "./OpenApiSchema";
+import { OpenApiSchema } from "./OpenApiSchema";
 
 type OpenApiSchemaNumberFormat = "float" | "double" | "int32" | "int64";
 
@@ -16,7 +16,7 @@ type OpenApiSchemaNumberReturn<T extends "number" | "integer"> =
 
 class OpenApiSchemaNumber<
   T extends "integer" | "number",
-> extends AbstractOpenApiSchema {
+> extends OpenApiSchema {
   private readonly _min?: number;
   private readonly _max?: number;
   private readonly _exMin?: boolean;
@@ -367,7 +367,7 @@ class OpenApiSchemaNumber<
   }
 }
 
-class OpenApiSchemaBoolean extends AbstractOpenApiSchema {
+class OpenApiSchemaBoolean extends OpenApiSchema {
   public constructor(
     xml?: OpenApiXML,
     docs?: OpenApiDocumentation,

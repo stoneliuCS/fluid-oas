@@ -4,7 +4,7 @@ import type { OpenApiDocumentation } from "./OpenApiDocumentation";
 import type { OpenApiXML } from "./OpenApiXML";
 import { deepFreeze } from "../lib/freeze";
 
-abstract class AbstractOpenApiSchema {
+abstract class OpenApiSchema {
   protected readonly _type: OpenApiSchemaType;
   protected readonly _description?: string;
   protected readonly _xml?: OpenApiXML;
@@ -24,7 +24,7 @@ abstract class AbstractOpenApiSchema {
   public static create(type: "oneOf"): OpenApiSchemaOneOf;
   public static create(type: "anyOf"): OpenApiSchemaAnyOf;
   public static create(type: "not"): OpenApiSchemaNot;
-  public static create(type: OpenApiSchemaType): AbstractOpenApiSchema {
+  public static create(type: OpenApiSchemaType): OpenApiSchema {
     switch (type) {
       case "string":
         return new OpenApiSchemaString();
@@ -63,14 +63,14 @@ abstract class AbstractOpenApiSchema {
     this._default = defaultVal;
   }
 
-  public abstract xml(xml: OpenApiXML): AbstractOpenApiSchema;
+  public abstract xml(xml: OpenApiXML): OpenApiSchema;
   public abstract externalDocs(
     docs: OpenApiDocumentation,
-  ): AbstractOpenApiSchema;
-  public abstract example(example: OpenApiExample): AbstractOpenApiSchema;
-  public abstract description(description: string): AbstractOpenApiSchema;
-  public abstract nullable(): AbstractOpenApiSchema;
-  public abstract default(defaultVal: unknown): AbstractOpenApiSchema;
+  ): OpenApiSchema;
+  public abstract example(example: OpenApiExample): OpenApiSchema;
+  public abstract description(description: string): OpenApiSchema;
+  public abstract nullable(): OpenApiSchema;
+  public abstract default(defaultVal: unknown): OpenApiSchema;
   public abstract toJSON(): unknown;
 
   protected commonJSON(): unknown {
@@ -111,7 +111,7 @@ type OpenApiSchemaNumberReturn<T extends "number" | "integer"> =
 
 class OpenApiSchemaNumber<
   T extends "integer" | "number",
-> extends AbstractOpenApiSchema {
+> extends OpenApiSchema {
   private readonly _min?: number;
   private readonly _max?: number;
   private readonly _exMin?: boolean;
@@ -462,7 +462,7 @@ class OpenApiSchemaNumber<
   }
 }
 
-class OpenApiSchemaBoolean extends AbstractOpenApiSchema {
+class OpenApiSchemaBoolean extends OpenApiSchema {
   public constructor(
     xml?: OpenApiXML,
     docs?: OpenApiDocumentation,
@@ -541,7 +541,7 @@ class OpenApiSchemaBoolean extends AbstractOpenApiSchema {
   }
 }
 
-class OpenApiSchemaString extends AbstractOpenApiSchema {
+class OpenApiSchemaString extends OpenApiSchema {
   private readonly _min?: number;
   private readonly _max?: number;
   private readonly _format?: string;
@@ -570,7 +570,7 @@ class OpenApiSchemaString extends AbstractOpenApiSchema {
     deepFreeze(this);
   }
 
-  public default(defaultVal: string): AbstractOpenApiSchema {
+  public default(defaultVal: string): OpenApiSchema {
     return new OpenApiSchemaString(
       this._xml,
       this._docs,
@@ -796,15 +796,15 @@ class OpenApiSchemaString extends AbstractOpenApiSchema {
   }
 }
 
-class OpenApiSchemaObject extends AbstractOpenApiSchema {
-  private readonly _properties?: Map<string, AbstractOpenApiSchema>;
+class OpenApiSchemaObject extends OpenApiSchema {
+  private readonly _properties?: Map<string, OpenApiSchema>;
   private readonly _requiredProperties?: Set<string>;
-  private readonly _additionalProperties?: AbstractOpenApiSchema | boolean;
+  private readonly _additionalProperties?: OpenApiSchema | boolean;
   private readonly _minProperties?: number;
   private readonly _maxProperties?: number;
 
   public constructor(
-    _properties?: Map<string, AbstractOpenApiSchema>,
+    _properties?: Map<string, OpenApiSchema>,
     _xml?: OpenApiXML,
     _docs?: OpenApiDocumentation,
     _example?: OpenApiExample,
@@ -812,7 +812,7 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
     _nullable?: boolean,
     _defaultVal?: unknown,
     _requiredProperties?: Set<string>,
-    _additionalProperties?: AbstractOpenApiSchema | boolean,
+    _additionalProperties?: OpenApiSchema | boolean,
     _minProperties?: number,
     _maxProperties?: number,
   ) {
@@ -879,7 +879,7 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
     );
   }
 
-  public additionalProperty(value: AbstractOpenApiSchema | boolean) {
+  public additionalProperty(value: OpenApiSchema | boolean) {
     return new OpenApiSchemaObject(
       this._properties,
       this._xml,
@@ -896,7 +896,7 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
   }
 
   private stringifyProperties(
-    properties: Map<string, AbstractOpenApiSchema>,
+    properties: Map<string, OpenApiSchema>,
   ): unknown {
     const mapper: { [key: string]: unknown } = {};
     for (const key of properties.keys()) {
@@ -1065,7 +1065,7 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
   }
 
   public property(propertyName: string, property: OpenApiSchema) {
-    let mappedSchemas: Map<string, AbstractOpenApiSchema>;
+    let mappedSchemas: Map<string, OpenApiSchema>;
     if (this._properties) {
       mappedSchemas = new Map(this._properties);
     } else {
@@ -1087,8 +1087,8 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
     );
   }
 
-  public properties(properties: { [key: string]: AbstractOpenApiSchema }) {
-    let mappedSchemas: Map<string, AbstractOpenApiSchema>;
+  public properties(properties: { [key: string]: OpenApiSchema }) {
+    let mappedSchemas: Map<string, OpenApiSchema>;
     if (this._properties) {
       mappedSchemas = new Map(this._properties);
     } else {
@@ -1116,16 +1116,16 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
   }
 }
 
-class OpenApiSchemaArray extends AbstractOpenApiSchema {}
-class OpenApiSchemaNot extends AbstractOpenApiSchema {}
-class OpenApiSchemaAnyOf extends AbstractOpenApiSchema {}
-class OpenApiSchemaAllOf extends AbstractOpenApiSchema {}
-class OpenApiSchemaOneOf extends AbstractOpenApiSchema {}
-class OpenApiSchemaAny extends AbstractOpenApiSchema {}
+class OpenApiSchemaArray extends OpenApiSchema {}
+class OpenApiSchemaNot extends OpenApiSchema {}
+class OpenApiSchemaAnyOf extends OpenApiSchema {}
+class OpenApiSchemaAllOf extends OpenApiSchema {}
+class OpenApiSchemaOneOf extends OpenApiSchema {}
+class OpenApiSchemaAny extends OpenApiSchema {}
 
-export const OpenApiString = AbstractOpenApiSchema.create("string");
-export const OpenApiInteger = AbstractOpenApiSchema.create("integer");
-export const OpenApiNumber = AbstractOpenApiSchema.create("number");
-export const OpenApiBoolean = AbstractOpenApiSchema.create("boolean");
-export const OpenApiObject = AbstractOpenApiSchema.create("object");
-export type OpenApiSchema = AbstractOpenApiSchema;
+export const OpenApiString = OpenApiSchema.create("string");
+export const OpenApiInteger = OpenApiSchema.create("integer");
+export const OpenApiNumber = OpenApiSchema.create("number");
+export const OpenApiBoolean = OpenApiSchema.create("boolean");
+export const OpenApiObject = OpenApiSchema.create("object");
+export type OpenApiSchema = OpenApiSchema;

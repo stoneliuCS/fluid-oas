@@ -2,9 +2,9 @@ import { deepFreeze } from "../../lib/freeze";
 import type { OpenApiDocumentation } from "../OpenApiDocumentation";
 import type { OpenApiExample } from "../OpenApiExample";
 import type { OpenApiXML } from "../OpenApiXML";
-import { AbstractOpenApiSchema } from "./OpenApiSchema";
+import { OpenApiSchema } from "./OpenApiSchema";
 
-class OpenApiSchemaString extends AbstractOpenApiSchema {
+class OpenApiSchemaString extends OpenApiSchema {
   private readonly _min?: number;
   private readonly _max?: number;
   private readonly _format?: string;

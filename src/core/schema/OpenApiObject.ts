@@ -2,17 +2,17 @@ import { deepFreeze } from "../../lib/freeze";
 import type { OpenApiDocumentation } from "../OpenApiDocumentation";
 import type { OpenApiExample } from "../OpenApiExample";
 import type { OpenApiXML } from "../OpenApiXML";
-import { AbstractOpenApiSchema } from "./OpenApiSchema";
+import { OpenApiSchema } from "./OpenApiSchema";
 
-class OpenApiSchemaObject extends AbstractOpenApiSchema {
-  private readonly _properties?: Map<string, AbstractOpenApiSchema>;
+class OpenApiSchemaObject extends OpenApiSchema {
+  private readonly _properties?: Map<string, OpenApiSchema>;
   private readonly _requiredProperties?: Set<string>;
-  private readonly _additionalProperties?: AbstractOpenApiSchema | boolean;
+  private readonly _additionalProperties?: OpenApiSchema | boolean;
   private readonly _minProperties?: number;
   private readonly _maxProperties?: number;
 
   public constructor(
-    _properties?: Map<string, AbstractOpenApiSchema>,
+    _properties?: Map<string, OpenApiSchema>,
     _xml?: OpenApiXML,
     _docs?: OpenApiDocumentation,
     _example?: OpenApiExample,
@@ -20,7 +20,7 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
     _nullable?: boolean,
     _defaultVal?: unknown,
     _requiredProperties?: Set<string>,
-    _additionalProperties?: AbstractOpenApiSchema | boolean,
+    _additionalProperties?: OpenApiSchema | boolean,
     _minProperties?: number,
     _maxProperties?: number,
   ) {
@@ -87,7 +87,7 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
     );
   }
 
-  public additionalProperty(value: AbstractOpenApiSchema | boolean) {
+  public additionalProperty(value: OpenApiSchema | boolean) {
     return new OpenApiSchemaObject(
       this._properties,
       this._xml,
@@ -104,7 +104,7 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
   }
 
   private stringifyProperties(
-    properties: Map<string, AbstractOpenApiSchema>,
+    properties: Map<string, OpenApiSchema>,
   ): unknown {
     const mapper: { [key: string]: unknown } = {};
     for (const key of properties.keys()) {
@@ -272,8 +272,8 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
     );
   }
 
-  public property(propertyName: string, property: AbstractOpenApiSchema) {
-    let mappedSchemas: Map<string, AbstractOpenApiSchema>;
+  public property(propertyName: string, property: OpenApiSchema) {
+    let mappedSchemas: Map<string, OpenApiSchema>;
     if (this._properties) {
       mappedSchemas = new Map(this._properties);
     } else {
@@ -295,8 +295,8 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
     );
   }
 
-  public properties(properties: { [key: string]: AbstractOpenApiSchema }) {
-    let mappedSchemas: Map<string, AbstractOpenApiSchema>;
+  public properties(properties: { [key: string]: OpenApiSchema }) {
+    let mappedSchemas: Map<string, OpenApiSchema>;
     if (this._properties) {
       mappedSchemas = new Map(this._properties);
     } else {
