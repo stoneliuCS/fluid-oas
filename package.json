@@ -1,7 +1,11 @@
 {
   "name": "salt",
-  "module": "./src",
+  "version": "v0.0.1",
+  "module": "./src/core/schema/index.ts",
   "type": "module",
+  "files": [
+    "src/core/schema"
+  ],
   "devDependencies": {
     "@types/bun": "latest"
   },
