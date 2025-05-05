@@ -36,6 +36,47 @@ const booleanSchema = OpenApiBoolean.description("I am a OpenAPI boolean!")
   .default(false)
   .nullable();
 
+const schema = OpenApiObject.description("Blah Blah blahajkshdjhaksjjksadhaks")
+  .property("name", OpenApiString.min(1).description("Display name of user"))
+  .property(
+    "username",
+    OpenApiString.min(1).description("The username of the user."),
+  )
+  .property(
+    "id",
+    OpenApiString.format("uuid")
+      .example("5e91507e-5630-4efd-9fd4-799178870b10")
+      .description("Unique identifier for the user."),
+  )
+  .property(
+    "mode",
+    OpenApiString.enum("BASIC", "ADVANCED", null).description(
+      "Mode for the user.",
+    ),
+  )
+  .property(
+    "profilePhoto",
+    OpenApiString.nullable().description("A URL to the users profile photo."),
+  )
+  .property(
+    "bio",
+    OpenApiString.nullable().description("A bio for the users profile."),
+  )
+  .property(
+    "birthday",
+    OpenApiString.nullable()
+      .format("date")
+      .description("Birthday of the user."),
+  )
+  .property(
+    "timezone",
+    OpenApiString.nullable().description("Timezone for the user."),
+  )
+  .property(
+    "postCount",
+    OpenApiInteger.nullable().description("Number of posts for this user."),
+  )
+  .required("username", "mode");
 
 const userSchema: OpenApiSchema = OpenApiObject.properties({
   name: OpenApiString.min(1).description("Display name of the user."),
@@ -59,4 +100,4 @@ const userSchema: OpenApiSchema = OpenApiObject.properties({
   ),
 }).required("username", "mode");
 
-console.log(userSchema.toJSON())
+console.log(userSchema.toJSON());

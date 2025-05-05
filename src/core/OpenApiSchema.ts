@@ -144,7 +144,7 @@ class OpenApiSchemaNumber<
     this._format = format;
     this._mult = multipleOf;
     this._enums = enums;
-    deepFreeze(this)
+    deepFreeze(this);
   }
 
   public default(defaultVal: number): OpenApiSchemaNumberReturn<T> {
@@ -166,7 +166,7 @@ class OpenApiSchemaNumber<
     ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public enum(...enumVal: (number | null)[]) : OpenApiSchemaNumberReturn<T> {
+  public enum(...enumVal: (number | null)[]): OpenApiSchemaNumberReturn<T> {
     let schema: OpenApiSchemaNumber<T> = this;
     for (const _enum of enumVal) {
       let enums: Set<number | null>;
@@ -197,7 +197,7 @@ class OpenApiSchemaNumber<
     return schema as OpenApiSchemaNumberReturn<T>;
   }
 
-  public nullable() : OpenApiSchemaNumberReturn<T> {
+  public nullable(): OpenApiSchemaNumberReturn<T> {
     return new OpenApiSchemaNumber(
       this._type,
       this._xml,
@@ -216,7 +216,7 @@ class OpenApiSchemaNumber<
     ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public multipleOf(multiple: number) : OpenApiSchemaNumberReturn<T> {
+  public multipleOf(multiple: number): OpenApiSchemaNumberReturn<T> {
     return new OpenApiSchemaNumber(
       this._type,
       this._xml,
@@ -260,7 +260,7 @@ class OpenApiSchemaNumber<
     ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public exclusiveMax() : OpenApiSchemaNumberReturn<T> {
+  public exclusiveMax(): OpenApiSchemaNumberReturn<T> {
     if (!this._max) {
       throw new Error(
         `Cannot add an exclusive maximum as a maximum has not been added yet.`,
@@ -308,7 +308,7 @@ class OpenApiSchemaNumber<
     ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public max(maximum: number) : OpenApiSchemaNumberReturn<T> {
+  public max(maximum: number): OpenApiSchemaNumberReturn<T> {
     if (this._min && this._min > maximum) {
       throw new Error(
         `${maximum} is smaller than the current minimum ${this._min}`,
@@ -332,7 +332,7 @@ class OpenApiSchemaNumber<
     ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public min(minimum: number) : OpenApiSchemaNumberReturn<T> {
+  public min(minimum: number): OpenApiSchemaNumberReturn<T> {
     if (this._max && this._max < minimum) {
       throw new Error(
         `${minimum} is larger than the current maximum ${this._max}`,
@@ -356,7 +356,7 @@ class OpenApiSchemaNumber<
     ) as OpenApiSchemaNumberReturn<T>;
   }
 
-  public xml(xml: OpenApiXML) :OpenApiSchemaNumberReturn<T> {
+  public xml(xml: OpenApiXML): OpenApiSchemaNumberReturn<T> {
     return new OpenApiSchemaNumber(
       this._type,
       xml,
@@ -372,9 +372,11 @@ class OpenApiSchemaNumber<
       this._format,
       this._mult,
       this._enums,
-    )as OpenApiSchemaNumberReturn<T>;
+    ) as OpenApiSchemaNumberReturn<T>;
   }
-  public externalDocs(docs: OpenApiDocumentation): OpenApiSchemaNumberReturn<T> {
+  public externalDocs(
+    docs: OpenApiDocumentation,
+  ): OpenApiSchemaNumberReturn<T> {
     return new OpenApiSchemaNumber(
       this._type,
       this._xml,
@@ -392,7 +394,7 @@ class OpenApiSchemaNumber<
       this._enums,
     ) as OpenApiSchemaNumberReturn<T>;
   }
-  public example(example: OpenApiExample) : OpenApiSchemaNumberReturn<T> {
+  public example(example: OpenApiExample): OpenApiSchemaNumberReturn<T> {
     return new OpenApiSchemaNumber(
       this._type,
       this._xml,
@@ -470,7 +472,7 @@ class OpenApiSchemaBoolean extends AbstractOpenApiSchema {
     defaultVal?: unknown,
   ) {
     super("boolean", xml, docs, example, description, nullable, defaultVal);
-    deepFreeze(this)
+    deepFreeze(this);
   }
 
   public default(defaultVal: boolean): OpenApiSchemaBoolean {
@@ -565,7 +567,7 @@ class OpenApiSchemaString extends AbstractOpenApiSchema {
     this._format = format;
     this._pattern = pattern;
     this._enums = enums;
-    deepFreeze(this)
+    deepFreeze(this);
   }
 
   public default(defaultVal: string): AbstractOpenApiSchema {
@@ -1053,6 +1055,29 @@ class OpenApiSchemaObject extends AbstractOpenApiSchema {
       this._docs,
       this._example,
       description,
+      this._nullable,
+      this._default,
+      this._requiredProperties,
+      this._additionalProperties,
+      this._minProperties,
+      this._maxProperties,
+    );
+  }
+
+  public property(propertyName: string, property: OpenApiSchema) {
+    let mappedSchemas: Map<string, AbstractOpenApiSchema>;
+    if (this._properties) {
+      mappedSchemas = new Map(this._properties);
+    } else {
+      mappedSchemas = new Map();
+    }
+    mappedSchemas.set(propertyName, property);
+    return new OpenApiSchemaObject(
+      mappedSchemas,
+      this._xml,
+      this._docs,
+      this._example,
+      this._description,
       this._nullable,
       this._default,
       this._requiredProperties,
