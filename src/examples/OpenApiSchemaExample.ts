@@ -1,11 +1,10 @@
 import {
-  OpenApiBoolean,
-  OpenApiInteger,
   OpenApiNumber,
-  OpenApiObject,
+  OpenApiInteger,
   OpenApiString,
-  type OpenApiSchema,
-} from "../core/OpenApiSchema";
+  OpenApiBoolean,
+  OpenApiObject,
+} from "../core/schema";
 
 // Define a number schema
 const numberSchema = OpenApiNumber.description("I am a OpenAPI Number!")
@@ -78,7 +77,7 @@ const schema = OpenApiObject.description("Blah Blah blahajkshdjhaksjjksadhaks")
   )
   .required("username", "mode");
 
-const userSchema: OpenApiSchema = OpenApiObject.properties({
+const userSchema = OpenApiObject.properties({
   name: OpenApiString.min(1).description("Display name of the user."),
   username: OpenApiString.min(1).description("The username of the user."),
   id: OpenApiString.format("uuid")
