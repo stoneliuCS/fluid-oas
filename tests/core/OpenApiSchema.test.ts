@@ -4,7 +4,7 @@ import {
   OpenApiNumber,
   OpenApiObject,
   OpenApiString,
-} from "../../src/core/OpenApiSchema";
+} from "../../src/core/schema";
 
 describe("OpenAPI schema String tests", () => {
   const openapiString = OpenApiString;
