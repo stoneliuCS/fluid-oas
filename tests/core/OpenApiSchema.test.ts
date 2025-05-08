@@ -123,6 +123,19 @@ describe("OpenAPI Schema Number tests.", () => {
 describe("OpenApi Object tests", () => {
   const object = OpenApiObject;
 
+  test("required properties", () => {
+    const requiredSchema = object.required("stone");
+    expect(requiredSchema.toJSON()).toMatchObject({
+      type: "object",
+      required: ["stone"],
+    });
+    const requiredSchemaV2 = requiredSchema.required("something", "hello");
+    expect(requiredSchemaV2.toJSON()).toMatchObject({
+      type: "object",
+      required: ["stone", "something", "hello"],
+    });
+  });
+
   test("Nullable openapi types", () => {
     const nullableObjectSchema = object.nullable().nullable(); // All object schemas are idempotent.
     expect(nullableObjectSchema.toJSON()).toMatchObject({

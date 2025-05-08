@@ -1,4 +1,4 @@
-import type { OpenApiDocumentation } from "../OpenApiDocumentation";
+import type { OpenApiDocumentation } from "../../corev2/OpenApiDocumentation";
 import type { OpenApiExample } from "../OpenApiExample";
 import type { OpenApiXML } from "../OpenApiXML";
 import { OpenApiSchema } from "./OpenApiSchema";

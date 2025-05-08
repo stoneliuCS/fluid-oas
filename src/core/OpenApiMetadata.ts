@@ -7,7 +7,6 @@ import type {
 } from "../types/OpenApiTypes";
 import type { OpenApiInfo } from "./OpenApiInfo";
 import type { OpenApiPath } from "./OpenApiPath";
-import type { OpenApiSchemaType } from "./OpenApiSchema";
 import type { OpenApiSecurity } from "./OpenApiSecurity";
 import type { OpenApiServer } from "./OpenApiServer";
 import type { OpenApiTag } from "./OpenApiTag";

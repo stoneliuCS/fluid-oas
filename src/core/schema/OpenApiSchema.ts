@@ -1,5 +1,7 @@
-import type { OpenApiSchemaType } from "../../types/OpenApiTypes";
-import type { OpenApiDocumentation } from "../OpenApiDocumentation";
+import type {
+  OpenApiSchemaType,
+} from "../../types/OpenApiTypes";
+import type { OpenApiDocumentation } from "../../corev2/OpenApiDocumentation";
 import type { OpenApiExample } from "../OpenApiExample";
 import type { OpenApiXML } from "../OpenApiXML";
 
@@ -29,11 +31,9 @@ export abstract class OpenApiSchema {
     this._nullable = nullable;
     this._default = defaultVal;
   }
-
+  public abstract extend(name: string, schema: OpenApiSchema): OpenApiSchema;
   public abstract xml(xml: OpenApiXML): OpenApiSchema;
-  public abstract externalDocs(
-    docs: OpenApiDocumentation,
-  ): OpenApiSchema;
+  public abstract externalDocs(docs: OpenApiDocumentation): OpenApiSchema;
   public abstract example(example: OpenApiExample): OpenApiSchema;
   public abstract description(description: string): OpenApiSchema;
   public abstract nullable(): OpenApiSchema;
