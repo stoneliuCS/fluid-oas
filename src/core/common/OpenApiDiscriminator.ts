@@ -36,7 +36,9 @@ class _OpenApiDiscriminator
   map(name: string, schema: OpenApiSchema) {
     return new _OpenApiDiscriminator(
       this._propertyName,
-      this._mapping ? this._mapping.set(name, schema) : Map(),
+      this._mapping
+        ? this._mapping.set(name, schema)
+        : Map<string, OpenApiSchema>().set(name, schema),
       this._extensions,
     );
   }
@@ -45,7 +47,9 @@ class _OpenApiDiscriminator
     return new _OpenApiDiscriminator(
       this._propertyName,
       this._mapping,
-      this._extensions ? this._extensions.set(name, schema) : Map(),
+      this._extensions
+        ? this._extensions.set(name, schema)
+        : Map<string, OpenApiSchema>().set(name, schema),
     );
   }
 }

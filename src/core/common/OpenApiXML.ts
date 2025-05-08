@@ -102,7 +102,9 @@ class _OpenApiXML implements OpenApiSpecificationProperty<_OpenApiXML> {
       this._prefix,
       this._attribute,
       this._wrapped,
-      this._extensions ? this._extensions.set(name, schema) : Map(),
+      this._extensions
+        ? this._extensions.set(name, schema)
+        : Map<string, OpenApiSchema>().set(name, schema),
     );
   }
 }
