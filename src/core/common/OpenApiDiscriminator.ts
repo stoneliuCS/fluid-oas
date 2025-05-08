@@ -19,7 +19,11 @@ class _OpenApiDiscriminator
       propertyName: this._propertyName,
     };
     if (this._mapping) {
-      Object.defineProperty(json, "mapping", { value: this._mapping.toJSON() });
+      Object.defineProperty(json, "mapping", {
+        value: this._mapping.map((val) => {
+          return val.toJSON();
+        }),
+      });
     }
     if (this._extensions) {
       this._extensions.forEach((val, key) => {
