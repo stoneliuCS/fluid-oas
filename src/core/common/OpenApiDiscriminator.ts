@@ -1,6 +1,5 @@
 import { Map } from "immutable";
-import type { OpenApiSchema } from "../schema/OpenApiSchema";
-import type { OpenApiSpecificationProperty } from "../types/OpenApi";
+import type { OpenApiSchema, OpenApiSpecificationProperty } from "../types/OpenApi";
 
 class _OpenApiDiscriminator
   implements OpenApiSpecificationProperty<_OpenApiDiscriminator>

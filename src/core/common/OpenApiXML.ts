@@ -1,5 +1,4 @@
-import type { OpenApiSchema } from "../schema/OpenApiSchema";
-import type { OpenApiSpecificationProperty } from "../types/OpenApi";
+import type { OpenApiSchema, OpenApiSpecificationProperty } from "../types/OpenApi";
 import { Map } from "immutable";
 
 class _OpenApiXML implements OpenApiSpecificationProperty<_OpenApiXML> {
