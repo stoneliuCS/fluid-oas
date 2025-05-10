@@ -27,12 +27,13 @@ The OAS 3.0.0 _OpenAPI Specification_ defines the following primitive data types
 - [string](#defining-a-string)
 - [boolean](#defining-a-boolean)
 
-#### Defining a Number
+#### Number
 
 ```ts
-OpenApiNumber.description("I am a OpenAPI Number!")
-  .default(1.5)
+OpenApiNumber()
+  .description("I am a OpenAPI Number!")
   .format("double")
+  .default(1)
   .min(0.5)
   .max(2.5)
   .exclusiveMin();
@@ -50,12 +51,13 @@ OpenApiNumber.description("I am a OpenAPI Number!")
 }
 ```
 
-#### Defining a Integer
+#### Integer
 
 ```ts
-OpenApiInteger.description("I am a OpenAPI Integer!")
-  .default(2)
+OpenApiInteger()
+  .description("I am a OpenAPI Integer!")
   .format("int64")
+  .default(1)
   .min(0)
   .max(99)
   .exclusiveMax();
@@ -76,12 +78,13 @@ OpenApiInteger.description("I am a OpenAPI Integer!")
 #### Defining a String
 
 ```ts
-OpenApiString.description("Unique identifier")
+OpenApiString()
+  .description("Unique identifier")
+  .default("1238971891792")
   .format("uuid")
   .pattern(
     /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/,
-  )
-  .example("643ad75f-0514-49f1-a68e-18a87ba017f0");
+  );
 ```
 
 ```json
@@ -97,7 +100,10 @@ OpenApiString.description("Unique identifier")
 #### Defining a Boolean
 
 ```ts
-OpenApiBoolean.description("I am a OpenAPI boolean!").default(false).nullable();
+OpenApiBoolean()
+  .description("I am a OpenAPI boolean!")
+  .default(false)
+  .nullable();
 ```
 
 ```json
@@ -109,83 +115,95 @@ OpenApiBoolean.description("I am a OpenAPI boolean!").default(false).nullable();
 }
 ```
 
-### Objects
+#### Objects
+
+Chain the `property` method on `OpenApiObject` to fluidly build complex API Schemas:
 
 ```ts
-OpenApiObject.properties({
-  name: OpenApiString.min(1).description("Display name of the user."),
-  username: OpenApiString.min(1).description("The username of the user."),
-  id: OpenApiString.format("uuid")
-    .example("5e91507e-5630-4efd-9fd4-799178870b10")
-    .description("Unique identifier for the user."),
-  mode: OpenApiString.enum("BASIC", "ADVANCED", null).description(
-    "Mode for the user.",
-  ),
-  profilePhoto: OpenApiString.nullable().description(
-    "A URL to the users profile photo.",
-  ),
-  bio: OpenApiString.nullable().description("A bio for the users profile."),
-  birthday: OpenApiString.nullable()
-    .format("date")
-    .description("Birthday of the user."),
-  timezone: OpenApiString.nullable().description("Timezone for the user."),
-  postCount: OpenApiInteger.nullable().description(
-    "Number of posts for this user.",
-  ),
-}).required("username", "mode");
+const Pet = OpenApiObject()
+  .property("id")
+  .schema(OpenApiInteger().format("int64").example("10"))
+  .property("name")
+  .schema(OpenApiString().example("doggie"))
+  .property("category")
+  .schema(
+    OpenApiObject()
+      .property("id")
+      .schema(OpenApiInteger().format("int64"))
+      .property("name")
+      .schema(OpenApiString().example("dogs")),
+  )
+  .property("photoUrls")
+  .schema(OpenApiArray(OpenApiArray(OpenApiString())))
+  .property("tags")
+  .schema(
+    OpenApiObject()
+      .property("id")
+      .schema(OpenApiInteger().format("int64"))
+      .property("name")
+      .schema(OpenApiString()),
+  )
+  .property("status")
+  .schema(
+    OpenApiString()
+      .enum("available")
+      .enum("pending")
+      .enum("sold")
+      .description("pet status in the store."),
+  );
 ```
 
 ```json
 {
   "type": "object",
-  "required": ["username", "mode"],
   "properties": {
-    "name": {
-      "type": "string",
-      "description": "Display name of the user.",
-      "minLength": 1
-    },
-    "username": {
-      "type": "string",
-      "description": "The username of the user.",
-      "minLength": 1
-    },
     "id": {
-      "type": "string",
-      "description": "Unique identifier for the user.",
-      "example": "5e91507e-5630-4efd-9fd4-799178870b10",
-      "format": "uuid"
+      "example": "10",
+      "format": "int64",
+      "type": "integer"
     },
-    "mode": {
-      "type": "string",
-      "description": "Mode for the user.",
-      "enum": ["BASIC", "ADVANCED", null]
+    "name": {
+      "example": "doggie",
+      "type": "string"
     },
-    "profilePhoto": {
-      "type": "string",
-      "description": "A URL to the users profile photo.",
-      "nullable": true
+    "category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "name": {
+          "example": "dogs",
+          "type": "string"
+        }
+      }
     },
-    "bio": {
-      "type": "string",
-      "description": "A bio for the users profile.",
-      "nullable": true
+    "photoUrls": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
     },
-    "birthday": {
-      "type": "string",
-      "description": "Birthday of the user.",
-      "nullable": true,
-      "format": "date"
+    "tags": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
     },
-    "timezone": {
-      "type": "string",
-      "description": "Timezone for the user.",
-      "nullable": true
-    },
-    "postCount": {
-      "type": "integer",
-      "description": "Number of posts for this user.",
-      "nullable": true
+    "status": {
+      "description": "pet status in the store.",
+      "enum": ["available", "pending", "sold"],
+      "type": "string"
     }
   }
 }

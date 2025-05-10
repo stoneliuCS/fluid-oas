@@ -1,3 +1,4 @@
+import type { OpenApiArrayType } from "./OpenApiArray";
 import type { OpenApiBooleanType } from "./OpenApiBoolean";
 import type { OpenApiIntegerType } from "./OpenApiInteger";
 import type { OpenApiNumberType } from "./OpenApiNumber";
@@ -11,4 +12,5 @@ export type OpenApiSchema =
   | OpenApiIntegerType
   | OpenApiBooleanType
   | OpenApiObjectType
+  | OpenApiArrayType
   | OpenApiOneOfType;

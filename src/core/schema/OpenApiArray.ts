@@ -18,6 +18,11 @@ class _OpenApiArray extends ArrayBase {
   private _items?: OpenApiSchema;
   private _uniqueItems?: boolean;
 
+  public constructor(items: OpenApiSchema) {
+    super();
+    this._items = items;
+  }
+
   toJSON(): unknown {
     const json = super.toJSON();
     Object.defineProperty(json, "type", {
@@ -39,12 +44,6 @@ class _OpenApiArray extends ArrayBase {
     return json;
   }
 
-  items(items: OpenApiSchema) {
-    const copy: this = Object.create(this);
-    copy._items = items;
-    return copy;
-  }
-
   unique() {
     const copy: this = Object.create(this);
     copy._uniqueItems = true;
@@ -52,5 +51,5 @@ class _OpenApiArray extends ArrayBase {
   }
 }
 
-export const OpenApiArray = () => new _OpenApiArray();
+export const OpenApiArray = (items: OpenApiSchema) => new _OpenApiArray(items);
 export type OpenApiArrayType = _OpenApiArray;

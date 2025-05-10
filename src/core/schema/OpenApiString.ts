@@ -1,18 +1,21 @@
 import {
   SchemaBase,
   withDefault,
+  withEnum,
   withFormat,
   withMaximum,
   withMinimum,
   withNullable,
 } from "../common/common";
 
-const StringBase = withFormat(
-  withNullable(
-    withMaximum(withMinimum(withDefault(SchemaBase)<string>())("minLength"))(
-      "maxLength",
+const StringBase = withEnum(
+  withFormat(
+    withNullable(
+      withMaximum(withMinimum(withDefault(SchemaBase)<string>())("minLength"))(
+        "maxLength",
+      ),
     ),
-  ),
+  )<string>(),
 )<string>();
 class _OpenApiString extends StringBase {
   private readonly _type: string = "string";
