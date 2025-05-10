@@ -64,6 +64,8 @@ describe("OpenApiString tests.", () => {
           .mapping("some")
           .schema(OpenApiString),
       )
+      .extend("x-something")
+      .with(OpenApiString)
       .toJSON();
 
     expect(actual).toMatchObject({
@@ -72,6 +74,7 @@ describe("OpenApiString tests.", () => {
       minLength: 1,
       maxLength: 2,
       format: "uuid",
+      "x-something": { type: "string" },
       externalDocs: {
         url: "https://blah.com",
         description: "random website",
