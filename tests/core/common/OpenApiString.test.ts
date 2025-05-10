@@ -53,6 +53,7 @@ describe("OpenApiString tests.", () => {
       .max(2)
       .format("uuid")
       .pattern(/ab+c/)
+      .description("I can add anything I want!")
       .externalDocs(
         OpenApiDocumentation.url("https://blah.com").description(
           "random website",
@@ -74,6 +75,7 @@ describe("OpenApiString tests.", () => {
       minLength: 1,
       maxLength: 2,
       format: "uuid",
+      description: "I can add anything I want!",
       "x-something": { type: "string" },
       externalDocs: {
         url: "https://blah.com",
