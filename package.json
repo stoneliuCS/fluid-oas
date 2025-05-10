@@ -11,8 +11,5 @@
   },
   "peerDependencies": {
     "typescript": "^5"
-  },
-  "dependencies": {
-    "immutable": "^5.1.2"
   }
 }

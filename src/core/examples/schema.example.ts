@@ -1,4 +1,5 @@
-import { CreateOpenApiString } from "../schema/OpenApiString";
+import { OpenApiDocumentation } from "../common/OpenApiDocumentation";
 
-// Example of a SSN in OpenApi String
-const ssn = CreateOpenApiString().pattern(/^\d{3}-\d{2}-\d{4}$/);
+const something1 = OpenApiDocumentation.description("Hey buddy");
+const something = something1.url("hey url").toJSON();
+console.log(something1.toJSON());
