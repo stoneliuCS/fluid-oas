@@ -1,10 +1,8 @@
 import { Base, withDescription, withURL } from "./common";
 
-class _OpenApiDocumentation extends Base {}
+const DocumentationBase = withURL(withDescription(Base));
 
-const OpenApiDocumentationImpl = withURL(
-  withDescription(_OpenApiDocumentation),
-);
+class _OpenApiDocumentation extends DocumentationBase {}
 
-export const OpenApiDocumentation = new OpenApiDocumentationImpl();
-export type OpenApiDocumentation = typeof OpenApiDocumentation;
+export const OpenApiDocumentation = new _OpenApiDocumentation();
+export type OpenApiDocumentation = _OpenApiDocumentation;

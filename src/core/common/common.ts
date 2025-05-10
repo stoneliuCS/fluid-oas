@@ -1,6 +1,7 @@
 import type { OpenApiSchema } from "../schema/OpenApiSchema";
 import type { OpenApiDiscriminator } from "./OpenApiDiscriminator";
 import type { OpenApiDocumentation } from "./OpenApiDocumentation";
+import type { OpenApiExample } from "./OpenApiExample";
 import type { OpenApiXML } from "./OpenApiXML";
 
 type GConstructor<T = { toJSON(): unknown }> = new (...args: any[]) => T;
@@ -12,9 +13,101 @@ class _Base {
 }
 
 export const Base = withExtensions(_Base);
-export const SchemaBase = withDescription(
-  withExternalDocs(withDiscriminator(withXML(Base))),
+export const SchemaBase = withExample(
+  withDescription(withExternalDocs(withDiscriminator(withXML(Base)))),
 );
+
+export function withValue<TBase extends GConstructor>(Base: TBase) {
+  return <K extends string | unknown>() => {
+    return class extends Base {
+      private _value?: K;
+
+      value(value: K) {
+        const copy: this = Object.create(this);
+        copy._value = value;
+        return copy;
+      }
+
+      toJSON(): unknown {
+        const json = this.toJSON();
+        if (this._value) {
+          Object.defineProperty(json, "value", {
+            value: this._value,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+export function withDeprecated<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _deprecated?: boolean;
+
+    deprecated() {
+      const copy: this = Object.create(this);
+      copy._deprecated = true;
+      return copy;
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._deprecated) {
+        Object.defineProperty(json, "deprecated", {
+          value: this._deprecated,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+export function withRequired<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _required?: boolean;
+
+    required() {
+      const copy: this = Object.create(this);
+      copy._required = true;
+      return copy;
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._required) {
+        Object.defineProperty(json, "required", {
+          value: this._required,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+export function withSummary<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _summary?: string;
+
+    summary(summary: string) {
+      const copy: this = Object.create(this);
+      copy._summary = summary;
+      return copy;
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._summary) {
+        Object.defineProperty(json, "summary", {
+          value: this._summary,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
 
 export function withFormat<TBase extends GConstructor>(Base: TBase) {
   return <K extends string>() =>
@@ -227,27 +320,6 @@ export function withDescription<TBase extends GConstructor>(Base: TBase) {
   };
 }
 
-export function withPropertyName<TBase extends GConstructor>(Base: TBase) {
-  return class extends Base {
-    private _propertyName?: string;
-    propertyName(propertyName: string): this {
-      const copy = Object.create(this);
-      copy._propertyName = propertyName;
-      return copy;
-    }
-    toJSON() {
-      const json = super.toJSON();
-      if (this._propertyName) {
-        Object.defineProperty(json, "propertyName", {
-          value: this._propertyName,
-          enumerable: true,
-        });
-      }
-      return json;
-    }
-  };
-}
-
 export function withMapping<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     private _mapping?: Map<string, OpenApiSchema>;
@@ -433,6 +505,29 @@ export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
       if (this._docs) {
         Object.defineProperty(json, "externalDocs", {
           value: this._docs.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+export function withExample<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _example?: OpenApiExample;
+
+    example(example: OpenApiExample): this {
+      const copy: this = Object.create(this);
+      copy._example = example;
+      return copy;
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._example) {
+        Object.defineProperty(json, "value", {
+          value: this._example.toJSON(),
           enumerable: true,
         });
       }

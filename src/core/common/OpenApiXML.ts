@@ -7,10 +7,10 @@ import {
   withWrapped,
 } from "./common";
 
-class _OpenApiXML extends Base {}
-
-const OpenApiXMLImpl = withWrapped(
-  withAttribute(withPrefix(withNamespace(withName(_OpenApiXML)))),
+const XMLBase = withWrapped(
+  withAttribute(withPrefix(withNamespace(withName(Base)))),
 );
-export const OpenApiXML = new OpenApiXMLImpl();
+
+class _OpenApiXML extends XMLBase {}
+export const OpenApiXML = new _OpenApiXML();
 export type OpenApiXML = typeof OpenApiXML;
