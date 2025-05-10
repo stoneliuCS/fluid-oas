@@ -1,8 +1,13 @@
+import type { OpenApiEncoding } from "../path/OpenApiEncoding";
+import type { OpenApiHeader } from "../path/OpenApiHeader";
+import type { OpenApiMedia } from "../path/OpenApiMedia";
+import type { OpenApiParameter } from "../path/OpenApiParameter";
 import type { OpenApiSchema } from "../schema/OpenApiSchema";
 import type { OpenApiDiscriminator } from "./OpenApiDiscriminator";
 import type { OpenApiDocumentation } from "./OpenApiDocumentation";
 import type { OpenApiExample } from "./OpenApiExample";
 import type { OpenApiXML } from "./OpenApiXML";
+import { mapMap } from "./utils";
 
 type GConstructor<T = { toJSON(): unknown }> = new (...args: any[]) => T;
 
@@ -16,6 +21,10 @@ export const Base = withExtensions(_Base);
 export const SchemaBase = withExample(
   withDescription(withExternalDocs(withDiscriminator(withXML(Base)))),
 );
+export enum Fixed {
+  SCHEMA,
+  CONTENT,
+}
 
 export function withValue<TBase extends GConstructor>(Base: TBase) {
   return <K extends string | unknown>() => {
@@ -513,11 +522,118 @@ export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
   };
 }
 
+export function withEncodings<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _encodings?: Map<string, OpenApiEncoding>;
+
+    encoding(name: string) {
+      return {
+        encode: (encoding: OpenApiEncoding) => {
+          const copy: this = Object.create(this);
+          copy._encodings = new Map(this._encodings);
+          copy._encodings.set(name, encoding);
+          return copy;
+        },
+      };
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._encodings) {
+        Object.defineProperty(json, "encoding", {
+          enumerable: true,
+          value: mapMap(this._encodings, (val) => val.toJSON()),
+        });
+      }
+      return json;
+    }
+  };
+}
+
+export function withHeadersMap<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _headersMap?: Map<string, OpenApiHeader>;
+
+    headers(name: string) {
+      return {
+        header: (header: OpenApiHeader) => {
+          const copy: this = Object.create(this);
+          copy._headersMap = new Map(this._headersMap);
+          copy._headersMap.set(name, header);
+          return copy;
+        },
+      };
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._headersMap) {
+        Object.defineProperty(json, "headers", {
+          value: mapMap(this._headersMap, (val) => val.toJSON()),
+        });
+      }
+      return json;
+    }
+  };
+}
+
+export function withContentType<TBase extends GConstructor>(Base: TBase) {
+  return <K extends string>() =>
+    class extends Base {
+      private _contentType?: K;
+
+      contentType(contentType: K) {
+        const copy: this = Object.create(this);
+        copy._contentType = contentType;
+        return copy;
+      }
+
+      toJSON(): unknown {
+        const json = super.toJSON();
+        if (this._contentType) {
+          Object.defineProperty(json, "contentType", {
+            value: this._contentType,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+}
+
+export function withExamples<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _examples?: Map<string, OpenApiExample>;
+
+    examples(name: string) {
+      return {
+        example: (example: OpenApiExample) => {
+          const copy: this = Object.create(this);
+          copy._examples = new Map(this._examples);
+          copy._examples.set(name, example);
+          return copy;
+        },
+      };
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._examples) {
+        Object.defineProperty(json, "examples", {
+          value: mapMap(this._examples, (val) => val.toJSON()),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
 export function withExample<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _example?: OpenApiExample;
+    private _example?: unknown;
 
-    example(example: OpenApiExample): this {
+    example(example: unknown): this {
       const copy: this = Object.create(this);
       copy._example = example;
       return copy;
@@ -526,9 +642,172 @@ export function withExample<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._example) {
-        Object.defineProperty(json, "value", {
-          value: this._example.toJSON(),
+        Object.defineProperty(json, "example", {
+          value: this._example,
           enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+export function withOperation<TBase extends GConstructor>(Base: TBase) {
+  return (
+    op:
+      | "GET"
+      | "PUT"
+      | "POST"
+      | "DELETE"
+      | "OPTIONS"
+      | "HEAD"
+      | "PATCH"
+      | "TRACE",
+  ) => {
+    return class extends Base {
+      [op]() {}
+    };
+  };
+}
+
+export function withTags<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _tags?: string[];
+
+    tag(tag: string) {
+      const copy: this = Object.create(this);
+      copy._tags = this._tags === undefined ? [tag] : [...this._tags, tag];
+      return copy;
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._tags) {
+        Object.defineProperty(json, "tags", {
+          value: this._tags,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+export function withParameters<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _parameters?: OpenApiParameter[];
+
+    parameter(parameter: OpenApiParameter) {
+      const copy: this = Object.create(this);
+      copy._parameters =
+        this._parameters === undefined
+          ? [parameter]
+          : [...this._parameters, parameter];
+      return copy;
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._parameters) {
+        Object.defineProperty(json, "parameters", {
+          value: this._parameters.map((param) => param.toJSON()),
+        });
+      }
+      return json;
+    }
+  };
+}
+
+export function withStyle<TBase extends GConstructor>(Base: TBase) {
+  return <K>() =>
+    class extends Base {
+      private _style?: K;
+      style(style: K) {
+        const copy: this = Object.create(this);
+        copy._style = style;
+        return copy;
+      }
+
+      toJSON(): unknown {
+        const json = super.toJSON();
+        if (this._style) {
+          Object.defineProperty(json, "style", {
+            value: this._style,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+}
+
+export function withExplode<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _explode?: boolean;
+
+    explode() {
+      const copy: this = Object.create(this);
+      copy._explode = true;
+      return copy;
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._explode) {
+        Object.defineProperty(json, "explode", {
+          value: this._explode,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+export function withSchema<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _schema?: OpenApiSchema;
+
+    schema(schema: OpenApiSchema) {
+      const copy: this = Object.create(this);
+      copy._schema = schema;
+      return copy;
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._schema) {
+        Object.defineProperty(json, "schema", {
+          value: this._schema.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+export function withContent<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _content?: Map<string, OpenApiMedia>;
+
+    content(name: string) {
+      return {
+        media: (media: OpenApiMedia) => {
+          const copy: this = Object.create(this);
+          copy._content = new Map(this._content);
+          copy._content.set(name, media);
+          return copy;
+        },
+      };
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._content) {
+        Object.defineProperty(json, "content", {
+          enumerable: true,
+          value: mapMap(this._content, (val) => val.toJSON()),
         });
       }
       return json;

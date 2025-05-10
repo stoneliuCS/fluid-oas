@@ -31,4 +31,4 @@ class _OpenApiParameter extends ParameterBase {
 }
 
 export const OpenApiParameter = new _OpenApiParameter();
-export type OpenApiParameterType = _OpenApiParameter;
+export type OpenApiParameter = _OpenApiParameter;
