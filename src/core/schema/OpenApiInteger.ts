@@ -96,4 +96,4 @@ class _OpenApiInteger extends SchemaBase {
 
 const OpenApiIntegerImpl = withDefault(_OpenApiInteger)<number>();
 export const OpenApiInteger = new OpenApiIntegerImpl();
-export type OpenApiIntegerType = typeof OpenApiInteger;
+export type OpenApiIntegerType = _OpenApiInteger;

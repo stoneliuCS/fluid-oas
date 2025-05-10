@@ -1,7 +1,4 @@
-import type { OpenApiBooleanType } from "../schema/OpenApiBoolean";
-import type { OpenApiIntegerType } from "../schema/OpenApiInteger";
-import type { OpenApiNumberType } from "../schema/OpenApiNumber";
-import type { OpenApiStringType } from "../schema/OpenApiString";
+import type { OpenApiSchema } from "../schema/OpenApiSchema";
 import type { OpenApiDiscriminator } from "./OpenApiDiscriminator";
 import type { OpenApiDocumentation } from "./OpenApiDocumentation";
 import type { OpenApiXML } from "./OpenApiXML";
@@ -18,11 +15,6 @@ export const Base = withExtensions(_Base);
 export const SchemaBase = withDescription(
   withExternalDocs(withDiscriminator(withXML(Base))),
 );
-export type OpenApiSchema =
-  | OpenApiStringType
-  | OpenApiIntegerType
-  | OpenApiNumberType
-  | OpenApiBooleanType;
 
 export function withDefault<TBase extends GConstructor>(Base: TBase) {
   return <K>() =>

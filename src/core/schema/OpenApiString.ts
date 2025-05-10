@@ -71,4 +71,4 @@ class _OpenApiString extends SchemaBase {
 
 const OpenApiStringImpl = withDefault(_OpenApiString)<string>();
 export const OpenApiString = new OpenApiStringImpl();
-export type OpenApiStringType = typeof OpenApiString;
+export type OpenApiStringType = _OpenApiString;

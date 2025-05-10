@@ -15,4 +15,4 @@ class _OpenApiBoolean extends SchemaBase {
 
 const OpenApiBooleanImpl = withDefault(_OpenApiBoolean)<boolean>();
 export const OpenApiBoolean = new OpenApiBooleanImpl();
-export type OpenApiBooleanType = typeof OpenApiBoolean;
+export type OpenApiBooleanType = _OpenApiBoolean;
