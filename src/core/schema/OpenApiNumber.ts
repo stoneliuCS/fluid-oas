@@ -98,4 +98,4 @@ class _OpenApiNumber extends SchemaBase {
 }
 
 export const OpenApiNumber = new _OpenApiNumber();
-export type OpenApiNumber = typeof OpenApiNumber;
+export type OpenApiNumberType = typeof OpenApiNumber;

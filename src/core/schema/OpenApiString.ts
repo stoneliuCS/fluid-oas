@@ -70,4 +70,4 @@ class _OpenApiString extends SchemaBase {
 }
 
 export const OpenApiString = new _OpenApiString();
-export type OpenApiString = typeof OpenApiString;
+export type OpenApiStringType = typeof OpenApiString;

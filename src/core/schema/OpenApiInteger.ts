@@ -95,4 +95,4 @@ class _OpenApiInteger extends SchemaBase {
 }
 
 export const OpenApiInteger = new _OpenApiInteger();
-export type OpenApiInteger = typeof OpenApiInteger;
+export type OpenApiIntegerType = typeof OpenApiInteger;

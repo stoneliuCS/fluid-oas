@@ -14,4 +14,4 @@ class _OpenApiBoolean extends SchemaBase {
 }
 
 export const OpenApiBoolean = new _OpenApiBoolean();
-export type OpenApiBoolean = typeof OpenApiBoolean;
+export type OpenApiBooleanType = typeof OpenApiBoolean;
