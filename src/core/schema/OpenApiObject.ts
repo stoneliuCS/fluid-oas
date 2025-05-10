@@ -1,7 +1,14 @@
-import { SchemaBase, withDefault } from "../common/common";
+import {
+  SchemaBase,
+  withDefault,
+  withMaximum,
+  withMinimum,
+} from "../common/common";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
-const ObjectBase = withDefault(SchemaBase)<OpenApiObjectType>();
+const ObjectBase = withMaximum(
+  withMinimum(withDefault(SchemaBase)<OpenApiObjectType>())("minProperties"),
+)("maxProperties");
 
 class _OpenApiObject extends ObjectBase {
   private readonly _type: string = "object";
