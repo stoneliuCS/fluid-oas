@@ -1,6 +1,6 @@
-import { OpenApiSchemaClass } from "./OpenApiSchema";
+import { SchemaBase } from "../common/common";
 
-class _OpenApiBoolean extends OpenApiSchemaClass {
+class _OpenApiBoolean extends SchemaBase {
   private readonly _type: string = "boolean";
 
   toJSON(): unknown {

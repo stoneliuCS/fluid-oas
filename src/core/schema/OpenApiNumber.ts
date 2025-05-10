@@ -1,6 +1,6 @@
-import { OpenApiSchemaClass } from "./OpenApiSchema";
+import { SchemaBase } from "../common/common";
 
-class _OpenApiNumber extends OpenApiSchemaClass {
+class _OpenApiNumber extends SchemaBase {
   private readonly _type: string = "number";
   private _minimum?: number;
   private _maximum?: number;

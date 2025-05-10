@@ -1,7 +1,10 @@
+import type { OpenApiBoolean } from "../schema/OpenApiBoolean";
+import type { OpenApiInteger } from "../schema/OpenApiInteger";
+import type { OpenApiNumber } from "../schema/OpenApiNumber";
+import type { OpenApiString } from "../schema/OpenApiString";
 import type { OpenApiDiscriminator } from "./OpenApiDiscriminator";
 import type { OpenApiDocumentation } from "./OpenApiDocumentation";
 import type { OpenApiXML } from "./OpenApiXML";
-import { OpenApiSchema } from "../schema/OpenApiSchema";
 
 type GConstructor<T = { toJSON(): unknown }> = new (...args: any[]) => T;
 
@@ -12,6 +15,14 @@ class _Base {
 }
 
 export const Base = withExtensions(_Base);
+export const SchemaBase = withDescription(
+  withExternalDocs(withDiscriminator(withXML(Base))),
+);
+export type OpenApiSchema =
+  | OpenApiString
+  | OpenApiInteger
+  | OpenApiNumber
+  | OpenApiBoolean;
 
 export function withExtensions<TBase extends GConstructor>(Base: TBase) {
   return class WithExtensions extends Base {
