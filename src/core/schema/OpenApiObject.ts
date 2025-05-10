@@ -3,12 +3,15 @@ import {
   withDefault,
   withMaximum,
   withMinimum,
+  withNullable,
 } from "../common/common";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
-const ObjectBase = withMaximum(
-  withMinimum(withDefault(SchemaBase)<OpenApiObjectType>())("minProperties"),
-)("maxProperties");
+const ObjectBase = withNullable(
+  withMaximum(
+    withMinimum(withDefault(SchemaBase)<OpenApiObjectType>())("minProperties"),
+  )("maxProperties"),
+);
 
 class _OpenApiObject extends ObjectBase {
   private readonly _type: string = "object";

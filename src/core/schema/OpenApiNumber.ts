@@ -1,20 +1,25 @@
 import {
   SchemaBase,
   withDefault,
+  withFormat,
   withMaximum,
   withMinimum,
+  withNullable,
 } from "../common/common";
 
-const NumberBase = withMaximum(
-  withMinimum(withDefault(SchemaBase)<number>())("minimum"),
-)("maximum");
+const NumberBase = withFormat(
+  withNullable(
+    withMaximum(withMinimum(withDefault(SchemaBase)<number>())("minimum"))(
+      "maximum",
+    ),
+  ),
+)<"float" | "double">();
 
 class _OpenApiNumber extends NumberBase {
   private readonly _type: string = "number";
   private _exclusiveMin?: boolean;
   private _exclusiveMax?: boolean;
   private _multipleOf?: number;
-  private _format?: "float" | "double";
 
   exclusiveMin(): this {
     const copy: this = Object.create(this);
@@ -31,12 +36,6 @@ class _OpenApiNumber extends NumberBase {
   multipleOf(mutliple: number) {
     const copy: this = Object.create(this);
     copy._multipleOf = mutliple;
-    return copy;
-  }
-
-  format(format: "float" | "double") {
-    const copy: this = Object.create(this);
-    copy._format = format;
     return copy;
   }
 
@@ -68,12 +67,6 @@ class _OpenApiNumber extends NumberBase {
       });
     }
 
-    if (this._format) {
-      Object.defineProperty(json, "format", {
-        value: this._format,
-        enumerable: true,
-      });
-    }
     return json;
   }
 }

@@ -3,12 +3,15 @@ import {
   withDefault,
   withMaximum,
   withMinimum,
+  withNullable,
 } from "../common/common";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
-const ArrayBase = withMaximum(
-  withMinimum(withDefault(SchemaBase)<OpenApiArrayType>())("minItems"),
-)("maxItems");
+const ArrayBase = withNullable(
+  withMaximum(
+    withMinimum(withDefault(SchemaBase)<OpenApiArrayType>())("minItems"),
+  )("maxItems"),
+);
 
 class _OpenApiArray extends ArrayBase {
   private readonly _type: string = "array";

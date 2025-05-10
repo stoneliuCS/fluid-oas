@@ -1,6 +1,6 @@
-import { SchemaBase, withDefault } from "../common/common";
+import { SchemaBase, withDefault, withNullable } from "../common/common";
 
-const BooleanBase = withDefault(SchemaBase)<boolean>();
+const BooleanBase = withNullable(withDefault(SchemaBase)<boolean>());
 class _OpenApiBoolean extends BooleanBase {
   private readonly _type: string = "boolean";
 

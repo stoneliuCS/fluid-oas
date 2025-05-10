@@ -16,6 +16,52 @@ export const SchemaBase = withDescription(
   withExternalDocs(withDiscriminator(withXML(Base))),
 );
 
+export function withFormat<TBase extends GConstructor>(Base: TBase) {
+  return <K extends string>() =>
+    class extends Base {
+      private _format?: K;
+
+      format(format: K): this {
+        const copy: this = Object.create(this);
+        copy._format = format;
+        return copy;
+      }
+
+      toJSON(): unknown {
+        const json = super.toJSON();
+        if (this._format) {
+          Object.defineProperty(json, "format", {
+            value: this._format,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+}
+
+export function withNullable<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _nullable?: boolean;
+    nullable() {
+      const copy: this = Object.create(this);
+      copy._nullable = true;
+      return copy;
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._nullable) {
+        Object.defineProperty(json, "nullable", {
+          value: this._nullable,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
 export function withMaximum<TBase extends GConstructor>(Base: TBase) {
   return (name: string) =>
     class extends Base {
@@ -85,7 +131,7 @@ export function withDefault<TBase extends GConstructor>(Base: TBase) {
 }
 
 export function withExtensions<TBase extends GConstructor>(Base: TBase) {
-  return class WithExtensions extends Base {
+  return class extends Base {
     private _extensions?: Map<string, OpenApiSchema>;
     extend(name: string) {
       if (!name.startsWith("x-")) {
@@ -116,7 +162,7 @@ export function withExtensions<TBase extends GConstructor>(Base: TBase) {
 }
 
 export function withName<TBase extends GConstructor>(Base: TBase) {
-  return class WithName extends Base {
+  return class extends Base {
     private _name?: string;
     name(name: string): this {
       const copy = Object.create(this);
@@ -138,7 +184,7 @@ export function withName<TBase extends GConstructor>(Base: TBase) {
 }
 
 export function withURL<TBase extends GConstructor>(Base: TBase) {
-  return class WithURL extends Base {
+  return class extends Base {
     private _url?: string;
     url(url: string): this {
       const copy = Object.create(this);
@@ -160,7 +206,7 @@ export function withURL<TBase extends GConstructor>(Base: TBase) {
 }
 
 export function withDescription<TBase extends GConstructor>(Base: TBase) {
-  return class WithDescription extends Base {
+  return class extends Base {
     private _description?: string;
     description(description: string): this {
       const copy = Object.create(this);
@@ -182,7 +228,7 @@ export function withDescription<TBase extends GConstructor>(Base: TBase) {
 }
 
 export function withPropertyName<TBase extends GConstructor>(Base: TBase) {
-  return class WithPropertyName extends Base {
+  return class extends Base {
     private _propertyName?: string;
     propertyName(propertyName: string): this {
       const copy = Object.create(this);
@@ -203,7 +249,7 @@ export function withPropertyName<TBase extends GConstructor>(Base: TBase) {
 }
 
 export function withMapping<TBase extends GConstructor>(Base: TBase) {
-  return class WithMapping extends Base {
+  return class extends Base {
     private _mapping?: Map<string, OpenApiSchema>;
 
     mapping(name: string) {
@@ -235,7 +281,7 @@ export function withMapping<TBase extends GConstructor>(Base: TBase) {
 }
 
 export function withNamespace<TBase extends GConstructor>(Base: TBase) {
-  return class WithNamespace extends Base {
+  return class extends Base {
     private _namespace?: string;
 
     namespace(namespace: string): this {
@@ -258,7 +304,7 @@ export function withNamespace<TBase extends GConstructor>(Base: TBase) {
 }
 
 export function withPrefix<TBase extends GConstructor>(Base: TBase) {
-  return class WithPrefix extends Base {
+  return class extends Base {
     private _prefix?: string;
 
     prefix(prefix: string): this {
@@ -281,7 +327,7 @@ export function withPrefix<TBase extends GConstructor>(Base: TBase) {
 }
 
 export function withWrapped<TBase extends GConstructor>(Base: TBase) {
-  return class WithWrapped extends Base {
+  return class extends Base {
     private _wrapped?: boolean;
 
     wrapped(): this {
@@ -304,7 +350,7 @@ export function withWrapped<TBase extends GConstructor>(Base: TBase) {
 }
 
 export function withAttribute<TBase extends GConstructor>(Base: TBase) {
-  return class WithAttribute extends Base {
+  return class extends Base {
     private _attribute?: boolean;
 
     wrapped(): this {
@@ -327,7 +373,7 @@ export function withAttribute<TBase extends GConstructor>(Base: TBase) {
 }
 
 export function withXML<TBase extends GConstructor>(Base: TBase) {
-  return class WithXML extends Base {
+  return class extends Base {
     private _xml?: OpenApiXML;
 
     xml(xml: OpenApiXML): this {
@@ -350,7 +396,7 @@ export function withXML<TBase extends GConstructor>(Base: TBase) {
 }
 
 export function withDiscriminator<TBase extends GConstructor>(Base: TBase) {
-  return class WithDiscriminator extends Base {
+  return class extends Base {
     private _discriminator?: OpenApiDiscriminator;
 
     discriminator(discriminator: OpenApiDiscriminator): this {
@@ -373,7 +419,7 @@ export function withDiscriminator<TBase extends GConstructor>(Base: TBase) {
 }
 
 export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
-  return class WithExternalDocs extends Base {
+  return class extends Base {
     private _docs?: OpenApiDocumentation;
 
     externalDocs(docs: OpenApiDocumentation): this {
