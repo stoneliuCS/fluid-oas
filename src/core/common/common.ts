@@ -1,7 +1,7 @@
-import type { OpenApiSchema } from "../types/OpenApi";
 import type { OpenApiDiscriminator } from "./OpenApiDiscriminator";
 import type { OpenApiDocumentation } from "./OpenApiDocumentation";
 import type { OpenApiXML } from "./OpenApiXML";
+import { OpenApiSchema } from "../schema/OpenApiSchema";
 
 type GConstructor<T = { toJSON(): unknown }> = new (...args: any[]) => T;
 
@@ -245,7 +245,7 @@ export function withDiscriminator<TBase extends GConstructor>(Base: TBase) {
   return class WithDiscriminator extends Base {
     private _discriminator?: OpenApiDiscriminator;
 
-    discriminator(discriminator: OpenApiDiscriminator) {
+    discriminator(discriminator: OpenApiDiscriminator): this {
       const copy: this = Object.create(this);
       copy._discriminator = discriminator;
       return copy;
@@ -267,7 +267,7 @@ export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
   return class WithExternalDocs extends Base {
     private _docs?: OpenApiDocumentation;
 
-    externalDocs(docs: OpenApiDocumentation) {
+    externalDocs(docs: OpenApiDocumentation): this {
       const copy: this = Object.create(this);
       copy._docs = docs;
       return copy;

@@ -1,4 +1,4 @@
-import { Base, withDescription, withExtensions, withURL } from "./common";
+import { Base, withDescription, withURL } from "./common";
 
 class _OpenApiDocumentation extends Base {}
 

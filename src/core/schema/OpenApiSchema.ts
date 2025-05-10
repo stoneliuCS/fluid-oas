@@ -7,8 +7,9 @@ import {
 
 class _OpenApiSchema extends Base {}
 
-const OpenApiSchemaImpl = withExternalDocs(
+export const OpenApiSchema = withExternalDocs(
   withDiscriminator(withXML(_OpenApiSchema)),
 );
 
-export const OpenApiSchema = OpenApiSchemaImpl
+const OpenApiSchemaImpl = new OpenApiSchema();
+export type OpenApiSchema = typeof OpenApiSchemaImpl;
