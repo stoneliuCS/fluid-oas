@@ -1,7 +1,7 @@
 import { SchemaBase, withDefault } from "../common/common";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
-const ObjectBase = withDefault(SchemaBase)<OpenApiSchema>();
+const ObjectBase = withDefault(SchemaBase)<OpenApiObjectType>();
 
 class _OpenApiObject extends ObjectBase {
   private readonly _type: string = "object";

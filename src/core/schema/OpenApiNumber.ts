@@ -1,27 +1,20 @@
-import { SchemaBase, withDefault } from "../common/common";
+import {
+  SchemaBase,
+  withDefault,
+  withMaximum,
+  withMinimum,
+} from "../common/common";
 
-const NumberBase = withDefault(SchemaBase)<number>();
+const NumberBase = withMaximum(
+  withMinimum(withDefault(SchemaBase)<number>())("minimum"),
+)("maximum");
 
 class _OpenApiNumber extends NumberBase {
   private readonly _type: string = "number";
-  private _minimum?: number;
-  private _maximum?: number;
   private _exclusiveMin?: boolean;
   private _exclusiveMax?: boolean;
   private _multipleOf?: number;
   private _format?: "float" | "double";
-
-  min(min: number): this {
-    const copy: this = Object.create(this);
-    copy._minimum = min;
-    return copy;
-  }
-
-  max(max: number): this {
-    const copy: this = Object.create(this);
-    copy._maximum = max;
-    return copy;
-  }
 
   exclusiveMin(): this {
     const copy: this = Object.create(this);
@@ -54,20 +47,6 @@ class _OpenApiNumber extends NumberBase {
 
       enumerable: true,
     });
-    if (this._minimum) {
-      Object.defineProperty(json, "minimum", {
-        value: this._minimum,
-
-        enumerable: true,
-      });
-    }
-    if (this._maximum) {
-      Object.defineProperty(json, "maximum", {
-        value: this._maximum,
-
-        enumerable: true,
-      });
-    }
     if (this._exclusiveMin) {
       Object.defineProperty(json, "exclusiveMinimum", {
         value: this._exclusiveMin,

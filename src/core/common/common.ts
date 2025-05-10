@@ -16,6 +16,52 @@ export const SchemaBase = withDescription(
   withExternalDocs(withDiscriminator(withXML(Base))),
 );
 
+export function withMaximum<TBase extends GConstructor>(Base: TBase) {
+  return (name: string) =>
+    class extends Base {
+      private _max?: number;
+      max(max: number) {
+        const copy: this = Object.create(this);
+        copy._max = max;
+        return copy;
+      }
+
+      toJSON(): unknown {
+        const json = super.toJSON();
+        if (this._max) {
+          Object.defineProperty(json, name, {
+            value: this._max,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+}
+
+export function withMinimum<TBase extends GConstructor>(Base: TBase) {
+  return (name: string) =>
+    class extends Base {
+      private _min?: number;
+      min(min: number) {
+        const copy: this = Object.create(this);
+        copy._min = min;
+        return copy;
+      }
+
+      toJSON(): unknown {
+        const json = super.toJSON();
+        if (this._min) {
+          Object.defineProperty(json, name, {
+            value: this._min,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+}
+
 export function withDefault<TBase extends GConstructor>(Base: TBase) {
   return <K>() =>
     class extends Base {

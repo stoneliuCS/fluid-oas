@@ -1,26 +1,20 @@
-import { SchemaBase, withDefault } from "../common/common";
+import {
+  SchemaBase,
+  withDefault,
+  withMaximum,
+  withMinimum,
+} from "../common/common";
 
-const IntegerBase = withDefault(SchemaBase)<number>();
+const IntegerBase = withMaximum(
+  withMinimum(withDefault(SchemaBase)<number>())("minimum"),
+)("maximum");
+
 class _OpenApiInteger extends IntegerBase {
   private readonly _type: string = "integer";
-  private _minimum?: number;
-  private _maximum?: number;
   private _exclusiveMin?: boolean;
   private _exclusiveMax?: boolean;
   private _multipleOf?: number;
   private _format?: "int32" | "int64";
-
-  min(min: number): this {
-    const copy: this = Object.create(this);
-    copy._minimum = min;
-    return copy;
-  }
-
-  max(max: number): this {
-    const copy: this = Object.create(this);
-    copy._maximum = max;
-    return copy;
-  }
 
   exclusiveMin(): this {
     const copy: this = Object.create(this);
@@ -52,18 +46,6 @@ class _OpenApiInteger extends IntegerBase {
       value: this._type,
       enumerable: true,
     });
-    if (this._minimum) {
-      Object.defineProperty(json, "minimum", {
-        value: this._minimum,
-        enumerable: true,
-      });
-    }
-    if (this._maximum) {
-      Object.defineProperty(json, "maximum", {
-        value: this._maximum,
-        enumerable: true,
-      });
-    }
     if (this._exclusiveMin) {
       Object.defineProperty(json, "exclusiveMinimum", {
         value: this._exclusiveMin,

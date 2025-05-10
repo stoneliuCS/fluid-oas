@@ -1,24 +1,12 @@
-import { SchemaBase, withDefault } from "../common/common";
+import { SchemaBase, withDefault, withMaximum, withMinimum } from "../common/common";
 
-const StringBase = withDefault(SchemaBase)<string>();
+const StringBase = withMaximum(
+  withMinimum(withDefault(SchemaBase)<string>())("minLength"),
+)("maxLength");
 class _OpenApiString extends StringBase {
   private readonly _type: string = "string";
-  private _minLength?: number;
-  private _maxLength?: number;
   private _format?: string;
   private _pattern?: RegExp;
-
-  min(min: number): this {
-    const copy: this = Object.create(this);
-    copy._minLength = min;
-    return copy;
-  }
-
-  max(max: number): this {
-    const copy: this = Object.create(this);
-    copy._maxLength = max;
-    return copy;
-  }
 
   format(format: string): this {
     const copy: this = Object.create(this);
@@ -38,20 +26,6 @@ class _OpenApiString extends StringBase {
       value: this._type,
       enumerable: true,
     });
-
-    if (this._minLength) {
-      Object.defineProperty(json, "minLength", {
-        value: this._minLength,
-        enumerable: true,
-      });
-    }
-
-    if (this._maxLength) {
-      Object.defineProperty(json, "maxLength", {
-        value: this._maxLength,
-        enumerable: true,
-      });
-    }
 
     if (this._format) {
       Object.defineProperty(json, "format", {
