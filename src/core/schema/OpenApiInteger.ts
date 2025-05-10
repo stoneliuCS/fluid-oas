@@ -1,13 +1,13 @@
 import { OpenApiSchema } from "./OpenApiSchema";
 
-class _OpenApiNumber extends OpenApiSchema {
-  private readonly _type: string = "number";
+class _OpenApiInteger extends OpenApiSchema {
+  private readonly _type: string = "integer";
   private _minimum?: number;
   private _maximum?: number;
   private _exclusiveMin?: boolean;
   private _exclusiveMax?: boolean;
   private _multipleOf?: number;
-  private _format?: "float" | "double";
+  private _format?: "int32" | "int64";
 
   min(min: number): this {
     const copy: this = Object.create(this);
@@ -39,7 +39,7 @@ class _OpenApiNumber extends OpenApiSchema {
     return copy;
   }
 
-  format(format: "float" | "double") {
+  format(format: "int32" | "int64") {
     const copy: this = Object.create(this);
     copy._format = format;
     return copy;
@@ -81,5 +81,5 @@ class _OpenApiNumber extends OpenApiSchema {
   }
 }
 
-export const OpenApiNumber = new _OpenApiNumber();
-export type OpenApiNumber = typeof OpenApiNumber;
+export const OpenApiInteger = new _OpenApiInteger();
+export type OpenApiInteger = typeof OpenApiInteger;

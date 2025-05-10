@@ -1,12 +1,17 @@
 import type { OpenApiSchema } from "../types/OpenApi";
+import type { OpenApiDiscriminator } from "./OpenApiDiscriminator";
+import type { OpenApiDocumentation } from "./OpenApiDocumentation";
+import type { OpenApiXML } from "./OpenApiXML";
 
 type GConstructor<T = { toJSON(): unknown }> = new (...args: any[]) => T;
 
-export class Base {
+class _Base {
   toJSON(): unknown {
     return {};
   }
 }
+
+export const Base = withExtensions(_Base);
 
 export function withExtensions<TBase extends GConstructor>(Base: TBase) {
   return class WithExtensions extends Base {
@@ -100,7 +105,7 @@ export function withDescription<TBase extends GConstructor>(Base: TBase) {
 export function withPropertyName<TBase extends GConstructor>(Base: TBase) {
   return class WithPropertyName extends Base {
     private _propertyName?: string;
-    propertyName(propertyName: string) {
+    propertyName(propertyName: string): this {
       const copy = Object.create(this);
       copy._propertyName = propertyName;
       return copy;
@@ -123,8 +128,8 @@ export function withMapping<TBase extends GConstructor>(Base: TBase) {
 
     mapping(name: string) {
       return {
-        schema: (schema: OpenApiSchema) => {
-          const copy: WithMapping = Object.create(this);
+        schema: (schema: OpenApiSchema): this => {
+          const copy = Object.create(this);
           copy._mapping = new Map(this._mapping);
           copy._mapping.set(name, schema);
           return copy;
@@ -145,8 +150,8 @@ export function withNamespace<TBase extends GConstructor>(Base: TBase) {
   return class WithNamespace extends Base {
     private _namespace?: string;
 
-    namespace(namespace: string) {
-      const copy: WithNamespace = Object.create(this);
+    namespace(namespace: string): this {
+      const copy = Object.create(this);
       copy._namespace = namespace;
       return copy;
     }
@@ -164,8 +169,8 @@ export function withPrefix<TBase extends GConstructor>(Base: TBase) {
   return class WithPrefix extends Base {
     private _prefix?: string;
 
-    prefix(prefix: string) {
-      const copy: WithPrefix = Object.create(this);
+    prefix(prefix: string): this {
+      const copy = Object.create(this);
       copy._prefix = prefix;
       return copy;
     }
@@ -183,8 +188,8 @@ export function withWrapped<TBase extends GConstructor>(Base: TBase) {
   return class WithWrapped extends Base {
     private _wrapped?: boolean;
 
-    wrapped() {
-      const copy: WithWrapped = Object.create(this);
+    wrapped(): this {
+      const copy = Object.create(this);
       copy._wrapped = true;
       return copy;
     }
@@ -202,8 +207,8 @@ export function withAttribute<TBase extends GConstructor>(Base: TBase) {
   return class WithAttribute extends Base {
     private _attribute?: boolean;
 
-    wrapped() {
-      const copy: WithAttribute = Object.create(this);
+    wrapped(): this {
+      const copy = Object.create(this);
       copy._attribute = true;
       return copy;
     }
@@ -213,6 +218,69 @@ export function withAttribute<TBase extends GConstructor>(Base: TBase) {
       if (this._attribute) {
         Object.defineProperty(json, "attribute", { value: this._attribute });
       }
+    }
+  };
+}
+
+export function withXML<TBase extends GConstructor>(Base: TBase) {
+  return class WithXML extends Base {
+    private _xml?: OpenApiXML;
+
+    xml(xml: OpenApiXML): this {
+      const copy: this = Object.create(this);
+      copy._xml = xml;
+      return copy;
+    }
+
+    toJSON() {
+      const json = super.toJSON();
+      if (this._xml) {
+        Object.defineProperty(json, "xml", { value: this._xml });
+      }
+    }
+  };
+}
+
+export function withDiscriminator<TBase extends GConstructor>(Base: TBase) {
+  return class WithDiscriminator extends Base {
+    private _discriminator?: OpenApiDiscriminator;
+
+    discriminator(discriminator: OpenApiDiscriminator) {
+      const copy: this = Object.create(this);
+      copy._discriminator = discriminator;
+      return copy;
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._discriminator) {
+        Object.defineProperty(json, "discriminator", {
+          value: this._discriminator,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
+  return class WithExternalDocs extends Base {
+    private _docs?: OpenApiDocumentation;
+
+    externalDocs(docs: OpenApiDocumentation) {
+      const copy: this = Object.create(this);
+      copy._docs = docs;
+      return copy;
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._docs) {
+        Object.defineProperty(json, "externalDocs", {
+          value: this._docs,
+        });
+      }
+      return json;
     }
   };
 }

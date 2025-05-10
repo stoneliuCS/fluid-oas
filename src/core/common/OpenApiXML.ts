@@ -1,7 +1,6 @@
 import {
   Base,
   withAttribute,
-  withExtensions,
   withName,
   withNamespace,
   withPrefix,
@@ -10,6 +9,8 @@ import {
 
 class _OpenApiXML extends Base {}
 
-const OpenApiXMLImpl = withExtensions(
-  withWrapped(withAttribute(withPrefix(withNamespace(withName(_OpenApiXML))))),
+const OpenApiXMLImpl = withWrapped(
+  withAttribute(withPrefix(withNamespace(withName(_OpenApiXML)))),
 );
+export const OpenApiXML = new OpenApiXMLImpl();
+export type OpenApiXML = typeof OpenApiXML;

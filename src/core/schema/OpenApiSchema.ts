@@ -1,5 +1,14 @@
-import { Base } from "../common/common";
+import {
+  Base,
+  withDiscriminator,
+  withExternalDocs,
+  withXML,
+} from "../common/common";
 
-abstract class _OpenApiSchema extends Base {}
+class _OpenApiSchema extends Base {}
 
-export type OpenApiSchema = _OpenApiSchema;
+const OpenApiSchemaImpl = withExternalDocs(
+  withDiscriminator(withXML(_OpenApiSchema)),
+);
+
+export const OpenApiSchema = OpenApiSchemaImpl
