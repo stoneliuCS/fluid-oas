@@ -1,6 +1,7 @@
 import { SchemaBase, withDefault } from "../common/common";
 
-class _OpenApiInteger extends SchemaBase {
+const IntegerBase = withDefault(SchemaBase)<number>();
+class _OpenApiInteger extends IntegerBase {
   private readonly _type: string = "integer";
   private _minimum?: number;
   private _maximum?: number;
@@ -94,6 +95,5 @@ class _OpenApiInteger extends SchemaBase {
   }
 }
 
-const OpenApiIntegerImpl = withDefault(_OpenApiInteger)<number>();
-export const OpenApiInteger = new OpenApiIntegerImpl();
+export const OpenApiInteger = new _OpenApiInteger();
 export type OpenApiIntegerType = _OpenApiInteger;

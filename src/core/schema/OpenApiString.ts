@@ -1,6 +1,7 @@
 import { SchemaBase, withDefault } from "../common/common";
 
-class _OpenApiString extends SchemaBase {
+const StringBase = withDefault(SchemaBase)<string>();
+class _OpenApiString extends StringBase {
   private readonly _type: string = "string";
   private _minLength?: number;
   private _maxLength?: number;
@@ -69,6 +70,5 @@ class _OpenApiString extends SchemaBase {
   }
 }
 
-const OpenApiStringImpl = withDefault(_OpenApiString)<string>();
-export const OpenApiString = new OpenApiStringImpl();
+export const OpenApiString = new _OpenApiString();
 export type OpenApiStringType = _OpenApiString;
