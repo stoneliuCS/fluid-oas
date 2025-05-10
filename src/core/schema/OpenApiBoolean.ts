@@ -14,5 +14,5 @@ class _OpenApiBoolean extends BooleanBase {
   }
 }
 
-export const OpenApiBoolean = new _OpenApiBoolean();
+export const OpenApiBoolean = () => new _OpenApiBoolean();
 export type OpenApiBooleanType = _OpenApiBoolean;

@@ -70,5 +70,5 @@ class _OpenApiInteger extends IntegerBase {
   }
 }
 
-export const OpenApiInteger = new _OpenApiInteger();
+export const OpenApiInteger = () => new _OpenApiInteger();
 export type OpenApiIntegerType = _OpenApiInteger;

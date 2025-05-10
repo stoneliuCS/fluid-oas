@@ -1,11 +1,11 @@
 import {
   Base,
   Fixed,
-  withContent,
+  withContentMap,
   withDeprecated,
   withDescription,
   withExample,
-  withExamples,
+  withExamplesMap,
   withExplode,
   withRequired,
   withSchema,
@@ -14,13 +14,13 @@ import {
 
 const HeaderBase = withDeprecated(withRequired(withDescription(Base)));
 
-const HeaderBaseWithSchema = withExamples(
+const HeaderBaseWithSchema = withExamplesMap(
   withExample(
     withSchema(withExample(withExplode(withStyle(HeaderBase)<"simple">()))),
   ),
 );
 
-const HeaderBaseWithContent = withContent(HeaderBase);
+const HeaderBaseWithContent = withContentMap(HeaderBase);
 
 class _OpenApiHeaderSchema extends HeaderBaseWithSchema {}
 class _OpenApiHeaderContent extends HeaderBaseWithContent {}

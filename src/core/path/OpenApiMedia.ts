@@ -2,13 +2,13 @@ import {
   Base,
   withEncodings,
   withExample,
-  withExamples,
+  withExamplesMap,
   withSchema,
 } from "../common/common";
 
-const MediaBase = withEncodings(withExamples(withExample(withSchema(Base))));
+const MediaBase = withEncodings(withExamplesMap(withExample(withSchema(Base))));
 
 class _OpenApiMedia extends MediaBase {}
 
-export const OpenApiMedia = new _OpenApiMedia();
+export const OpenApiMedia = () => new _OpenApiMedia();
 export type OpenApiMedia = _OpenApiMedia;

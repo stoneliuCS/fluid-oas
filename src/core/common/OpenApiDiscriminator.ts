@@ -46,5 +46,5 @@ class _OpenApiDiscriminator extends DiscriminatorBase {
   }
 }
 
-export const OpenApiDiscriminator = new _OpenApiDiscriminator();
+export const OpenApiDiscriminator = () => new _OpenApiDiscriminator();
 export type OpenApiDiscriminator = _OpenApiDiscriminator;

@@ -52,5 +52,5 @@ class _OpenApiArray extends ArrayBase {
   }
 }
 
-export const OpenApiArray = new _OpenApiArray();
+export const OpenApiArray = () => new _OpenApiArray();
 export type OpenApiArrayType = _OpenApiArray;

@@ -6,35 +6,35 @@ import { OpenApiDiscriminator } from "../../../src/core/common/OpenApiDiscrimina
 
 describe("OpenApiString tests.", () => {
   afterEach(() =>
-    expect(OpenApiString.toJSON()).toMatchObject({ type: "string" }),
+    expect(OpenApiString().toJSON()).toMatchObject({ type: "string" }),
   );
 
   test("Test OpenApiString construction", () => {
-    expect(OpenApiString.toJSON()).toMatchObject({ type: "string" });
+    expect(OpenApiString().toJSON()).toMatchObject({ type: "string" });
   });
 
   test("Test OpenApi minimum test.", () => {
-    const actual = OpenApiString.min(1).toJSON();
+    const actual = OpenApiString().min(1).toJSON();
     expect(actual).toMatchObject({ type: "string", minLength: 1 });
   });
 
   test("Test OpenApi maximum test.", () => {
-    const actual = OpenApiString.max(1).toJSON();
+    const actual = OpenApiString().max(1).toJSON();
     expect(actual).toMatchObject({ type: "string", maxLength: 1 });
   });
 
   test("Format test", () => {
-    const actual = OpenApiString.format("uuid").toJSON();
+    const actual = OpenApiString().format("uuid").toJSON();
     expect(actual).toMatchObject({ type: "string", format: "uuid" });
   });
 
   test("Pattern test", () => {
-    const actual = OpenApiString.pattern(/ab+c/).toJSON();
+    const actual = OpenApiString().pattern(/ab+c/).toJSON();
     expect(actual).toMatchObject({ type: "string", pattern: "ab+c" });
   });
 
   test("Combined simple test", () => {
-    const actual = OpenApiString.min(1)
+    const actual = OpenApiString().min(1)
       .max(2)
       .format("uuid")
       .pattern(/ab+c/)
@@ -49,24 +49,24 @@ describe("OpenApiString tests.", () => {
   });
 
   test("Test with advanced extensions", () => {
-    const actual = OpenApiString.min(1)
+    const actual = OpenApiString().min(1)
       .max(2)
       .format("uuid")
       .pattern(/ab+c/)
       .description("I can add anything I want!")
       .externalDocs(
-        OpenApiDocumentation.url("https://blah.com").description(
+        OpenApiDocumentation().url("https://blah.com").description(
           "random website",
         ),
       )
-      .xml(OpenApiXML.name("Stone").wrapped().namespace("stone"))
+      .xml(OpenApiXML().name("Stone").wrapped().namespace("stone"))
       .discriminator(
-        OpenApiDiscriminator.propertyName("blah")
+        OpenApiDiscriminator().propertyName("blah")
           .mapping("some")
-          .schema(OpenApiString),
+          .schema(OpenApiString()),
       )
       .extend("x-something")
-      .with(OpenApiString)
+      .with(OpenApiString())
       .toJSON();
 
     expect(actual).toMatchObject({

@@ -4,5 +4,5 @@ const Pathbase = withDescription(withSummary(Base));
 
 class _OpenApiPath extends Pathbase {}
 
-export const OpenApiPath = new _OpenApiPath();
+export const OpenApiPath = () => new _OpenApiPath();
 export type OpenApiPathType = _OpenApiPath;

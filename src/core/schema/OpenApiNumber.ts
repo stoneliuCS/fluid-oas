@@ -71,5 +71,5 @@ class _OpenApiNumber extends NumberBase {
   }
 }
 
-export const OpenApiNumber = new _OpenApiNumber();
+export const OpenApiNumber = () => new _OpenApiNumber();
 export type OpenApiNumberType = _OpenApiNumber;

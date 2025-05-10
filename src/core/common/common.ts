@@ -6,6 +6,7 @@ import type { OpenApiSchema } from "../schema/OpenApiSchema";
 import type { OpenApiDiscriminator } from "./OpenApiDiscriminator";
 import type { OpenApiDocumentation } from "./OpenApiDocumentation";
 import type { OpenApiExample } from "./OpenApiExample";
+import type { OpenApiLink } from "./OpenApiLink";
 import type { OpenApiXML } from "./OpenApiXML";
 import { mapMap } from "./utils";
 
@@ -307,6 +308,31 @@ export function withURL<TBase extends GConstructor>(Base: TBase) {
   };
 }
 
+export function withEnum<TBase extends GConstructor>(Base: TBase) {
+  return <K>() =>
+    class extends Base {
+      private _enum?: K[];
+
+      enum(_enum: K) {
+        const copy: this = Object.create(this);
+        copy._enum =
+          this._enum === undefined ? [_enum] : [...this._enum, _enum];
+        return copy;
+      }
+
+      toJSON(): unknown {
+        const json = super.toJSON();
+        if (this._enum) {
+          Object.defineProperty(json, "enum", {
+            value: this._enum,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+}
+
 export function withDescription<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     private _description?: string;
@@ -550,6 +576,32 @@ export function withEncodings<TBase extends GConstructor>(Base: TBase) {
   };
 }
 
+export function withLinksMap<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _linksMap?: Map<string, OpenApiLink>;
+
+    links(name: string) {
+      return {
+        link: (link: OpenApiLink) => {
+          const copy: this = Object.create(this);
+          copy._linksMap = new Map(this._linksMap);
+          copy._linksMap.set(name, link);
+          return copy;
+        },
+      };
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._linksMap) {
+        Object.defineProperty(json, "links", {
+          value: mapMap(this._linksMap, (val) => val.toJSON()),
+        });
+      }
+      return json;
+    }
+  };
+}
 export function withHeadersMap<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     private _headersMap?: Map<string, OpenApiHeader>;
@@ -601,7 +653,7 @@ export function withContentType<TBase extends GConstructor>(Base: TBase) {
     };
 }
 
-export function withExamples<TBase extends GConstructor>(Base: TBase) {
+export function withExamplesMap<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     private _examples?: Map<string, OpenApiExample>;
 
@@ -652,9 +704,32 @@ export function withExample<TBase extends GConstructor>(Base: TBase) {
   };
 }
 
+export function withOperationId<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _opId?: string;
+
+    opId(opId: string): this {
+      const copy: this = Object.create(this);
+      copy._opId = opId;
+      return copy;
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._opId) {
+        Object.defineProperty(json, "operationId", {
+          value: this._opId,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
 export function withOperation<TBase extends GConstructor>(Base: TBase) {
-  return (
-    op:
+  return <
+    K extends
       | "GET"
       | "PUT"
       | "POST"
@@ -663,10 +738,8 @@ export function withOperation<TBase extends GConstructor>(Base: TBase) {
       | "HEAD"
       | "PATCH"
       | "TRACE",
-  ) => {
-    return class extends Base {
-      [op]() {}
-    };
+  >() => {
+    return class extends Base {};
   };
 }
 
@@ -787,7 +860,7 @@ export function withSchema<TBase extends GConstructor>(Base: TBase) {
   };
 }
 
-export function withContent<TBase extends GConstructor>(Base: TBase) {
+export function withContentMap<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     private _content?: Map<string, OpenApiMedia>;
 

@@ -41,5 +41,5 @@ class _OpenApiString extends StringBase {
   }
 }
 
-export const OpenApiString = new _OpenApiString();
+export const OpenApiString = () => new _OpenApiString();
 export type OpenApiStringType = _OpenApiString;

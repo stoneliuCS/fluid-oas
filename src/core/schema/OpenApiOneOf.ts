@@ -25,5 +25,5 @@ class _OpenApiOneOf extends OneOfBase {
   }
 }
 
-export const OpenApiOneOf = new _OpenApiOneOf();
+export const OpenApiOneOf = () => new _OpenApiOneOf();
 export type OpenApiOneOfType = _OpenApiOneOf;
