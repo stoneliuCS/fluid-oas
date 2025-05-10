@@ -1,4 +1,4 @@
-import { SchemaBase } from "../common/common";
+import { SchemaBase, withDefault } from "../common/common";
 
 class _OpenApiNumber extends SchemaBase {
   private readonly _type: string = "number";
@@ -97,5 +97,6 @@ class _OpenApiNumber extends SchemaBase {
   }
 }
 
-export const OpenApiNumber = new _OpenApiNumber();
+const OpenApiNumberImpl = withDefault(_OpenApiNumber)<number>();
+export const OpenApiNumber = new OpenApiNumberImpl();
 export type OpenApiNumberType = typeof OpenApiNumber;

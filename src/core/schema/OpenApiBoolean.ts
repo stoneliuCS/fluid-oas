@@ -1,4 +1,4 @@
-import { SchemaBase } from "../common/common";
+import { SchemaBase, withDefault } from "../common/common";
 
 class _OpenApiBoolean extends SchemaBase {
   private readonly _type: string = "boolean";
@@ -13,5 +13,6 @@ class _OpenApiBoolean extends SchemaBase {
   }
 }
 
-export const OpenApiBoolean = new _OpenApiBoolean();
+const OpenApiBooleanImpl = withDefault(_OpenApiBoolean)<boolean>();
+export const OpenApiBoolean = new OpenApiBooleanImpl();
 export type OpenApiBooleanType = typeof OpenApiBoolean;

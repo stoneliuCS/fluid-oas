@@ -24,6 +24,28 @@ export type OpenApiSchema =
   | OpenApiNumberType
   | OpenApiBooleanType;
 
+export function withDefault<TBase extends GConstructor>(Base: TBase) {
+  return <K>() =>
+    class extends Base {
+      private _default?: K;
+      default(def: K): this {
+        const copy: this = Object.create(this);
+        copy._default = def;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._default) {
+          Object.defineProperty(json, "default", {
+            value: this._default,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+}
+
 export function withExtensions<TBase extends GConstructor>(Base: TBase) {
   return class WithExtensions extends Base {
     private _extensions?: Map<string, OpenApiSchema>;
