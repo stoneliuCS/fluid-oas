@@ -1,6 +1,6 @@
-import { OpenApiSchema } from "./OpenApiSchema";
+import { OpenApiSchemaClass } from "./OpenApiSchema";
 
-class _OpenApiInteger extends OpenApiSchema {
+class _OpenApiInteger extends OpenApiSchemaClass {
   private readonly _type: string = "integer";
   private _minimum?: number;
   private _maximum?: number;
@@ -46,35 +46,48 @@ class _OpenApiInteger extends OpenApiSchema {
   }
 
   toJSON(): unknown {
-    const json = {};
-    Object.defineProperty(json, "type", { value: this._type });
+    const json = super.toJSON();
+    Object.defineProperty(json, "type", {
+      value: this._type,
+      enumerable: true,
+    });
     if (this._minimum) {
-      Object.defineProperty(json, "minimum", { value: this._minimum });
+      Object.defineProperty(json, "minimum", {
+        value: this._minimum,
+        enumerable: true,
+      });
     }
     if (this._maximum) {
-      Object.defineProperty(json, "maximum", { value: this._maximum });
+      Object.defineProperty(json, "maximum", {
+        value: this._maximum,
+        enumerable: true,
+      });
     }
     if (this._exclusiveMin) {
       Object.defineProperty(json, "exclusiveMinimum", {
         value: this._exclusiveMin,
+        enumerable: true,
       });
     }
 
     if (this._exclusiveMax) {
       Object.defineProperty(json, "exclusiveMaximum", {
         value: this._exclusiveMax,
+        enumerable: true,
       });
     }
 
     if (this._multipleOf) {
       Object.defineProperty(json, "multipleOf", {
         value: this._multipleOf,
+        enumerable: true,
       });
     }
 
     if (this._format) {
       Object.defineProperty(json, "format", {
         value: this._format,
+        enumerable: true,
       });
     }
     return json;

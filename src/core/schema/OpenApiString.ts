@@ -1,6 +1,6 @@
-import { OpenApiSchema } from "./OpenApiSchema";
+import { OpenApiSchemaClass } from "./OpenApiSchema";
 
-class _OpenApiString extends OpenApiSchema {
+class _OpenApiString extends OpenApiSchemaClass {
   private readonly _type: string = "string";
   private _minLength?: number;
   private _maxLength?: number;
@@ -32,23 +32,38 @@ class _OpenApiString extends OpenApiSchema {
   }
 
   toJSON(): unknown {
-    const json = {};
-    Object.defineProperty(json, "type", { value: this._type });
+    const json = super.toJSON();
+    Object.defineProperty(json, "type", {
+      value: this._type,
+      enumerable: true,
+    });
 
     if (this._minLength) {
-      Object.defineProperty(json, "minLength", { value: this._minLength });
+      Object.defineProperty(json, "minLength", {
+        value: this._minLength,
+        enumerable: true,
+      });
     }
 
     if (this._maxLength) {
-      Object.defineProperty(json, "maxLength", { value: this._maxLength });
+      Object.defineProperty(json, "maxLength", {
+        value: this._maxLength,
+        enumerable: true,
+      });
     }
 
     if (this._format) {
-      Object.defineProperty(json, "format", { value: this._format });
+      Object.defineProperty(json, "format", {
+        value: this._format,
+        enumerable: true,
+      });
     }
 
     if (this._pattern) {
-      Object.defineProperty(json, "pattern", { value: this._pattern.source });
+      Object.defineProperty(json, "pattern", {
+        value: this._pattern.source,
+        enumerable: true,
+      });
     }
     return json;
   }

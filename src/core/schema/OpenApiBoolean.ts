@@ -1,11 +1,14 @@
-import { OpenApiSchema } from "./OpenApiSchema";
+import { OpenApiSchemaClass } from "./OpenApiSchema";
 
-class _OpenApiBoolean extends OpenApiSchema {
+class _OpenApiBoolean extends OpenApiSchemaClass {
   private readonly _type: string = "boolean";
 
   toJSON(): unknown {
-    const json = {};
-    Object.defineProperty(json, "type", { value: this._type });
+    const json = super.toJSON();
+    Object.defineProperty(json, "type", {
+      value: this._type,
+      enumerable: true,
+    });
     return json;
   }
 }

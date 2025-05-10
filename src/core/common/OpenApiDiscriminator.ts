@@ -6,4 +6,4 @@ const OpenApiDiscriminatorImpl = withMapping(
   withPropertyName(_OpenApiDiscriminator),
 );
 export const OpenApiDiscriminator = new OpenApiDiscriminatorImpl();
-export type OpenApiDiscriminator = typeof OpenApiDiscriminatorImpl;
+export type OpenApiDiscriminator = typeof OpenApiDiscriminator;

@@ -33,7 +33,10 @@ export function withExtensions<TBase extends GConstructor>(Base: TBase) {
       const json = super.toJSON();
       if (this._extensions) {
         for (let [key, val] of this._extensions.entries()) {
-          Object.defineProperty(json, key, { value: val });
+          Object.defineProperty(json, key, {
+            value: val.toJSON(),
+            enumerable: true,
+          });
         }
       }
       return json;
@@ -53,7 +56,10 @@ export function withName<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._name) {
-        Object.defineProperty(json, "name", { value: this._name });
+        Object.defineProperty(json, "name", {
+          value: this._name,
+          enumerable: true,
+        });
       }
       return json;
     }
@@ -74,6 +80,7 @@ export function withURL<TBase extends GConstructor>(Base: TBase) {
       if (this._url) {
         Object.defineProperty(json, "url", {
           value: this._url,
+          enumerable: true,
         });
       }
       return json;
@@ -95,6 +102,7 @@ export function withDescription<TBase extends GConstructor>(Base: TBase) {
       if (this._description) {
         Object.defineProperty(json, "description", {
           value: this._description,
+          enumerable: true,
         });
       }
       return json;
@@ -115,6 +123,7 @@ export function withPropertyName<TBase extends GConstructor>(Base: TBase) {
       if (this._propertyName) {
         Object.defineProperty(json, "propertyName", {
           value: this._propertyName,
+          enumerable: true,
         });
       }
       return json;
@@ -140,8 +149,16 @@ export function withMapping<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._mapping) {
-        Object.defineProperty(json, "mapping", { value: this._mapping });
+        const map: any = {};
+        this._mapping.forEach((val, key) => {
+          map[key] = val.toJSON();
+        });
+        Object.defineProperty(json, "mapping", {
+          value: map,
+          enumerable: true,
+        });
       }
+      return json;
     }
   };
 }
@@ -159,8 +176,12 @@ export function withNamespace<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._namespace) {
-        Object.defineProperty(json, "namespace", { value: this._namespace });
+        Object.defineProperty(json, "namespace", {
+          value: this._namespace,
+          enumerable: true,
+        });
       }
+      return json;
     }
   };
 }
@@ -178,8 +199,12 @@ export function withPrefix<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._prefix) {
-        Object.defineProperty(json, "prefix", { value: this._prefix });
+        Object.defineProperty(json, "prefix", {
+          value: this._prefix,
+          enumerable: true,
+        });
       }
+      return json;
     }
   };
 }
@@ -197,8 +222,12 @@ export function withWrapped<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._wrapped) {
-        Object.defineProperty(json, "wrapped", { value: this._wrapped });
+        Object.defineProperty(json, "wrapped", {
+          value: this._wrapped,
+          enumerable: true,
+        });
       }
+      return json;
     }
   };
 }
@@ -216,8 +245,12 @@ export function withAttribute<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._attribute) {
-        Object.defineProperty(json, "attribute", { value: this._attribute });
+        Object.defineProperty(json, "attribute", {
+          value: this._attribute,
+          enumerable: true,
+        });
       }
+      return json;
     }
   };
 }
@@ -235,8 +268,12 @@ export function withXML<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._xml) {
-        Object.defineProperty(json, "xml", { value: this._xml });
+        Object.defineProperty(json, "xml", {
+          value: this._xml.toJSON(),
+          enumerable: true,
+        });
       }
+      return json;
     }
   };
 }
@@ -255,7 +292,8 @@ export function withDiscriminator<TBase extends GConstructor>(Base: TBase) {
       const json = super.toJSON();
       if (this._discriminator) {
         Object.defineProperty(json, "discriminator", {
-          value: this._discriminator,
+          value: this._discriminator.toJSON(),
+          enumerable: true,
         });
       }
       return json;
@@ -277,7 +315,8 @@ export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
       const json = super.toJSON();
       if (this._docs) {
         Object.defineProperty(json, "externalDocs", {
-          value: this._docs,
+          value: this._docs.toJSON(),
+          enumerable: true,
         });
       }
       return json;
