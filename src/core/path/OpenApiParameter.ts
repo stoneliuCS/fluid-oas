@@ -1,6 +1,7 @@
 import {
   Base,
   Fixed,
+  withAllowReserved,
   withContentMap,
   withDeprecated,
   withDescription,
@@ -37,31 +38,17 @@ class _OpenApiParameter extends ParameterBase {
   }
 }
 
-const _OpenApiParameterBaseSchema = withExamplesMap(
-  withExample(withSchema(withExplode(withStyle(_OpenApiParameter)<string>()))),
+const _OpenApiParameterBaseSchema = withAllowReserved(
+  withExamplesMap(
+    withExample(
+      withSchema(withExplode(withStyle(_OpenApiParameter)<string>())),
+    ),
+  ),
 );
 
 const _OpenApiParameterBaseContent = withContentMap(_OpenApiParameter);
 
-class _OpenApiParameterSchema extends _OpenApiParameterBaseSchema {
-  private _allowReserved?: boolean;
-  allowReserved() {
-    const copy: this = Object.create(this);
-    copy._allowReserved = true;
-    return copy;
-  }
-
-  toJSON(): unknown {
-    const json = super.toJSON();
-    if (this._allowReserved) {
-      Object.defineProperty(json, "allowReserved", {
-        value: this._allowReserved,
-        enumerable: true,
-      });
-    }
-    return json;
-  }
-}
+class _OpenApiParameterSchema extends _OpenApiParameterBaseSchema {}
 class _OpenApiParameterContent extends _OpenApiParameterBaseContent {}
 
 export function OpenApiParameter(

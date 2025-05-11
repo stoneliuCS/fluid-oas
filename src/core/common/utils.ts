@@ -2,11 +2,11 @@ export const serializeError = (className: Function, propertyName: string) => {
   return `Cannot serialize ${className.name} properly. ${propertyName} is not defined yet. Please define it first`;
 };
 
-export function mapMap<K, V, R>(
-  map: Map<K, V>,
+export function mapMap<V, R>(
+  map: Map<string, V>,
   mapper: (value: V) => R,
-): Map<K, R> {
-  const result: any = {};
+): Record<string, R> {
+  const result: Record<string, R> = {};
 
   map.forEach((value, key) => {
     result[key] = mapper(value);

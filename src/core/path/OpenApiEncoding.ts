@@ -1,6 +1,17 @@
-import { Base, withContentType, withHeadersMap } from "../common/common";
+import {
+  Base,
+  withAllowReserved,
+  withContentType,
+  withExplode,
+  withHeadersMap,
+  withStyle,
+} from "../common/common";
 
-const EncodingBase = withHeadersMap(withContentType(Base)<string>());
+const EncodingBase = withAllowReserved(
+  withExplode(
+    withStyle(withHeadersMap(withContentType(Base)<string>()))<string>(),
+  ),
+);
 
 class _OpenApiEncoding extends EncodingBase {}
 

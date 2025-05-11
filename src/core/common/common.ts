@@ -27,6 +27,28 @@ export enum Fixed {
   CONTENT,
 }
 
+export function withAllowReserved<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _allowReserved?: boolean;
+    allowReserved() {
+      const copy: this = Object.create(this);
+      copy._allowReserved = true;
+      return copy;
+    }
+
+    toJSON(): unknown {
+      const json = super.toJSON();
+      if (this._allowReserved) {
+        Object.defineProperty(json, "allowReserved", {
+          value: this._allowReserved,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
 export function withValue<TBase extends GConstructor>(Base: TBase) {
   return <K extends string | unknown>() => {
     return class extends Base {
@@ -51,6 +73,7 @@ export function withValue<TBase extends GConstructor>(Base: TBase) {
     };
   };
 }
+
 export function withDeprecated<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     private _deprecated?: boolean;
@@ -73,6 +96,7 @@ export function withDeprecated<TBase extends GConstructor>(Base: TBase) {
     }
   };
 }
+
 export function withRequired<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     private _required?: boolean;
