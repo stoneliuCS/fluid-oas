@@ -7,7 +7,8 @@
     "src/core/schema"
   ],
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "ts-morph": "^25.0.1"
   },
   "peerDependencies": {
     "typescript": "^5"
