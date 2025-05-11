@@ -9,4 +9,4 @@ function main() {
   MainProject.saveSync();
 }
 
-main();
+main()

@@ -13,6 +13,7 @@ export class TemplateBuilder {
     const sourceFile = this.project.createSourceFile(
       this.workingDir + this.typeDeclarationFilePath,
       "",
+      { overwrite: true },
     );
     sourceFile.addTypeAlias({
       name: "GConstructor",
@@ -48,7 +49,9 @@ export class TemplateBuilder {
     const maybeSourceFile = this.project.getSourceFile(augmentPath);
     let sourceFile: SourceFile;
     if (!maybeSourceFile) {
-      sourceFile = this.project.createSourceFile(augmentPath, "");
+      sourceFile = this.project.createSourceFile(augmentPath, "", {
+        overwrite: true,
+      });
 
       sourceFile.addImportDeclaration({
         moduleSpecifier: "./" + this.typeDeclarationFilePath,
