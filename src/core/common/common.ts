@@ -10,7 +10,7 @@ import type { OpenApiLink } from "./OpenApiLink";
 import type { OpenApiXML } from "./OpenApiXML";
 import { mapMap } from "./utils";
 
-type GConstructor<T = { toJSON(): unknown }> = new (...args: any[]) => T;
+export type GConstructor<T = { toJSON(): unknown }> = new (...args: any[]) => T;
 
 class _Base {
   toJSON(): unknown {
