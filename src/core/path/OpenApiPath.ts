@@ -1,4 +1,4 @@
-import { Base, withDescription, withSummary } from '../common/common';
+import { Base, withDescription, withSummary } from "../common/common";
 
 const Pathbase = withDescription(withSummary(Base));
 

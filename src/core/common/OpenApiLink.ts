@@ -1,7 +1,7 @@
-import type { OpenApiOperation } from '../path/OpenApiOperator';
-import { Base, withDescription, withOperationId } from './common';
-import type { OpenApiServer } from './OpenApiServer';
-import { mapMap } from './utils';
+import type { OpenApiOperation } from "../path/OpenApiOperator";
+import { Base, withDescription, withOperationId } from "./common";
+import type { OpenApiServer } from "./OpenApiServer";
+import { mapMap } from "./utils";
 
 const LinkBase = withOperationId(withDescription(Base));
 
@@ -47,21 +47,21 @@ class _OpenApiLink extends LinkBase {
     }
 
     if (this._parameters) {
-      Object.defineProperty(json, 'parameters', {
+      Object.defineProperty(json, "parameters", {
         value: mapMap(this._parameters, val => val),
         enumerable: true,
       });
     }
 
     if (this._requestBody) {
-      Object.defineProperty(json, 'requestBody', {
+      Object.defineProperty(json, "requestBody", {
         value: this._requestBody,
         enumerable: true,
       });
     }
 
     if (this._server) {
-      Object.defineProperty(json, 'server', {
+      Object.defineProperty(json, "server", {
         value: this._server.toJSON(),
         enumerable: true,
       });

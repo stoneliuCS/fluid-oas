@@ -1,4 +1,4 @@
-import { Base } from '../common/common';
+import { Base } from "../common/common";
 
 const OperatorBase = Base;
 

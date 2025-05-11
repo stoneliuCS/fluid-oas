@@ -4,7 +4,7 @@ import {
   withExample,
   withExamplesMap,
   withSchema,
-} from '../common/common';
+} from "../common/common";
 
 const MediaBase = withEncodings(withExamplesMap(withExample(withSchema(Base))));
 

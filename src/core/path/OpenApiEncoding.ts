@@ -5,7 +5,7 @@ import {
   withExplode,
   withHeadersMap,
   withStyle,
-} from '../common/common';
+} from "../common/common";
 
 const EncodingBase = withAllowReserved(
   withExplode(

@@ -12,17 +12,17 @@ import {
   withRequired,
   withSchema,
   withStyle,
-} from '../common/common';
-import { serializeError } from '../common/utils';
+} from "../common/common";
+import { serializeError } from "../common/utils";
 
 const ParameterBase = withDeprecated(
   withRequired(withDescription(withName(Base)))
 );
 
 class _OpenApiParameter extends ParameterBase {
-  private _in?: 'query' | 'header' | 'path' | 'cookie';
+  private _in?: "query" | "header" | "path" | "cookie";
 
-  in(_in: 'query' | 'header' | 'path' | 'cookie') {
+  in(_in: "query" | "header" | "path" | "cookie") {
     const copy: this = Object.create(this);
     copy._in = _in;
     return copy;
@@ -31,9 +31,9 @@ class _OpenApiParameter extends ParameterBase {
   toJSON(): unknown {
     const json = super.toJSON();
     if (!this._in) {
-      throw new TypeError(serializeError(_OpenApiParameter, 'in'));
+      throw new TypeError(serializeError(_OpenApiParameter, "in"));
     }
-    Object.defineProperty(json, 'in', { value: this._in, enumerable: true });
+    Object.defineProperty(json, "in", { value: this._in, enumerable: true });
     return json;
   }
 }

@@ -15,6 +15,7 @@
     "typescript": "^5"
   },
   "scripts": {
-    "format": "prettier --write ."
+    "format": "prettier --log-level silent --write .",
+    "generate": "bun run ./src/templates/index.ts && bun run format"
   }
 }

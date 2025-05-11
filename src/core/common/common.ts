@@ -1,14 +1,14 @@
-import type { OpenApiEncoding } from '../path/OpenApiEncoding';
-import type { OpenApiHeader } from '../path/OpenApiHeader';
-import type { OpenApiMedia } from '../path/OpenApiMedia';
-import type { OpenApiParameter } from '../path/OpenApiParameter';
-import type { OpenApiSchema } from '../schema/OpenApiSchema';
-import type { OpenApiDiscriminator } from './OpenApiDiscriminator';
-import type { OpenApiDocumentation } from './OpenApiDocumentation';
-import type { OpenApiExample } from './OpenApiExample';
-import type { OpenApiLink } from './OpenApiLink';
-import type { OpenApiXML } from './OpenApiXML';
-import { mapMap } from './utils';
+import type { OpenApiEncoding } from "../path/OpenApiEncoding";
+import type { OpenApiHeader } from "../path/OpenApiHeader";
+import type { OpenApiMedia } from "../path/OpenApiMedia";
+import type { OpenApiParameter } from "../path/OpenApiParameter";
+import type { OpenApiSchema } from "../schema/OpenApiSchema";
+import type { OpenApiDiscriminator } from "./OpenApiDiscriminator";
+import type { OpenApiDocumentation } from "./OpenApiDocumentation";
+import type { OpenApiExample } from "./OpenApiExample";
+import type { OpenApiLink } from "./OpenApiLink";
+import type { OpenApiXML } from "./OpenApiXML";
+import { mapMap } from "./utils";
 
 export type GConstructor<T = { toJSON(): unknown }> = new (...args: any[]) => T;
 
@@ -39,7 +39,7 @@ export function withAllowReserved<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._allowReserved) {
-        Object.defineProperty(json, 'allowReserved', {
+        Object.defineProperty(json, "allowReserved", {
           value: this._allowReserved,
           enumerable: true,
         });
@@ -63,7 +63,7 @@ export function withValue<TBase extends GConstructor>(Base: TBase) {
       toJSON(): unknown {
         const json = this.toJSON();
         if (this._value) {
-          Object.defineProperty(json, 'value', {
+          Object.defineProperty(json, "value", {
             value: this._value,
             enumerable: true,
           });
@@ -87,7 +87,7 @@ export function withDeprecated<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._deprecated) {
-        Object.defineProperty(json, 'deprecated', {
+        Object.defineProperty(json, "deprecated", {
           value: this._deprecated,
           enumerable: true,
         });
@@ -110,7 +110,7 @@ export function withRequired<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._required) {
-        Object.defineProperty(json, 'required', {
+        Object.defineProperty(json, "required", {
           value: this._required,
           enumerable: true,
         });
@@ -133,7 +133,7 @@ export function withSummary<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._summary) {
-        Object.defineProperty(json, 'summary', {
+        Object.defineProperty(json, "summary", {
           value: this._summary,
           enumerable: true,
         });
@@ -157,7 +157,7 @@ export function withFormat<TBase extends GConstructor>(Base: TBase) {
       toJSON(): unknown {
         const json = super.toJSON();
         if (this._format) {
-          Object.defineProperty(json, 'format', {
+          Object.defineProperty(json, "format", {
             value: this._format,
             enumerable: true,
           });
@@ -179,7 +179,7 @@ export function withNullable<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._nullable) {
-        Object.defineProperty(json, 'nullable', {
+        Object.defineProperty(json, "nullable", {
           value: this._nullable,
           enumerable: true,
         });
@@ -247,7 +247,7 @@ export function withDefault<TBase extends GConstructor>(Base: TBase) {
       toJSON() {
         const json = super.toJSON();
         if (this._default) {
-          Object.defineProperty(json, 'default', {
+          Object.defineProperty(json, "default", {
             value: this._default,
             enumerable: true,
           });
@@ -261,7 +261,7 @@ export function withExtensions<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     private _extensions?: Map<string, OpenApiSchema>;
     extend(name: string) {
-      if (!name.startsWith('x-')) {
+      if (!name.startsWith("x-")) {
         throw new Error();
       }
       return {
@@ -300,7 +300,7 @@ export function withName<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._name) {
-        Object.defineProperty(json, 'name', {
+        Object.defineProperty(json, "name", {
           value: this._name,
           enumerable: true,
         });
@@ -322,7 +322,7 @@ export function withURL<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._url) {
-        Object.defineProperty(json, 'url', {
+        Object.defineProperty(json, "url", {
           value: this._url,
           enumerable: true,
         });
@@ -347,7 +347,7 @@ export function withEnum<TBase extends GConstructor>(Base: TBase) {
       toJSON(): unknown {
         const json = super.toJSON();
         if (this._enum) {
-          Object.defineProperty(json, 'enum', {
+          Object.defineProperty(json, "enum", {
             value: this._enum,
             enumerable: true,
           });
@@ -369,7 +369,7 @@ export function withDescription<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._description) {
-        Object.defineProperty(json, 'description', {
+        Object.defineProperty(json, "description", {
           value: this._description,
           enumerable: true,
         });
@@ -401,7 +401,7 @@ export function withMapping<TBase extends GConstructor>(Base: TBase) {
         this._mapping.forEach((val, key) => {
           map[key] = val.toJSON();
         });
-        Object.defineProperty(json, 'mapping', {
+        Object.defineProperty(json, "mapping", {
           value: map,
           enumerable: true,
         });
@@ -424,7 +424,7 @@ export function withNamespace<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._namespace) {
-        Object.defineProperty(json, 'namespace', {
+        Object.defineProperty(json, "namespace", {
           value: this._namespace,
           enumerable: true,
         });
@@ -447,7 +447,7 @@ export function withPrefix<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._prefix) {
-        Object.defineProperty(json, 'prefix', {
+        Object.defineProperty(json, "prefix", {
           value: this._prefix,
           enumerable: true,
         });
@@ -470,7 +470,7 @@ export function withWrapped<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._wrapped) {
-        Object.defineProperty(json, 'wrapped', {
+        Object.defineProperty(json, "wrapped", {
           value: this._wrapped,
           enumerable: true,
         });
@@ -493,7 +493,7 @@ export function withAttribute<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._attribute) {
-        Object.defineProperty(json, 'attribute', {
+        Object.defineProperty(json, "attribute", {
           value: this._attribute,
           enumerable: true,
         });
@@ -516,7 +516,7 @@ export function withXML<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._xml) {
-        Object.defineProperty(json, 'xml', {
+        Object.defineProperty(json, "xml", {
           value: this._xml.toJSON(),
           enumerable: true,
         });
@@ -539,7 +539,7 @@ export function withDiscriminator<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._discriminator) {
-        Object.defineProperty(json, 'discriminator', {
+        Object.defineProperty(json, "discriminator", {
           value: this._discriminator.toJSON(),
           enumerable: true,
         });
@@ -562,7 +562,7 @@ export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._docs) {
-        Object.defineProperty(json, 'externalDocs', {
+        Object.defineProperty(json, "externalDocs", {
           value: this._docs.toJSON(),
           enumerable: true,
         });
@@ -590,7 +590,7 @@ export function withEncodings<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._encodings) {
-        Object.defineProperty(json, 'encoding', {
+        Object.defineProperty(json, "encoding", {
           enumerable: true,
           value: mapMap(this._encodings, val => val.toJSON()),
         });
@@ -618,7 +618,7 @@ export function withLinksMap<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._linksMap) {
-        Object.defineProperty(json, 'links', {
+        Object.defineProperty(json, "links", {
           value: mapMap(this._linksMap, val => val.toJSON()),
         });
       }
@@ -644,7 +644,7 @@ export function withHeadersMap<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._headersMap) {
-        Object.defineProperty(json, 'headers', {
+        Object.defineProperty(json, "headers", {
           value: mapMap(this._headersMap, val => val.toJSON()),
         });
       }
@@ -667,7 +667,7 @@ export function withContentType<TBase extends GConstructor>(Base: TBase) {
       toJSON(): unknown {
         const json = super.toJSON();
         if (this._contentType) {
-          Object.defineProperty(json, 'contentType', {
+          Object.defineProperty(json, "contentType", {
             value: this._contentType,
             enumerable: true,
           });
@@ -695,7 +695,7 @@ export function withExamplesMap<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._examples) {
-        Object.defineProperty(json, 'examples', {
+        Object.defineProperty(json, "examples", {
           value: mapMap(this._examples, val => val.toJSON()),
           enumerable: true,
         });
@@ -718,7 +718,7 @@ export function withExample<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._example) {
-        Object.defineProperty(json, 'example', {
+        Object.defineProperty(json, "example", {
           value: this._example,
           enumerable: true,
         });
@@ -741,7 +741,7 @@ export function withOperationId<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._opId) {
-        Object.defineProperty(json, 'operationId', {
+        Object.defineProperty(json, "operationId", {
           value: this._opId,
           enumerable: true,
         });
@@ -754,14 +754,14 @@ export function withOperationId<TBase extends GConstructor>(Base: TBase) {
 export function withOperation<TBase extends GConstructor>(Base: TBase) {
   return <
     K extends
-      | 'GET'
-      | 'PUT'
-      | 'POST'
-      | 'DELETE'
-      | 'OPTIONS'
-      | 'HEAD'
-      | 'PATCH'
-      | 'TRACE',
+      | "GET"
+      | "PUT"
+      | "POST"
+      | "DELETE"
+      | "OPTIONS"
+      | "HEAD"
+      | "PATCH"
+      | "TRACE",
   >() => {
     return class extends Base {};
   };
@@ -780,7 +780,7 @@ export function withTags<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._tags) {
-        Object.defineProperty(json, 'tags', {
+        Object.defineProperty(json, "tags", {
           value: this._tags,
           enumerable: true,
         });
@@ -806,7 +806,7 @@ export function withParameters<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._parameters) {
-        Object.defineProperty(json, 'parameters', {
+        Object.defineProperty(json, "parameters", {
           value: this._parameters.map(param => param.toJSON()),
         });
       }
@@ -828,7 +828,7 @@ export function withStyle<TBase extends GConstructor>(Base: TBase) {
       toJSON(): unknown {
         const json = super.toJSON();
         if (this._style) {
-          Object.defineProperty(json, 'style', {
+          Object.defineProperty(json, "style", {
             value: this._style,
             enumerable: true,
           });
@@ -851,7 +851,7 @@ export function withExplode<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._explode) {
-        Object.defineProperty(json, 'explode', {
+        Object.defineProperty(json, "explode", {
           value: this._explode,
           enumerable: true,
         });
@@ -874,7 +874,7 @@ export function withSchema<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._schema) {
-        Object.defineProperty(json, 'schema', {
+        Object.defineProperty(json, "schema", {
           value: this._schema.toJSON(),
           enumerable: true,
         });
@@ -902,7 +902,7 @@ export function withContentMap<TBase extends GConstructor>(Base: TBase) {
     toJSON(): unknown {
       const json = super.toJSON();
       if (this._content) {
-        Object.defineProperty(json, 'content', {
+        Object.defineProperty(json, "content", {
           enumerable: true,
           value: mapMap(this._content, val => val.toJSON()),
         });

@@ -5,7 +5,7 @@ import {
   withNamespace,
   withPrefix,
   withWrapped,
-} from './common';
+} from "./common";
 
 const XMLBase = withWrapped(
   withAttribute(withPrefix(withNamespace(withName(Base))))

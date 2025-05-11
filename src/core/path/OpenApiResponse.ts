@@ -4,7 +4,7 @@ import {
   withDescription,
   withHeadersMap,
   withLinksMap,
-} from '../common/common';
+} from "../common/common";
 
 const ResponseBase = withLinksMap(
   withContentMap(withHeadersMap(withDescription(Base)))

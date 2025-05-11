@@ -1,13 +1,19 @@
-import { withBooleanTemplate } from './BooleanTemplate';
-import { withMapTemplate } from './MapTemplate';
-import { withStringTemplate } from './StringTemplate';
-import { MainProject } from './TemplateBuilder';
+import { writePrimitiveFunction } from "./PrimitiveTemplates";
+import { makeMixinFunctionSignature } from "./template";
+import { MainProject } from "./TemplateBuilder";
 
 function main() {
-  withBooleanTemplate();
-  withStringTemplate();
-  withMapTemplate();
-  MainProject.save().then().catch().finally();
+  // Primitive Signatures
+  [
+    makeMixinFunctionSignature({
+      fnName: "withDescription",
+      fieldType: "string",
+      serializedName: "description",
+      comments:
+        "Extends the functionality of a class with a Description Builder.",
+    }),
+  ].forEach(signature => writePrimitiveFunction(signature).write());
+  console.log(MainProject.getText("common.ts"));
 }
 
 main();

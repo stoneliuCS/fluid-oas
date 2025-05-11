@@ -1,27 +1,27 @@
-import { describe, test, expect, afterEach } from 'bun:test';
-import { OpenApiObject } from '../../../src/core/schema/OpenApiObject';
-import { OpenApiString } from '../../../src/core/schema/OpenApiString';
+import { describe, test, expect, afterEach } from "bun:test";
+import { OpenApiObject } from "../../../src/core/schema/OpenApiObject";
+import { OpenApiString } from "../../../src/core/schema/OpenApiString";
 
-describe('OpenApiDocumentation Construction Tests', () => {
+describe("OpenApiDocumentation Construction Tests", () => {
   afterEach(() => {
-    expect(OpenApiObject().toJSON()).toEqual({ type: 'object' });
+    expect(OpenApiObject().toJSON()).toEqual({ type: "object" });
   });
 
-  test('Object creation logic', () => {
-    expect(OpenApiObject().toJSON()).toEqual({ type: 'object' });
+  test("Object creation logic", () => {
+    expect(OpenApiObject().toJSON()).toEqual({ type: "object" });
   });
 
-  test('Object property logic', () => {
+  test("Object property logic", () => {
     const actual = OpenApiObject()
-      .property('firstname')
+      .property("firstname")
       .schema(OpenApiString())
-      .property('lastname')
+      .property("lastname")
       .schema(OpenApiString());
     expect(actual.toJSON()).toEqual({
-      type: 'object',
+      type: "object",
       properties: {
-        firstname: { type: 'string' },
-        lastname: { type: 'string' },
+        firstname: { type: "string" },
+        lastname: { type: "string" },
       },
     });
   });

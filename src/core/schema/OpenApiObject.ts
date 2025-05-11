@@ -4,29 +4,29 @@ import {
   withMaximum,
   withMinimum,
   withNullable,
-} from '../common/common';
-import type { OpenApiSchema } from './OpenApiSchema';
+} from "../common/common";
+import type { OpenApiSchema } from "./OpenApiSchema";
 
 const ObjectBase = withNullable(
   withMaximum(
-    withMinimum(withDefault(SchemaBase)<OpenApiObjectType>())('minProperties')
-  )('maxProperties')
+    withMinimum(withDefault(SchemaBase)<OpenApiObjectType>())("minProperties")
+  )("maxProperties")
 );
 
 class _OpenApiObject extends ObjectBase {
-  private readonly _type: string = 'object';
+  private readonly _type: string = "object";
   private _required?: string[];
   private _properties?: Map<string, OpenApiSchema>;
   private _additionalProperties?: Map<string, OpenApiSchema>;
 
   toJSON(): unknown {
     const json = super.toJSON();
-    Object.defineProperty(json, 'type', {
+    Object.defineProperty(json, "type", {
       value: this._type,
       enumerable: true,
     });
     if (this._required) {
-      Object.defineProperty(json, 'required', {
+      Object.defineProperty(json, "required", {
         value: this._required,
         enumerable: true,
       });
@@ -36,7 +36,7 @@ class _OpenApiObject extends ObjectBase {
       this._properties.forEach((val, key) => {
         map[key] = val.toJSON();
       });
-      Object.defineProperty(json, 'properties', {
+      Object.defineProperty(json, "properties", {
         value: map,
         enumerable: true,
       });
@@ -46,7 +46,7 @@ class _OpenApiObject extends ObjectBase {
       this._additionalProperties.forEach((val, key) => {
         map[key] = val.toJSON();
       });
-      Object.defineProperty(json, 'additionalProperties', {
+      Object.defineProperty(json, "additionalProperties", {
         value: map,
         enumerable: true,
       });
