@@ -1,7 +1,5 @@
 import type { WriterFunction } from "ts-morph";
-import { MainProject, TemplateBuilder } from "./TemplateBuilder";
-
-const templateBuilder = new TemplateBuilder(MainProject);
+import { MainProject } from "./TemplateBuilder";
 
 const booleanWriter = (name: string) => {
   const writerFn: WriterFunction = (writer) => {
@@ -27,19 +25,16 @@ const booleanWriter = (name: string) => {
   return writerFn;
 };
 
-templateBuilder
-  .write("common.ts")
-  .writeFunction.name("withAllowReserved")
-  .writeBody(booleanWriter("allowReserved"));
+export const withBooleanTemplate = (): void => {
+  MainProject.write("common.ts")
+    .writeFunction.name("withAllowReserved")
+    .writeBody(booleanWriter("allowReserved"));
 
-templateBuilder
-  .write("common.ts")
-  .writeFunction.name("withDeprecated")
-  .writeBody(booleanWriter("deprecated"));
+  MainProject.write("common.ts")
+    .writeFunction.name("withDeprecated")
+    .writeBody(booleanWriter("deprecated"));
 
-templateBuilder
-  .write("common.ts")
-  .writeFunction.name("withRequired")
-  .writeBody(booleanWriter("required"));
-
-templateBuilder.saveSync();
+  MainProject.write("common.ts")
+    .writeFunction.name("withRequired")
+    .writeBody(booleanWriter("required"));
+};

@@ -84,8 +84,10 @@ export class TemplateBuilder {
   }
 }
 
-export const MainProject = new Project({
-  compilerOptions: {
-    tsConfigFilePath: "../../tsconfig.json",
-  },
-});
+export const MainProject = new TemplateBuilder(
+  new Project({
+    compilerOptions: {
+      tsConfigFilePath: "../../tsconfig.json",
+    },
+  }),
+);
