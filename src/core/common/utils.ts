@@ -4,7 +4,7 @@ export const serializeError = (className: Function, propertyName: string) => {
 
 export function mapMap<V, R>(
   map: Map<string, V>,
-  mapper: (value: V) => R,
+  mapper: (value: V) => R
 ): Record<string, R> {
   const result: Record<string, R> = {};
 

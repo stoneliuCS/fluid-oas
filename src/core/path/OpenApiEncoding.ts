@@ -5,12 +5,12 @@ import {
   withExplode,
   withHeadersMap,
   withStyle,
-} from "../common/common";
+} from '../common/common';
 
 const EncodingBase = withAllowReserved(
   withExplode(
-    withStyle(withHeadersMap(withContentType(Base)<string>()))<string>(),
-  ),
+    withStyle(withHeadersMap(withContentType(Base)<string>()))<string>()
+  )
 );
 
 class _OpenApiEncoding extends EncodingBase {}

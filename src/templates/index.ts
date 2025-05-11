@@ -1,12 +1,13 @@
-import { withBooleanTemplate } from "./BooleanTemplate";
-import { MainProject } from "./TemplateBuilder";
+import { withBooleanTemplate } from './BooleanTemplate';
+import { withMapTemplate } from './MapTemplate';
+import { withStringTemplate } from './StringTemplate';
+import { MainProject } from './TemplateBuilder';
 
 function main() {
-  // Load Boolean Code Gen
   withBooleanTemplate();
-
-  // Save Everything
-  MainProject.saveSync();
+  withStringTemplate();
+  withMapTemplate();
+  MainProject.save().then().catch().finally();
 }
 
-main()
+main();

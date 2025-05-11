@@ -1,6 +1,6 @@
-import { Base, withDescription, withURL } from "./common";
-import { OpenApiServerVariable } from "./OpenApiServerVariable";
-import { mapMap } from "./utils";
+import { Base, withDescription, withURL } from './common';
+import { OpenApiServerVariable } from './OpenApiServerVariable';
+import { mapMap } from './utils';
 
 const ServerBase = withDescription(withURL(Base));
 
@@ -22,9 +22,9 @@ class _OpenApiServer extends ServerBase {
     const json = super.toJSON();
 
     if (this._variables) {
-      Object.defineProperty(json, "variables", {
+      Object.defineProperty(json, 'variables', {
         enumerable: true,
-        value: mapMap(this._variables, (val) => val.toJSON()),
+        value: mapMap(this._variables, val => val.toJSON()),
       });
     }
     return json;

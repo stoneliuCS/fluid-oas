@@ -5,18 +5,18 @@ import {
   withMaximum,
   withMinimum,
   withNullable,
-} from "../common/common";
+} from '../common/common';
 
 const IntegerBase = withFormat(
   withNullable(
-    withMaximum(withMinimum(withDefault(SchemaBase)<number>())("minimum"))(
-      "maximum",
-    ),
-  ),
-)<"int32" | "int64">();
+    withMaximum(withMinimum(withDefault(SchemaBase)<number>())('minimum'))(
+      'maximum'
+    )
+  )
+)<'int32' | 'int64'>();
 
 class _OpenApiInteger extends IntegerBase {
-  private readonly _type: string = "integer";
+  private readonly _type: string = 'integer';
   private _exclusiveMin?: boolean;
   private _exclusiveMax?: boolean;
   private _multipleOf?: number;
@@ -41,26 +41,26 @@ class _OpenApiInteger extends IntegerBase {
 
   toJSON(): unknown {
     const json = super.toJSON();
-    Object.defineProperty(json, "type", {
+    Object.defineProperty(json, 'type', {
       value: this._type,
       enumerable: true,
     });
     if (this._exclusiveMin) {
-      Object.defineProperty(json, "exclusiveMinimum", {
+      Object.defineProperty(json, 'exclusiveMinimum', {
         value: this._exclusiveMin,
         enumerable: true,
       });
     }
 
     if (this._exclusiveMax) {
-      Object.defineProperty(json, "exclusiveMaximum", {
+      Object.defineProperty(json, 'exclusiveMaximum', {
         value: this._exclusiveMax,
         enumerable: true,
       });
     }
 
     if (this._multipleOf) {
-      Object.defineProperty(json, "multipleOf", {
+      Object.defineProperty(json, 'multipleOf', {
         value: this._multipleOf,
         enumerable: true,
       });

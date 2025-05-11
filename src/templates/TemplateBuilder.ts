@@ -1,9 +1,9 @@
-import { Project, SourceFile, type WriterFunction } from "ts-morph";
+import { Project, SourceFile, type WriterFunction } from 'ts-morph';
 
 export class TemplateBuilder {
   private readonly project: Project;
-  private readonly workingDir = "./src/common/";
-  private readonly typeDeclarationFilePath = "constructor.ts";
+  private readonly workingDir = './src/common/';
+  private readonly typeDeclarationFilePath = 'constructor.ts';
   public constructor(project: Project) {
     this.project = project;
     this.createTypeConstructor();
@@ -12,14 +12,14 @@ export class TemplateBuilder {
   private createTypeConstructor() {
     const sourceFile = this.project.createSourceFile(
       this.workingDir + this.typeDeclarationFilePath,
-      "",
-      { overwrite: true },
+      '',
+      { overwrite: true }
     );
     sourceFile.addTypeAlias({
-      name: "GConstructor",
+      name: 'GConstructor',
       isExported: true,
-      typeParameters: ["T = { toJSON(): unknown }"],
-      type: (write) => write.write("new (...args: any[]) => T"),
+      typeParameters: ['T = { toJSON(): unknown }'],
+      type: write => write.write('new (...args: any[]) => T'),
     });
   }
 
@@ -29,8 +29,8 @@ export class TemplateBuilder {
         const fn = sourceFile.addFunction({
           name: name,
           isExported: true,
-          typeParameters: ["TBase extends GConstructor"],
-          parameters: [{ name: "Base", type: "TBase" }],
+          typeParameters: ['TBase extends GConstructor'],
+          parameters: [{ name: 'Base', type: 'TBase' }],
         });
         return {
           writeBody: (textOrWriterFunction: string | WriterFunction) =>
@@ -49,31 +49,24 @@ export class TemplateBuilder {
     const maybeSourceFile = this.project.getSourceFile(augmentPath);
     let sourceFile: SourceFile;
     if (!maybeSourceFile) {
-      sourceFile = this.project.createSourceFile(augmentPath, "", {
+      sourceFile = this.project.createSourceFile(augmentPath, '', {
         overwrite: true,
       });
-
       sourceFile.addImportDeclaration({
-        moduleSpecifier: "./" + this.typeDeclarationFilePath,
-        namedImports: ["GConstructor"],
+        moduleSpecifier: './' + this.typeDeclarationFilePath,
+        namedImports: ['GConstructor'],
         isTypeOnly: true,
       });
     } else {
-      maybeSourceFile
-        .getImportDeclaration((importDeclaration) =>
-          importDeclaration.getNamedImports().every((val) => {
-            val.getText() === "GConstructor";
-          }),
-        )
-        ?.remove();
       sourceFile = this.project.createSourceFile(
         augmentPath,
         maybeSourceFile.getText(),
-        { overwrite: true },
+        { overwrite: true }
       );
     }
     return {
-      writeFunction: this.writeFunction(sourceFile),
+      writeFunction: (name: string) =>
+        this.writeFunction(sourceFile).name(name),
     };
   }
 
@@ -81,16 +74,19 @@ export class TemplateBuilder {
     return this.project.getSourceFile(path)?.getText();
   }
 
-  public saveSync() {
-    this.project.getSourceFiles().map((sf) => sf.formatText());
-    return this.project.saveSync();
+  public async save() {
+    this.project.getSourceFiles().map(sf => {
+      sf.fixMissingImports();
+    });
+    await this.project.save();
   }
 }
 
 export const MainProject = new TemplateBuilder(
   new Project({
+    tsConfigFilePath: './tsconfig.json',
     compilerOptions: {
-      tsConfigFilePath: "../../tsconfig.json",
+      tsConfigFilePath: './tsconfig.json',
     },
-  }),
+  })
 );

@@ -1,5 +1,5 @@
-import { SchemaBase } from "../common/common";
-import type { OpenApiSchema } from "./OpenApiSchema";
+import { SchemaBase } from '../common/common';
+import type { OpenApiSchema } from './OpenApiSchema';
 
 const OneOfBase = SchemaBase;
 
@@ -16,8 +16,8 @@ class _OpenApiOneOf extends OneOfBase {
   toJSON(): unknown {
     const json = super.toJSON();
     if (this._oneOf) {
-      Object.defineProperty(json, "oneOf", {
-        value: this._oneOf.map((schema) => schema.toJSON()),
+      Object.defineProperty(json, 'oneOf', {
+        value: this._oneOf.map(schema => schema.toJSON()),
         enumerable: true,
       });
     }

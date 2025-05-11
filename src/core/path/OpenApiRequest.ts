@@ -3,7 +3,7 @@ import {
   withContentMap,
   withDescription,
   withRequired,
-} from "../common/common";
+} from '../common/common';
 
 const RequestBase = withRequired(withContentMap(withDescription(Base)));
 

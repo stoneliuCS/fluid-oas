@@ -1,5 +1,5 @@
-import type { OpenApiSchema } from "../schema/OpenApiSchema";
-import { Base } from "./common";
+import type { OpenApiSchema } from '../schema/OpenApiSchema';
+import { Base } from './common';
 
 const DiscriminatorBase = Base;
 
@@ -31,13 +31,13 @@ class _OpenApiDiscriminator extends DiscriminatorBase {
       this._mapping.forEach((val, key) => {
         map[key] = val.toJSON();
       });
-      Object.defineProperty(json, "mapping", {
+      Object.defineProperty(json, 'mapping', {
         value: map,
         enumerable: true,
       });
     }
     if (this._propertyName) {
-      Object.defineProperty(json, "propertyName", {
+      Object.defineProperty(json, 'propertyName', {
         value: this._propertyName,
         enumerable: true,
       });

@@ -4,10 +4,10 @@ import {
   withDescription,
   withHeadersMap,
   withLinksMap,
-} from "../common/common";
+} from '../common/common';
 
 const ResponseBase = withLinksMap(
-  withContentMap(withHeadersMap(withDescription(Base))),
+  withContentMap(withHeadersMap(withDescription(Base)))
 );
 
 class _OpenApiResponse extends ResponseBase {}

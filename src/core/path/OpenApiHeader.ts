@@ -10,14 +10,14 @@ import {
   withRequired,
   withSchema,
   withStyle,
-} from "../common/common";
+} from '../common/common';
 
 const HeaderBase = withDeprecated(withRequired(withDescription(Base)));
 
 const HeaderBaseWithSchema = withExamplesMap(
   withExample(
-    withSchema(withExample(withExplode(withStyle(HeaderBase)<"simple">()))),
-  ),
+    withSchema(withExample(withExplode(withStyle(HeaderBase)<'simple'>())))
+  )
 );
 
 const HeaderBaseWithContent = withContentMap(HeaderBase);

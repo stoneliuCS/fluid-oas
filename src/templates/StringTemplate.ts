@@ -1,13 +1,13 @@
 import type { WriterFunction } from 'ts-morph';
 import { MainProject } from './TemplateBuilder';
 
-const booleanWriter = (name: string) => {
+const stringWriter = (name: string) => {
   const writerFn: WriterFunction = writer => {
     writer.write('return class extends Base').block(() => {
-      writer.writeLine(`private _${name}? : boolean`);
-      writer.write(`${name}()`).block(() => {
+      writer.writeLine(`private _${name}? : string`);
+      writer.write(`${name}(${name} : string)`).block(() => {
         writer.writeLine('const copy : this = Object.create(this);');
-        writer.writeLine(`copy._${name} = true;`);
+        writer.writeLine(`copy._${name} = ${name};`);
         writer.writeLine('return copy;');
       });
 
@@ -25,20 +25,12 @@ const booleanWriter = (name: string) => {
   return writerFn;
 };
 
-export const withBooleanTemplate = (): void => {
+export const withStringTemplate = (): void => {
   MainProject.write('common.ts')
-    .writeFunction('withAllowReserved')
-    .writeBody(booleanWriter('allowReserved'));
+    .writeFunction('withDescription')
+    .writeBody(stringWriter('description'));
 
   MainProject.write('common.ts')
-    .writeFunction('withDeprecated')
-    .writeBody(booleanWriter('deprecated'));
-
-  MainProject.write('common.ts')
-    .writeFunction('withRequired')
-    .writeBody(booleanWriter('required'));
-
-  MainProject.write('common.ts')
-    .writeFunction('withNullable')
-    .writeBody(booleanWriter('nullable'));
+    .writeFunction('withSummary')
+    .writeBody(stringWriter('summary'));
 };

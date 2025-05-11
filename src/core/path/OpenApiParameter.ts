@@ -12,17 +12,17 @@ import {
   withRequired,
   withSchema,
   withStyle,
-} from "../common/common";
-import { serializeError } from "../common/utils";
+} from '../common/common';
+import { serializeError } from '../common/utils';
 
 const ParameterBase = withDeprecated(
-  withRequired(withDescription(withName(Base))),
+  withRequired(withDescription(withName(Base)))
 );
 
 class _OpenApiParameter extends ParameterBase {
-  private _in?: "query" | "header" | "path" | "cookie";
+  private _in?: 'query' | 'header' | 'path' | 'cookie';
 
-  in(_in: "query" | "header" | "path" | "cookie") {
+  in(_in: 'query' | 'header' | 'path' | 'cookie') {
     const copy: this = Object.create(this);
     copy._in = _in;
     return copy;
@@ -31,19 +31,17 @@ class _OpenApiParameter extends ParameterBase {
   toJSON(): unknown {
     const json = super.toJSON();
     if (!this._in) {
-      throw new TypeError(serializeError(_OpenApiParameter, "in"));
+      throw new TypeError(serializeError(_OpenApiParameter, 'in'));
     }
-    Object.defineProperty(json, "in", { value: this._in, enumerable: true });
+    Object.defineProperty(json, 'in', { value: this._in, enumerable: true });
     return json;
   }
 }
 
 const _OpenApiParameterBaseSchema = withAllowReserved(
   withExamplesMap(
-    withExample(
-      withSchema(withExplode(withStyle(_OpenApiParameter)<string>())),
-    ),
-  ),
+    withExample(withSchema(withExplode(withStyle(_OpenApiParameter)<string>())))
+  )
 );
 
 const _OpenApiParameterBaseContent = withContentMap(_OpenApiParameter);
@@ -52,7 +50,7 @@ class _OpenApiParameterSchema extends _OpenApiParameterBaseSchema {}
 class _OpenApiParameterContent extends _OpenApiParameterBaseContent {}
 
 export function OpenApiParameter(
-  fixed: Fixed.CONTENT,
+  fixed: Fixed.CONTENT
 ): _OpenApiParameterContent;
 export function OpenApiParameter(fixed: Fixed.SCHEMA): _OpenApiParameterSchema;
 export function OpenApiParameter(fixed: Fixed) {

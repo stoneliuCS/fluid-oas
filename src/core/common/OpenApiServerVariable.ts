@@ -1,7 +1,7 @@
-import { Base, withDefault, withDescription, withEnum } from "./common";
+import { Base, withDefault, withDescription, withEnum } from './common';
 
 const ServerVariableBase = withEnum(
-  withDescription(withDefault(Base)<string>()),
+  withDescription(withDefault(Base)<string>())
 )<string>();
 
 class _ServerVariable extends ServerVariableBase {}

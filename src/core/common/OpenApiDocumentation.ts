@@ -1,4 +1,4 @@
-import { Base, withDescription, withURL } from "./common";
+import { Base, withDescription, withURL } from './common';
 
 const DocumentationBase = withURL(withDescription(Base));
 

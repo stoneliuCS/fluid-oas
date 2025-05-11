@@ -8,9 +8,13 @@
   ],
   "devDependencies": {
     "@types/bun": "latest",
+    "prettier": "^3.5.3",
     "ts-morph": "^25.0.1"
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "scripts": {
+    "format": "prettier --write ."
   }
 }

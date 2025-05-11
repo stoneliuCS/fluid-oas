@@ -1,8 +1,8 @@
-import { Base, withDefault } from "../common/common";
-import { OpenApiResponse } from "./OpenApiResponse";
+import { Base, withDefault } from '../common/common';
+import { OpenApiResponse } from './OpenApiResponse';
 
 const ResponsesBase = withDefault(Base)<OpenApiResponse>();
-type OpenApiResponseCode = "200";
+type OpenApiResponseCode = '200';
 class _OpenApiResponses extends ResponsesBase {
   private _responses?: Map<OpenApiResponseCode, OpenApiResponse>;
   responses(statusCode: OpenApiResponseCode) {
