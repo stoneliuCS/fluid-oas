@@ -1,7 +1,7 @@
 import type { WriterFunction } from "ts-morph";
-import { TemplateBuilder } from "./TemplateBuilder";
+import { MainProject, TemplateBuilder } from "./TemplateBuilder";
 
-const templateBuilder = new TemplateBuilder();
+const templateBuilder = new TemplateBuilder(MainProject);
 
 const booleanWriter = (name: string) => {
   const writerFn: WriterFunction = (writer) => {

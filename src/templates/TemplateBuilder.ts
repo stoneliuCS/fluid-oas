@@ -4,12 +4,8 @@ export class TemplateBuilder {
   private readonly project: Project;
   private readonly workingDir = "./src/common/";
   private readonly typeDeclarationFilePath = "constructor.ts";
-  public constructor() {
-    this.project = new Project({
-      compilerOptions: {
-        tsConfigFilePath: "../../tsconfig.json",
-      },
-    });
+  public constructor(project: Project) {
+    this.project = project;
     this.createTypeConstructor();
   }
 
@@ -87,3 +83,9 @@ export class TemplateBuilder {
     return this.project.saveSync();
   }
 }
+
+export const MainProject = new Project({
+  compilerOptions: {
+    tsConfigFilePath: "../../tsconfig.json",
+  },
+});
