@@ -2,12 +2,12 @@ import { CodeBlockWriter, FunctionDeclaration } from "ts-morph";
 
 export abstract class FunctionBuilder {
   protected readonly function: FunctionDeclaration;
-  protected readonly ctxMappings: Record<string, string>;
+  protected readonly ctxMappings: Map<string, string>;
 
   // Function already has a signature
   public constructor(fn: FunctionDeclaration) {
     this.function = fn;
-    this.ctxMappings = {};
+    this.ctxMappings = new Map();
     this.populateTypeMaps();
   }
 
@@ -27,9 +27,23 @@ export abstract class FunctionBuilder {
         .map(line => line.trim())
         .filter(line => line.length != 0)
         .forEach(annotation => {
-          this.ctxMappings[doc.getTagName()] = annotation.split(" ").at(-1)!;
+          const tagName = doc.getTagName();
+          const tagVal = annotation.split(" ").at(-1);
+          if (!tagVal) {
+            throw new Error("Tag value must hold a value.");
+          }
+          this.ctxMappings.set(tagName, tagVal);
         });
     });
+  }
+
+  protected writeClassReturnBody(writer: CodeBlockWriter) {
+    const block: (cb: () => void) => CodeBlockWriter = writer
+      .write(
+        `return class extends ${this.function.getParameter("Base")?.getName()} => `
+      )
+      .block.bind(writer);
+    return block;
   }
 
   protected abstract buildPrimitive(writer: CodeBlockWriter): void;

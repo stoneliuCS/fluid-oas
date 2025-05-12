@@ -8,13 +8,9 @@ import { FunctionBuilder } from "./FunctionBuilder";
 
 class PrimitiveBuilder extends FunctionBuilder {
   protected buildPrimitive(writer: CodeBlockWriter): void {
-    writer
-      .write(
-        `return class extends ${this.function.getParameter("Base")?.getName()} => `
-      )
-      .block(() => {
-        writer.writeLine(`private`);
-      });
+    this.writeClassReturnBody(writer)(() => {
+      writer.write(`private`);
+    });
   }
 }
 
