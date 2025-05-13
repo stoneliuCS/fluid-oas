@@ -9,8 +9,10 @@ export class TemplateBuilder {
   private readonly project: Project;
   private readonly workingDir = "./src/common/";
   private readonly typeDeclarationFilePath = "constructor.ts";
-  public constructor(project: Project) {
+  private readonly outputFile: string;
+  public constructor(project: Project, outputFile: string) {
     this.project = project;
+    this.outputFile = outputFile;
     this.createTypeConstructor();
   }
 
@@ -28,12 +30,8 @@ export class TemplateBuilder {
     });
   }
 
-  /**
-   * @param path - File name, do not give it a path.
-   * @returns Functions
-   */
-  public write(path: string) {
-    let augmentPath = this.workingDir + path;
+  public write() {
+    let augmentPath = this.workingDir + this.outputFile;
     const maybeSourceFile = this.project.getSourceFile(augmentPath);
     let sourceFile: SourceFile;
     if (!maybeSourceFile) {
@@ -76,5 +74,6 @@ export const MainProject = new TemplateBuilder(
     compilerOptions: {
       tsConfigFilePath: "./tsconfig.json",
     },
-  })
+  }),
+  "common.ts"
 );
