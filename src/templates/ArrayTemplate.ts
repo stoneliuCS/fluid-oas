@@ -10,7 +10,7 @@ export class ArrayTemplateBuilder extends FunctionBuilder {
         return this.writeClassReturnBody(writer).writeBody(cb);
       });
   }
-  protected buildFields(writer: CodeBlockWriter): void {
+  protected buildField(writer: CodeBlockWriter): void {
     writer.writeLine(
       `private _${this.serializedName} : ${FunctionBuilder.genericName}[];`
     );

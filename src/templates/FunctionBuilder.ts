@@ -119,7 +119,7 @@ export abstract class FunctionBuilder {
       throw new Error("Not enough information to perform build.");
     }
     this.buildAbstractBody(writer)(() => {
-      this.buildFields(writer);
+      this.buildField(writer);
       this.buildBuilderMethod(writer);
       this.buildJSONMethod(writer);
     });
@@ -127,7 +127,7 @@ export abstract class FunctionBuilder {
   protected abstract buildAbstractBody(
     writer: CodeBlockWriter
   ): (cb: () => void) => CodeBlockWriter;
-  protected abstract buildFields(writer: CodeBlockWriter): void;
+  protected abstract buildField(writer: CodeBlockWriter): void;
   protected abstract buildBuilderMethod(writer: CodeBlockWriter): void;
   protected abstract buildJSONMethod(writer: CodeBlockWriter): void;
 

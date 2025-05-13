@@ -7,7 +7,7 @@ export class MapTemplateBuilder extends FunctionBuilder {
   ): (cb: () => void) => CodeBlockWriter {
     return this.writeClassReturnBody(writer).writeBody;
   }
-  protected buildFields(writer: CodeBlockWriter): void {
+  protected buildField(writer: CodeBlockWriter): void {
     writer.writeLine(
       `private _${this.serializedName}? : Map<string, ${this.fieldType}>;`
     );
