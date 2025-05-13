@@ -15,14 +15,14 @@ type MixinSignatureArgs = {
   // Serialized Name
   serializedName: string;
   // Generic
-  generic: boolean;
+  generic?: boolean;
   // Optional Comments
   comments?: string;
 };
 
 export abstract class FunctionBuilder {
   private signature: OptionalKind<FunctionDeclarationStructure>;
-  protected readonly genericName = "T";
+  public static readonly genericName = "T";
   protected fieldType?: string;
   protected serializedName?: string;
   protected generic?: string;
@@ -51,7 +51,7 @@ export abstract class FunctionBuilder {
             {
               tagName: "fieldType",
               kind: StructureKind.JSDocTag,
-              text: fieldType.replace(/ /g, ""),
+              text: fieldType.replace(/ /g, "") || FunctionBuilder.genericName,
             },
             {
               tagName: "serializedName",
@@ -61,7 +61,7 @@ export abstract class FunctionBuilder {
             {
               tagName: "generic",
               kind: StructureKind.JSDocTag,
-              text: `${generic}`,
+              text: `${generic ? generic : "false"}`,
             },
           ],
         },
@@ -97,39 +97,11 @@ export abstract class FunctionBuilder {
 
   protected withGenericBody(writer: CodeBlockWriter) {
     const functionBlock: (cb: () => void) => CodeBlockWriter = writer
-      .write(`<${this.genericName} extends ${this.fieldType}>() => `)
+      .write(
+        `return <${FunctionBuilder.genericName} ${this.fieldType === FunctionBuilder.genericName ? "" : "extends " + this.fieldType}>() => `
+      )
       .block.bind(writer);
     return { withBody: functionBlock };
-  }
-
-  protected writeClassMethodBody(writer: CodeBlockWriter) {
-    const methodBlock: (
-      withParam: boolean
-    ) => (cb: () => void) => CodeBlockWriter = param => {
-      const type = this.generic === "true" ? "T" : this.fieldType;
-      console.log(type);
-      return writer
-        .write(
-          `${this.serializedName}(${param ? this.serializedName + " : " + type : ""})`
-        )
-        .block.bind(writer);
-    };
-
-    return {
-      writeMethodBody: () => methodBlock(false),
-      writerMethodBodyWithParam: () => methodBlock(true),
-    };
-  }
-
-  protected writeSimpleJSONMethodBody(writer: CodeBlockWriter) {
-    writer.write("toJSON()").block(() => {
-      writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this._${this.serializedName})`).block(() => {
-        writer.writeLine(
-          `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}, enumerable : true })`
-        );
-      });
-    });
   }
 
   protected writeClassReturnBody(writer: CodeBlockWriter) {
@@ -148,5 +120,6 @@ export abstract class FunctionBuilder {
     const func = template.write().writeFunction(this.signature);
     this.populateTypeMaps(func);
     func.setBodyText(this.buildFunction.bind(this));
+    console.log(func.getText());
   }
 }

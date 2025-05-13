@@ -1,53 +1,84 @@
+import { ArrayTemplateBuilder } from "./ArrayTemplate";
 import { FunctionBuilder } from "./FunctionBuilder";
 import { FunctionTemplateBuilder } from "./FunctionTemplate";
+import { MapTemplateBuilder } from "./MapTemplate";
 import { PrimitiveTemplateBuilder } from "./PrimitiveTemplate";
 import { MainProject } from "./TemplateBuilder";
-
-const description = new PrimitiveTemplateBuilder({
-  fnName: "withDescription",
-  fieldType: "string",
-  serializedName: "description",
-  generic: false,
-  comments: "Extends the functionality of a class with a Description Builder.",
-});
-
-const summary = new PrimitiveTemplateBuilder({
-  fnName: "withSummary",
-  fieldType: "string",
-  serializedName: "summary",
-  generic: false,
-  comments: "Extends the functionality of a class with a Summary Builder.",
-});
-
-const allowReserved = new PrimitiveTemplateBuilder({
-  fnName: "withAllowReserved",
-  fieldType: "boolean",
-  serializedName: "allowReserved",
-  generic: false,
-  comments:
-    "Extends the functionality of a class with a AllowReserved Builder.",
-});
-
-const value = new FunctionTemplateBuilder({
-  fnName: "withValue",
-  fieldType: "string | unknown",
-  serializedName: "value",
-  generic: true,
-  comments: "Extends the functionality of a class with a Value Builder.",
-});
 
 async function main() {
   // Generic Function Generators
   const functions: FunctionBuilder[] = [
-    description,
-    summary,
-    allowReserved,
-    value,
+    new PrimitiveTemplateBuilder({
+      fnName: "withDescription",
+      fieldType: "string",
+      serializedName: "description",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withSummary",
+      fieldType: "string",
+      serializedName: "summary",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withAllowReserved",
+      fieldType: "boolean",
+      serializedName: "allowReserved",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withDeprecated",
+      fieldType: "boolean",
+      serializedName: "deprecated",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withRequired",
+      fieldType: "boolean",
+      serializedName: "required",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withNullable",
+      fieldType: "boolean",
+      serializedName: "nullable",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withMaximum",
+      fieldType: "number",
+      serializedName: "maximum",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withMinimum",
+      fieldType: "number",
+      serializedName: "minimum",
+    }),
+    new FunctionTemplateBuilder({
+      fnName: "withValue",
+      fieldType: "string | unknown",
+      serializedName: "value",
+      generic: true,
+    }),
+    new FunctionTemplateBuilder({
+      fnName: "withFormat",
+      fieldType: "string",
+      serializedName: "format",
+      generic: true,
+    }),
+    new FunctionTemplateBuilder({
+      fnName: "withDefault",
+      fieldType: "",
+      serializedName: "default",
+      generic: true,
+    }),
+    new MapTemplateBuilder({
+      fnName: "withMapping",
+      fieldType: "OpenApiSchema",
+      serializedName: "mapping",
+    }),
+    new ArrayTemplateBuilder({
+      fnName: "withParameters",
+      fieldType: "OpenApiSchema",
+      serializedName: "parameters",
+    }),
   ];
 
   functions.forEach(func => func.write(MainProject));
-
-  console.log(MainProject.getText("common.ts"));
 
   await MainProject.save();
 }

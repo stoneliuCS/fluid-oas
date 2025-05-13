@@ -2,6 +2,22 @@ import { CodeBlockWriter } from "ts-morph";
 import { FunctionBuilder } from "./FunctionBuilder";
 
 export class PrimitiveTemplateBuilder extends FunctionBuilder {
+  private writeClassMethodBody(writer: CodeBlockWriter) {
+    const methodBlock: (
+      withParam: boolean
+    ) => (cb: () => void) => CodeBlockWriter = param => {
+      return writer
+        .write(
+          `${this.serializedName}(${param ? "val : " + this.fieldType : ""})`
+        )
+        .block.bind(writer);
+    };
+
+    return {
+      writeMethodBody: () => methodBlock(false),
+      writerMethodBodyWithParam: () => methodBlock(true),
+    };
+  }
   protected buildFunction(writer: CodeBlockWriter): void {
     this.writeClassReturnBody(writer).writeBody(() => {
       writer.writeLine(`private _${this.serializedName}? : ${this.fieldType};`);
@@ -20,12 +36,19 @@ export class PrimitiveTemplateBuilder extends FunctionBuilder {
         );
         writer.conditionalWriteLine(
           !flag,
-          () => `copy._${this.serializedName} = ${this.serializedName};`
+          () => `copy._${this.serializedName} = val;`
         );
         writer.writeLine("return copy;");
       });
 
-      this.writeSimpleJSONMethodBody(writer);
+      writer.write("toJSON()").block(() => {
+        writer.writeLine("const json = super.toJSON();");
+        writer.write(`if (this._${this.serializedName})`).block(() => {
+          writer.writeLine(
+            `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}, enumerable : true })`
+          );
+        });
+      });
     });
   }
 }
