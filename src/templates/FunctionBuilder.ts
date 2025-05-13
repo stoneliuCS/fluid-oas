@@ -129,7 +129,16 @@ export abstract class FunctionBuilder {
   ): (cb: () => void) => CodeBlockWriter;
   protected abstract buildField(writer: CodeBlockWriter): void;
   protected abstract buildBuilderMethod(writer: CodeBlockWriter): void;
-  protected abstract buildJSONMethod(writer: CodeBlockWriter): void;
+  protected buildJSONMethod(writer: CodeBlockWriter): void {
+    writer.write("toJSON()").block(() => {
+      writer.writeLine("const json = super.toJSON();");
+      writer.write(`if (this._${this.serializedName})`).block(() => {
+        writer.writeLine(
+          `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}, enumerable : true })`
+        );
+      });
+    });
+  }
 
   public write(template: TemplateBuilder) {
     const func = template.write().writeFunction(this.signature);

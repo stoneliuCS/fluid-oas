@@ -41,3 +41,20 @@ export class MapTemplateBuilder extends FunctionBuilder {
     });
   }
 }
+
+export class PrimitiveMapBuilder extends MapTemplateBuilder {
+  protected buildJSONMethod(writer: CodeBlockWriter): void {
+    writer.write("toJSON()").block(() => {
+      writer.writeLine("const json = super.toJSON();");
+      writer.write(`if (this._${this.serializedName})`).block(() => {
+        writer.writeLine("const mappings : any = {};");
+        writer.writeLine(
+          `this._${this.serializedName}.forEach((val, key) => { mappings[key] = val })`
+        );
+        writer.writeLine(
+          `Object.defineProperty(json, "${this.serializedName}", { value : mappings, enumerable : true })`
+        );
+      });
+    });
+  }
+}

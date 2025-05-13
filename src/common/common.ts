@@ -1,3 +1,4 @@
+import type { OpenApiParameter } from "../core/path/OpenApiParameter.ts";
 import type { OpenApiSchema } from "../core/schema/OpenApiSchema.ts";
 import type { GConstructor } from "./constructor.ts";
 
@@ -202,78 +203,25 @@ export function withMinimum<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType string|unknown
- * @serializedName value
- * @generic true
+ * @fieldType OpenApiParameter
+ * @serializedName parameters
+ * @generic false
  */
-export function withValue<TBase extends GConstructor>(Base: TBase) {
-  return <T extends string | unknown>() => {
+export function withParameters<TBase extends GConstructor>(Base: TBase) {
+  return <T extends OpenApiParameter>() => {
     return class extends Base {
-      private _value: T;
-      value(val: T) {
+      private _parameters: T[];
+      parameters(val: T) {
         const copy: this = Object.create(this);
-        copy._value = val;
+        copy._parameters =
+          this._parameters === undefined ? [val] : [...this._parameters, val];
         return copy;
       }
       toJSON() {
         const json = super.toJSON();
-        if (this._value) {
-          Object.defineProperty(json, "value", {
-            value: this._value,
-            enumerable: true,
-          });
-        }
-      }
-    };
-  };
-}
-
-/**
- * @fieldType string
- * @serializedName format
- * @generic true
- */
-export function withFormat<TBase extends GConstructor>(Base: TBase) {
-  return <T extends string>() => {
-    return class extends Base {
-      private _format: T;
-      format(val: T) {
-        const copy: this = Object.create(this);
-        copy._format = val;
-        return copy;
-      }
-      toJSON() {
-        const json = super.toJSON();
-        if (this._format) {
-          Object.defineProperty(json, "format", {
-            value: this._format,
-            enumerable: true,
-          });
-        }
-      }
-    };
-  };
-}
-
-/**
- * @fieldType T
- * @serializedName default
- * @generic true
- */
-export function withDefault<TBase extends GConstructor>(Base: TBase) {
-  return <T>() => {
-    return class extends Base {
-      private _default: T;
-      default(val: T) {
-        const copy: this = Object.create(this);
-        copy._default = val;
-        return copy;
-      }
-      toJSON() {
-        const json = super.toJSON();
-        if (this._default) {
-          Object.defineProperty(json, "default", {
-            value: this._default,
+        if (this._parameters) {
+          Object.defineProperty(json, "parameters", {
+            value: this._parameters.map(val => val.toJSON()),
             enumerable: true,
           });
         }
@@ -338,33 +286,5 @@ export function withPattern<TBase extends GConstructor>(Base: TBase) {
         });
       }
     }
-  };
-}
-
-/**
- * @fieldType OpenApiSchema
- * @serializedName parameters
- * @generic false
- */
-export function withParameters<TBase extends GConstructor>(Base: TBase) {
-  return <T extends OpenApiSchema>() => {
-    return class extends Base {
-      private _parameters: T[];
-      parameters(val: T) {
-        const copy: this = Object.create(this);
-        copy._parameters =
-          this._parameters === undefined ? [val] : [...this._parameters, val];
-        return copy;
-      }
-      toJSON() {
-        const json = super.toJSON();
-        if (this._parameters) {
-          Object.defineProperty(json, "parameters", {
-            value: this._parameters.map(val => val.toJSON()),
-            enumerable: true,
-          });
-        }
-      }
-    };
   };
 }

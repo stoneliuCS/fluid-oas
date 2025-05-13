@@ -31,16 +31,6 @@ export class PrimitiveTemplateBuilder extends FunctionBuilder {
       writer.writeLine("return copy;");
     });
   }
-  protected buildJSONMethod(writer: CodeBlockWriter): void {
-    writer.write("toJSON()").block(() => {
-      writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this._${this.serializedName})`).block(() => {
-        writer.writeLine(
-          `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}, enumerable : true })`
-        );
-      });
-    });
-  }
   private writeClassMethodBody(writer: CodeBlockWriter) {
     const methodBlock: (
       withParam: boolean
