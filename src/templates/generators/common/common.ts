@@ -35,14 +35,29 @@ export const commonTemplates = (): FunctionBuilder[] => {
       serializedName: "nullable",
     }),
     new PrimitiveTemplateBuilder({
-      fnName: "withMaximum",
-      fieldType: "number",
-      serializedName: "maximum",
+      fnName: "withName",
+      fieldType: "string",
+      serializedName: "name",
     }),
     new PrimitiveTemplateBuilder({
-      fnName: "withMinimum",
-      fieldType: "number",
-      serializedName: "minimum",
+      fnName: "withNamespace",
+      fieldType: "string",
+      serializedName: "namespace",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withPrefix",
+      fieldType: "string",
+      serializedName: "prefix",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withWrapped",
+      fieldType: "boolean",
+      serializedName: "wrapped",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withAttribute",
+      fieldType: "boolean",
+      serializedName: "attribute",
     }),
   ];
 

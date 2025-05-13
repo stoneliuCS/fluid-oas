@@ -21,5 +21,15 @@ export const stringTemplates = (): FunctionBuilder[] => {
       fieldType: "RegExp",
       serializedName: "pattern",
     }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withMinLength",
+      fieldType: "number",
+      serializedName: "minLength",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withMaxLength",
+      fieldType: "number",
+      serializedName: "maxLength",
+    }),
   ];
 };
