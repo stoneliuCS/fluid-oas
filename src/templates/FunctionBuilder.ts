@@ -14,8 +14,6 @@ type MixinSignatureArgs = {
   fieldType: string;
   // Serialized Name
   serializedName: string;
-  // Generic
-  generic?: boolean;
   // Optional Comments
   comments?: string;
 };
@@ -25,7 +23,6 @@ export abstract class FunctionBuilder {
   public static readonly genericName = "T";
   protected fieldType?: string;
   protected serializedName?: string;
-  protected generic?: string;
 
   // Function already has a signature
   public constructor(signature: MixinSignatureArgs) {
@@ -36,7 +33,6 @@ export abstract class FunctionBuilder {
     fnName,
     serializedName,
     fieldType,
-    generic,
     comments,
   }: MixinSignatureArgs): OptionalKind<FunctionDeclarationStructure> {
     return {
@@ -57,11 +53,6 @@ export abstract class FunctionBuilder {
               tagName: "serializedName",
               kind: StructureKind.JSDocTag,
               text: serializedName,
-            },
-            {
-              tagName: "generic",
-              kind: StructureKind.JSDocTag,
-              text: `${generic ? generic : "false"}`,
             },
           ],
         },
@@ -115,7 +106,7 @@ export abstract class FunctionBuilder {
   }
 
   protected buildFunction(writer: CodeBlockWriter): void {
-    if (!this.generic || !this.fieldType || !this.serializedName) {
+    if (!this.fieldType || !this.serializedName) {
       throw new Error("Not enough information to perform build.");
     }
     this.buildAbstractBody(writer)(() => {

@@ -5,7 +5,6 @@ import type { GConstructor } from "./constructor.ts";
 /**
  * @fieldType string
  * @serializedName description
- * @generic false
  */
 export function withDescription<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
@@ -30,7 +29,6 @@ export function withDescription<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType string
  * @serializedName summary
- * @generic false
  */
 export function withSummary<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
@@ -55,7 +53,6 @@ export function withSummary<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType boolean
  * @serializedName allowReserved
- * @generic false
  */
 export function withAllowReserved<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
@@ -80,7 +77,6 @@ export function withAllowReserved<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType boolean
  * @serializedName deprecated
- * @generic false
  */
 export function withDeprecated<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
@@ -105,7 +101,6 @@ export function withDeprecated<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType boolean
  * @serializedName required
- * @generic false
  */
 export function withRequired<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
@@ -130,7 +125,6 @@ export function withRequired<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType boolean
  * @serializedName nullable
- * @generic false
  */
 export function withNullable<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
@@ -155,7 +149,6 @@ export function withNullable<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType number
  * @serializedName maximum
- * @generic false
  */
 export function withMaximum<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
@@ -180,7 +173,6 @@ export function withMaximum<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType number
  * @serializedName minimum
- * @generic false
  */
 export function withMinimum<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
@@ -203,9 +195,60 @@ export function withMinimum<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
+ * @fieldType string|unknown
+ * @serializedName value
+ */
+export function withValue<TBase extends GConstructor>(Base: TBase) {
+  return <T extends string | unknown>() => {
+    return class extends Base {
+      private _value: T;
+      value(val: T) {
+        const copy: this = Object.create(this);
+        copy._value = val;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._value) {
+          Object.defineProperty(json, "value", {
+            value: this._value,
+            enumerable: true,
+          });
+        }
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName format
+ */
+export function withFormat<TBase extends GConstructor>(Base: TBase) {
+  return <T extends string>() => {
+    return class extends Base {
+      private _format: T;
+      format(val: T) {
+        const copy: this = Object.create(this);
+        copy._format = val;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._format) {
+          Object.defineProperty(json, "format", {
+            value: this._format,
+            enumerable: true,
+          });
+        }
+      }
+    };
+  };
+}
+
+/**
  * @fieldType OpenApiParameter
  * @serializedName parameters
- * @generic false
  */
 export function withParameters<TBase extends GConstructor>(Base: TBase) {
   return <T extends OpenApiParameter>() => {
@@ -233,7 +276,6 @@ export function withParameters<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType OpenApiSchema
  * @serializedName mapping
- * @generic false
  */
 export function withMapping<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
@@ -267,7 +309,6 @@ export function withMapping<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType RegExp
  * @serializedName pattern
- * @generic false
  */
 export function withPattern<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {

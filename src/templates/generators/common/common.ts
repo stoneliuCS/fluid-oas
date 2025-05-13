@@ -1,8 +1,9 @@
 import { FunctionBuilder } from "../../FunctionBuilder";
 import { PrimitiveTemplateBuilder } from "../../PrimitiveTemplate";
+import { FunctionTemplateBuilder } from "../../FunctionTemplate.ts";
 
 export const commonTemplates = (): FunctionBuilder[] => {
-  return [
+  const primitves: FunctionBuilder[] = [
     new PrimitiveTemplateBuilder({
       fnName: "withDescription",
       fieldType: "string",
@@ -44,4 +45,18 @@ export const commonTemplates = (): FunctionBuilder[] => {
       serializedName: "minimum",
     }),
   ];
+
+  const functions: FunctionBuilder[] = [
+    new FunctionTemplateBuilder({
+      fnName: "withValue",
+      fieldType: "string | unknown",
+      serializedName: "value",
+    }),
+    new FunctionTemplateBuilder({
+      fnName: "withFormat",
+      fieldType: "string",
+      serializedName: "format",
+    }),
+  ];
+  return primitves.concat(functions);
 };
