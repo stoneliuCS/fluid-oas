@@ -51,7 +51,7 @@ export abstract class FunctionBuilder {
             {
               tagName: "fieldType",
               kind: StructureKind.JSDocTag,
-              text: fieldType.replace(/ /g, "") || FunctionBuilder.genericName,
+              text: fieldType.replace(/ /g, ""),
             },
             {
               tagName: "serializedName",

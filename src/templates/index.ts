@@ -62,7 +62,7 @@ async function main() {
     }),
     new FunctionTemplateBuilder({
       fnName: "withDefault",
-      fieldType: "",
+      fieldType: FunctionBuilder.genericName,
       serializedName: "default",
       generic: true,
     }),
