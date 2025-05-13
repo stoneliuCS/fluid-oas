@@ -120,6 +120,5 @@ export abstract class FunctionBuilder {
     const func = template.write().writeFunction(this.signature);
     this.populateTypeMaps(func);
     func.setBodyText(this.buildFunction.bind(this));
-    console.log(func.getText());
   }
 }

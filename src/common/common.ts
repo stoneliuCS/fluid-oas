@@ -343,3 +343,28 @@ export function withParameters<TBase extends GConstructor>(Base: TBase) {
     };
   };
 }
+
+/**
+ * @fieldType RegExp
+ * @serializedName pattern
+ * @generic false
+ */
+export function withPattern<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _pattern?: RegExp;
+    pattern(val: RegExp) {
+      const copy: this = Object.create(this);
+      copy._pattern = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._pattern) {
+        Object.defineProperty(json, "pattern", {
+          value: this._pattern,
+          enumerable: true,
+        });
+      }
+    }
+  };
+}

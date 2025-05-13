@@ -5,8 +5,19 @@ import { MapTemplateBuilder } from "./MapTemplate";
 import { PrimitiveTemplateBuilder } from "./PrimitiveTemplate";
 import { MainProject } from "./TemplateBuilder";
 
+const buildStringFunctions = (): FunctionBuilder[] => {
+  return [
+    new PrimitiveTemplateBuilder({
+      fnName: "withPattern",
+      fieldType: "RegExp",
+      serializedName: "pattern",
+    }),
+  ];
+};
+
 async function main() {
   // Generic Function Generators
+  const stringMethods = buildStringFunctions();
   const functions: FunctionBuilder[] = [
     new PrimitiveTemplateBuilder({
       fnName: "withDescription",
@@ -78,7 +89,9 @@ async function main() {
     }).overrideJSONMethod(),
   ];
 
-  functions.forEach(func => func.write(MainProject));
+  const total = functions.concat(stringMethods);
+
+  total.forEach(func => func.write(MainProject));
 
   await MainProject.save();
 }
