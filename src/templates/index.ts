@@ -1,3 +1,4 @@
+import { CodeBlockWriter } from "ts-morph";
 import { ArrayTemplateBuilder } from "./ArrayTemplate";
 import { FunctionBuilder } from "./FunctionBuilder";
 import { FunctionTemplateBuilder } from "./FunctionTemplate";
@@ -6,8 +7,20 @@ import { PrimitiveTemplateBuilder } from "./PrimitiveTemplate";
 import { MainProject } from "./TemplateBuilder";
 
 const buildStringFunctions = (): FunctionBuilder[] => {
+  const withRegExpClass = class extends PrimitiveTemplateBuilder {
+    protected buildJSONMethod(writer: CodeBlockWriter): void {
+      writer.write("toJSON()").block(() => {
+        writer.writeLine("const json = super.toJSON();");
+        writer.write(`if (this._${this.serializedName})`).block(() => {
+          writer.writeLine(
+            `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}.source, enumerable : true })`
+          );
+        });
+      });
+    }
+  };
   return [
-    new PrimitiveTemplateBuilder({
+    new withRegExpClass({
       fnName: "withPattern",
       fieldType: "RegExp",
       serializedName: "pattern",
@@ -15,9 +28,29 @@ const buildStringFunctions = (): FunctionBuilder[] => {
   ];
 };
 
+const buildArrayFunctions = (): FunctionBuilder[] => {
+  const withParametersClass = class extends ArrayTemplateBuilder {
+    protected buildJSONMethod(writer: CodeBlockWriter): void {
+      writer.write("toJSON()").block(() => {
+        writer.writeLine("const json = super.toJSON();");
+        writer.write(`if (this._${this.serializedName})`).block(() => {
+          writer.writeLine(
+            `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}.map(val => val.toJSON()), enumerable : true })`
+          );
+        });
+      });
+    }
+  };
+  const withParameters = new withParametersClass({
+    fnName: "withParameters",
+    fieldType: "OpenApiSchema",
+    serializedName: "parameters",
+  });
+  return [withParameters];
+};
+
 async function main() {
   // Generic Function Generators
-  const stringMethods = buildStringFunctions();
   const functions: FunctionBuilder[] = [
     new PrimitiveTemplateBuilder({
       fnName: "withDescription",
@@ -82,14 +115,11 @@ async function main() {
       fieldType: "OpenApiSchema",
       serializedName: "mapping",
     }),
-    new ArrayTemplateBuilder({
-      fnName: "withParameters",
-      fieldType: "OpenApiSchema",
-      serializedName: "parameters",
-    }).overrideJSONMethod(),
   ];
 
-  const total = functions.concat(stringMethods);
+  const total = functions
+    .concat(buildStringFunctions())
+    .concat(buildArrayFunctions());
 
   total.forEach(func => func.write(MainProject));
 

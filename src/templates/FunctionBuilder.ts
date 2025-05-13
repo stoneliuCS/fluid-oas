@@ -115,6 +115,7 @@ export abstract class FunctionBuilder {
   }
 
   protected abstract buildFunction(writer: CodeBlockWriter): void;
+  protected abstract buildJSONMethod(writer: CodeBlockWriter): void;
 
   public write(template: TemplateBuilder) {
     const func = template.write().writeFunction(this.signature);

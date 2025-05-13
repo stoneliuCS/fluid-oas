@@ -2,6 +2,16 @@ import { CodeBlockWriter } from "ts-morph";
 import { FunctionBuilder } from "./FunctionBuilder";
 
 export class PrimitiveTemplateBuilder extends FunctionBuilder {
+  protected buildJSONMethod(writer: CodeBlockWriter): void {
+    writer.write("toJSON()").block(() => {
+      writer.writeLine("const json = super.toJSON();");
+      writer.write(`if (this._${this.serializedName})`).block(() => {
+        writer.writeLine(
+          `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}, enumerable : true })`
+        );
+      });
+    });
+  }
   private writeClassMethodBody(writer: CodeBlockWriter) {
     const methodBlock: (
       withParam: boolean
@@ -40,15 +50,7 @@ export class PrimitiveTemplateBuilder extends FunctionBuilder {
         );
         writer.writeLine("return copy;");
       });
-
-      writer.write("toJSON()").block(() => {
-        writer.writeLine("const json = super.toJSON();");
-        writer.write(`if (this._${this.serializedName})`).block(() => {
-          writer.writeLine(
-            `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}, enumerable : true })`
-          );
-        });
-      });
+      this.buildJSONMethod(writer);
     });
   }
 }
