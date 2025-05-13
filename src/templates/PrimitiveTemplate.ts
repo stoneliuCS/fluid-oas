@@ -2,6 +2,35 @@ import { CodeBlockWriter } from "ts-morph";
 import { FunctionBuilder } from "./FunctionBuilder";
 
 export class PrimitiveTemplateBuilder extends FunctionBuilder {
+  protected buildAbstractBody(
+    writer: CodeBlockWriter
+  ): (cb: () => void) => CodeBlockWriter {
+    return this.writeClassReturnBody(writer).writeBody;
+  }
+  protected buildFields(writer: CodeBlockWriter): void {
+    writer.writeLine(`private _${this.serializedName}? : ${this.fieldType};`);
+  }
+  protected buildBuilderMethod(writer: CodeBlockWriter): void {
+    let method: (cb: () => void) => CodeBlockWriter;
+    const flag = this.fieldType === "boolean";
+    if (flag) {
+      method = this.writeClassMethodBody(writer).writeMethodBody();
+    } else {
+      method = this.writeClassMethodBody(writer).writerMethodBodyWithParam();
+    }
+    method(() => {
+      writer.writeLine("const copy: this = Object.create(this);");
+      writer.conditionalWriteLine(
+        flag,
+        () => `copy._${this.serializedName} = true;`
+      );
+      writer.conditionalWriteLine(
+        !flag,
+        () => `copy._${this.serializedName} = val;`
+      );
+      writer.writeLine("return copy;");
+    });
+  }
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
@@ -27,30 +56,5 @@ export class PrimitiveTemplateBuilder extends FunctionBuilder {
       writeMethodBody: () => methodBlock(false),
       writerMethodBodyWithParam: () => methodBlock(true),
     };
-  }
-  protected buildFunction(writer: CodeBlockWriter): void {
-    this.writeClassReturnBody(writer).writeBody(() => {
-      writer.writeLine(`private _${this.serializedName}? : ${this.fieldType};`);
-      let method: (cb: () => void) => CodeBlockWriter;
-      const flag = this.fieldType === "boolean";
-      if (flag) {
-        method = this.writeClassMethodBody(writer).writeMethodBody();
-      } else {
-        method = this.writeClassMethodBody(writer).writerMethodBodyWithParam();
-      }
-      method(() => {
-        writer.writeLine("const copy: this = Object.create(this);");
-        writer.conditionalWriteLine(
-          flag,
-          () => `copy._${this.serializedName} = true;`
-        );
-        writer.conditionalWriteLine(
-          !flag,
-          () => `copy._${this.serializedName} = val;`
-        );
-        writer.writeLine("return copy;");
-      });
-      this.buildJSONMethod(writer);
-    });
   }
 }

@@ -114,7 +114,21 @@ export abstract class FunctionBuilder {
     };
   }
 
-  protected abstract buildFunction(writer: CodeBlockWriter): void;
+  protected buildFunction(writer: CodeBlockWriter): void {
+    if (!this.generic || !this.fieldType || !this.serializedName) {
+      throw new Error("Not enough information to perform build.");
+    }
+    this.buildAbstractBody(writer)(() => {
+      this.buildFields(writer);
+      this.buildBuilderMethod(writer);
+      this.buildJSONMethod(writer);
+    });
+  }
+  protected abstract buildAbstractBody(
+    writer: CodeBlockWriter
+  ): (cb: () => void) => CodeBlockWriter;
+  protected abstract buildFields(writer: CodeBlockWriter): void;
+  protected abstract buildBuilderMethod(writer: CodeBlockWriter): void;
   protected abstract buildJSONMethod(writer: CodeBlockWriter): void;
 
   public write(template: TemplateBuilder) {
