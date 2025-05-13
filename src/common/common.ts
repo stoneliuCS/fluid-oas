@@ -331,6 +331,15 @@ export function withParameters<TBase extends GConstructor>(Base: TBase) {
           this._parameters === undefined ? [val] : [...this._parameters, val];
         return copy;
       }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._parameters) {
+          Object.defineProperty(json, "parameters", {
+            value: this._parameters.map(val => val.toJSON()),
+            enumerable: true,
+          });
+        }
+      }
     };
   };
 }

@@ -75,7 +75,7 @@ async function main() {
       fnName: "withParameters",
       fieldType: "OpenApiSchema",
       serializedName: "parameters",
-    }),
+    }).overrideJSONMethod(),
   ];
 
   functions.forEach(func => func.write(MainProject));
