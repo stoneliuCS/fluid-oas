@@ -18,6 +18,7 @@ export class MapTemplateBuilder extends FunctionBuilder {
     if (types.length != 2) {
       throw new Error("Map types must only have exactly two args.");
     }
+    sourceFile.delete();
     return {
       key: types[0].getText(),
       val: types[1].getText(),
