@@ -41,14 +41,16 @@ const ExtensionClass = class extends MapTemplateBuilder {
         );
       });
       writer.write(`return`).block(() => {
-        writer.write(`with : (val : ${this.fieldType}) => `).block(() => {
-          writer.writeLine("const copy : this = Object.create(this);");
-          writer.writeLine(
-            `copy._${this.serializedName} = new Map(this._${this.serializedName});`
-          );
-          writer.writeLine(`copy._${this.serializedName}.set(name, val);`);
-          writer.writeLine("return copy;");
-        });
+        writer
+          .write(`with : (val : ${this.parseField().val}) => `)
+          .block(() => {
+            writer.writeLine("const copy : this = Object.create(this);");
+            writer.writeLine(
+              `copy._${this.serializedName} = new Map(this._${this.serializedName});`
+            );
+            writer.writeLine(`copy._${this.serializedName}.set(name, val);`);
+            writer.writeLine("return copy;");
+          });
       });
     });
   }

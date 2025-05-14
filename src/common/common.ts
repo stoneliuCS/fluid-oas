@@ -435,7 +435,7 @@ export function withExtensions<TBase extends GConstructor>(Base: TBase) {
         throw new Error("Extension names must start with x-");
       }
       return {
-        with: (val: Map<string, OpenApiSchema>) => {
+        with: (val: OpenApiSchema) => {
           const copy: this = Object.create(this);
           copy._extensions = new Map(this._extensions);
           copy._extensions.set(name, val);

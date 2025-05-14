@@ -2,7 +2,7 @@ import { CodeBlockWriter } from "ts-morph";
 import { FunctionBuilder } from "./FunctionBuilder";
 
 export class MapTemplateBuilder extends FunctionBuilder {
-  private parseField() {
+  protected parseField() {
     const temp = `const tempVar: ${this.fieldType} = undefined as any;`;
     const sourceFile = this.currentProject?.createSourceFile("temp.ts", temp, {
       overwrite: true,

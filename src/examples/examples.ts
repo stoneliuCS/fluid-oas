@@ -6,7 +6,7 @@ console.log(
     .bearerFormat("Bearer")
     .flows(
       OpenApiOAuthFlows.authorizationCode(
-        OpenApiOAuthFlow.refreshUrl("url")
+        OpenApiOAuthFlow.refreshUrl("url").refreshUrl("/myurl")
       ).password(OpenApiOAuthFlow.scopes("stone").with("liu"))
     )
     .toJSON()
