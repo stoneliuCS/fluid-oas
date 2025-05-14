@@ -1,4 +1,6 @@
 import type { OpenApiDocumentation } from "../core/common/OpenApiDocumentation.ts";
+import type { OpenApiOAuthFlow } from "../core/common/OpenApiOAuthFlow.ts";
+import type { OpenApiOAuthFlows } from "../core/common/OpenApiOAuthFlows.ts";
 import type { OpenApiSchema } from "../core/schema/OpenApiSchema.ts";
 import type { GConstructor } from "./constructor.ts";
 
@@ -22,6 +24,7 @@ export function withDescription<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -46,6 +49,7 @@ export function withSummary<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -70,6 +74,7 @@ export function withAllowReserved<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -94,6 +99,7 @@ export function withDeprecated<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -118,6 +124,7 @@ export function withRequired<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -142,6 +149,7 @@ export function withNullable<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -166,6 +174,7 @@ export function withName<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -190,6 +199,7 @@ export function withNamespace<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -214,6 +224,7 @@ export function withPrefix<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -238,6 +249,7 @@ export function withWrapped<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -262,6 +274,7 @@ export function withAttribute<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -287,6 +300,7 @@ export function withValue<TBase extends GConstructor>(Base: TBase) {
             enumerable: true,
           });
         }
+        return json;
       }
     };
   };
@@ -313,6 +327,63 @@ export function withFormat<TBase extends GConstructor>(Base: TBase) {
             enumerable: true,
           });
         }
+        return json;
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType "apiKey"|"http"|"mutualTLS"|"oauth2"|"openIdConnect"
+ * @serializedName type
+ */
+export function withType<TBase extends GConstructor>(Base: TBase) {
+  return <
+    T extends "apiKey" | "http" | "mutualTLS" | "oauth2" | "openIdConnect",
+  >() => {
+    return class extends Base {
+      private _type?: T;
+      type(val: T) {
+        const copy: this = Object.create(this);
+        copy._type = val;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._type) {
+          Object.defineProperty(json, "type", {
+            value: this._type,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType "query"|"header"|"cookie"
+ * @serializedName in
+ */
+export function withIn<TBase extends GConstructor>(Base: TBase) {
+  return <T extends "query" | "header" | "cookie">() => {
+    return class extends Base {
+      private _in?: T;
+      in(val: T) {
+        const copy: this = Object.create(this);
+        copy._in = val;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._in) {
+          Object.defineProperty(json, "in", {
+            value: this._in,
+            enumerable: true,
+          });
+        }
+        return json;
       }
     };
   };
@@ -338,11 +409,16 @@ export function withMapping<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._mapping) {
+        const mappings: any = {};
+        this._mapping.forEach((val, key) => {
+          mappings[key] = val;
+        });
         Object.defineProperty(json, "mapping", {
-          value: this._mapping,
+          value: mappings,
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -377,6 +453,7 @@ export function withExtensions<TBase extends GConstructor>(Base: TBase) {
           });
         }
       }
+      return json;
     }
   };
 }
@@ -401,6 +478,7 @@ export function withMax<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -425,6 +503,7 @@ export function withMin<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -449,6 +528,7 @@ export function withPattern<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -473,6 +553,7 @@ export function withMinLength<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -497,6 +578,7 @@ export function withMaxLength<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -521,6 +603,7 @@ export function withURL<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
     }
   };
 }
@@ -545,6 +628,166 @@ export function withPropertyName<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName scheme
+ */
+export function withScheme<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _scheme?: string;
+    scheme(val: string) {
+      const copy: this = Object.create(this);
+      copy._scheme = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._scheme) {
+        Object.defineProperty(json, "scheme", {
+          value: this._scheme,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName bearerFormat
+ */
+export function withBearerFormat<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _bearerFormat?: string;
+    bearerFormat(val: string) {
+      const copy: this = Object.create(this);
+      copy._bearerFormat = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._bearerFormat) {
+        Object.defineProperty(json, "bearerFormat", {
+          value: this._bearerFormat,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName authorizationUrl
+ */
+export function withAuthorizationURL<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _authorizationUrl?: string;
+    authorizationUrl(val: string) {
+      const copy: this = Object.create(this);
+      copy._authorizationUrl = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._authorizationUrl) {
+        Object.defineProperty(json, "authorizationUrl", {
+          value: this._authorizationUrl,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName tokenUrl
+ */
+export function withTokenURL<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _tokenUrl?: string;
+    tokenUrl(val: string) {
+      const copy: this = Object.create(this);
+      copy._tokenUrl = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._tokenUrl) {
+        Object.defineProperty(json, "tokenUrl", {
+          value: this._tokenUrl,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName refreshUrl
+ */
+export function withRefreshURL<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _refreshUrl?: string;
+    refreshUrl(val: string) {
+      const copy: this = Object.create(this);
+      copy._refreshUrl = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._refreshUrl) {
+        Object.defineProperty(json, "refreshUrl", {
+          value: this._refreshUrl,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType Map<string,string>
+ * @serializedName scopes
+ */
+export function withScopes<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _scopes?: Map<string, string>;
+    scopes(name: string) {
+      return {
+        with: (val: string) => {
+          const copy: this = Object.create(this);
+          copy._scopes = new Map(this._scopes);
+          copy._scopes.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._scopes) {
+        const mappings: any = {};
+        this._scopes.forEach((val, key) => {
+          mappings[key] = val;
+        });
+        Object.defineProperty(json, "scopes", {
+          value: mappings,
+          enumerable: true,
+        });
+      }
+      return json;
     }
   };
 }
@@ -569,6 +812,157 @@ export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
           enumerable: true,
         });
       }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiOAuthFlow
+ * @serializedName implicit
+ */
+export function withImplicit<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _implicit?: OpenApiOAuthFlow;
+    implicit(val: OpenApiOAuthFlow) {
+      const copy: this = Object.create(this);
+      copy._implicit = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._implicit) {
+        Object.defineProperty(json, "implicit", {
+          value: this._implicit.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiOAuthFlow
+ * @serializedName password
+ */
+export function withPassword<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _password?: OpenApiOAuthFlow;
+    password(val: OpenApiOAuthFlow) {
+      const copy: this = Object.create(this);
+      copy._password = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._password) {
+        Object.defineProperty(json, "password", {
+          value: this._password.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiOAuthFlow
+ * @serializedName clientCredentials
+ */
+export function withClientCredentials<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _clientCredentials?: OpenApiOAuthFlow;
+    clientCredentials(val: OpenApiOAuthFlow) {
+      const copy: this = Object.create(this);
+      copy._clientCredentials = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._clientCredentials) {
+        Object.defineProperty(json, "clientCredentials", {
+          value: this._clientCredentials.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiOAuthFlow
+ * @serializedName authorizationCode
+ */
+export function withAuthorizationCode<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _authorizationCode?: OpenApiOAuthFlow;
+    authorizationCode(val: OpenApiOAuthFlow) {
+      const copy: this = Object.create(this);
+      copy._authorizationCode = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._authorizationCode) {
+        Object.defineProperty(json, "authorizationCode", {
+          value: this._authorizationCode.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiOAuthFlows
+ * @serializedName flows
+ */
+export function withFlows<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _flows?: OpenApiOAuthFlows;
+    flows(val: OpenApiOAuthFlows) {
+      const copy: this = Object.create(this);
+      copy._flows = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._flows) {
+        Object.defineProperty(json, "flows", {
+          value: this._flows.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName openIdConnectUrl
+ */
+export function withOpenIdConnectURL<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _openIdConnectUrl?: string;
+    openIdConnectUrl(val: string) {
+      const copy: this = Object.create(this);
+      copy._openIdConnectUrl = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._openIdConnectUrl) {
+        Object.defineProperty(json, "openIdConnectUrl", {
+          value: this._openIdConnectUrl,
+          enumerable: true,
+        });
+      }
+      return json;
     }
   };
 }

@@ -51,9 +51,7 @@ export class MapTemplateBuilder extends FunctionBuilder {
         });
       });
   }
-}
 
-export class PrimitiveMapBuilder extends MapTemplateBuilder {
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
@@ -66,6 +64,7 @@ export class PrimitiveMapBuilder extends MapTemplateBuilder {
           `Object.defineProperty(json, "${this.serializedName}", { value : mappings, enumerable : true })`
         );
       });
+      writer.writeLine("return json;");
     });
   }
 }

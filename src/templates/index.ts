@@ -13,6 +13,7 @@ const OpenApiClass = class extends PrimitiveTemplateBuilder {
           `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}.toJSON(), enumerable : true })`
         );
       });
+      writer.writeLine("return json;");
     });
   }
 };
@@ -26,6 +27,7 @@ const RegExpClass = class extends PrimitiveTemplateBuilder {
           `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}.source, enumerable : true })`
         );
       });
+      writer.writeLine("return json;");
     });
   }
 };
@@ -63,6 +65,7 @@ const ExtensionClass = class extends MapTemplateBuilder {
         }
   `);
       });
+      writer.writeLine("return json;");
     });
   }
 };
@@ -135,6 +138,16 @@ async function main() {
       fieldType: "string",
       serializedName: "format",
     }),
+    new FunctionTemplateBuilder({
+      fnName: "withType",
+      fieldType: ` "apiKey" | "http"| "mutualTLS"| "oauth2"| "openIdConnect"`,
+      serializedName: "type",
+    }),
+    new FunctionTemplateBuilder({
+      fnName: "withIn",
+      fieldType: `"query" | "header" | "cookie"`,
+      serializedName: "in",
+    }),
     new MapTemplateBuilder({
       fnName: "withMapping",
       fieldType: "Map<string,string>",
@@ -180,10 +193,70 @@ async function main() {
       fieldType: "string",
       serializedName: "propertyName",
     }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withScheme",
+      fieldType: "string",
+      serializedName: "scheme",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withBearerFormat",
+      fieldType: "string",
+      serializedName: "bearerFormat",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withAuthorizationURL",
+      fieldType: "string",
+      serializedName: "authorizationUrl",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withTokenURL",
+      fieldType: "string",
+      serializedName: "tokenUrl",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withRefreshURL",
+      fieldType: "string",
+      serializedName: "refreshUrl",
+    }),
+    new MapTemplateBuilder({
+      fnName: "withScopes",
+      fieldType: "Map<string,string>",
+      serializedName: "scopes",
+    }),
     new OpenApiClass({
       fnName: "withExternalDocs",
       fieldType: "OpenApiDocumentation",
       serializedName: "externalDocs",
+    }),
+    new OpenApiClass({
+      fnName: "withImplicit",
+      fieldType: "OpenApiOAuthFlow",
+      serializedName: "implicit",
+    }),
+    new OpenApiClass({
+      fnName: "withPassword",
+      fieldType: "OpenApiOAuthFlow",
+      serializedName: "password",
+    }),
+    new OpenApiClass({
+      fnName: "withClientCredentials",
+      fieldType: "OpenApiOAuthFlow",
+      serializedName: "clientCredentials",
+    }),
+    new OpenApiClass({
+      fnName: "withAuthorizationCode",
+      fieldType: "OpenApiOAuthFlow",
+      serializedName: "authorizationCode",
+    }),
+    new OpenApiClass({
+      fnName: "withFlows",
+      fieldType: "OpenApiOAuthFlows",
+      serializedName: "flows",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withOpenIdConnectURL",
+      fieldType: "string",
+      serializedName: "openIdConnectUrl",
     }),
   ].forEach(fn => fn.write(MainProject));
 

@@ -130,6 +130,7 @@ export abstract class FunctionBuilder {
           `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}, enumerable : true })`
         );
       });
+      writer.writeLine("return json;");
     });
   }
 
