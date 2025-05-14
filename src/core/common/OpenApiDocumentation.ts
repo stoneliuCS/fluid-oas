@@ -1,7 +1,7 @@
-import { Base, withDescription, withURL } from "./common";
+import { withDescription, withURL } from "../../common/common";
+import { Base } from "./base";
 
 const DocumentationBase = withURL(withDescription(Base));
-
 class _OpenApiDocumentation extends DocumentationBase {}
 
 export const OpenApiDocumentation = () => new _OpenApiDocumentation();

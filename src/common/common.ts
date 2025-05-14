@@ -1,4 +1,4 @@
-import type { OpenApiParameter } from "../core/path/OpenApiParameter.ts";
+import type { OpenApiDocumentation } from "../core/common/OpenApiDocumentation.ts";
 import type { OpenApiSchema } from "../core/schema/OpenApiSchema.ts";
 import type { GConstructor } from "./constructor.ts";
 
@@ -273,7 +273,7 @@ export function withAttribute<TBase extends GConstructor>(Base: TBase) {
 export function withValue<TBase extends GConstructor>(Base: TBase) {
   return <T extends string | unknown>() => {
     return class extends Base {
-      private _value: T;
+      private _value?: T;
       value(val: T) {
         const copy: this = Object.create(this);
         copy._value = val;
@@ -299,7 +299,7 @@ export function withValue<TBase extends GConstructor>(Base: TBase) {
 export function withFormat<TBase extends GConstructor>(Base: TBase) {
   return <T extends string>() => {
     return class extends Base {
-      private _format: T;
+      private _format?: T;
       format(val: T) {
         const copy: this = Object.create(this);
         copy._format = val;
@@ -319,42 +319,15 @@ export function withFormat<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiParameter
- * @serializedName parameters
- */
-export function withParameters<TBase extends GConstructor>(Base: TBase) {
-  return <T extends OpenApiParameter>() => {
-    return class extends Base {
-      private _parameters: T[];
-      parameters(val: T) {
-        const copy: this = Object.create(this);
-        copy._parameters =
-          this._parameters === undefined ? [val] : [...this._parameters, val];
-        return copy;
-      }
-      toJSON() {
-        const json = super.toJSON();
-        if (this._parameters) {
-          Object.defineProperty(json, "parameters", {
-            value: this._parameters.map(val => val.toJSON()),
-            enumerable: true,
-          });
-        }
-      }
-    };
-  };
-}
-
-/**
- * @fieldType OpenApiSchema
+ * @fieldType Map<string,string>
  * @serializedName mapping
  */
 export function withMapping<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _mapping?: Map<string, OpenApiSchema>;
+    private _mapping?: Map<string, string>;
     mapping(name: string) {
       return {
-        with: (val: OpenApiSchema) => {
+        with: (val: string) => {
           const copy: this = Object.create(this);
           copy._mapping = new Map(this._mapping);
           copy._mapping.set(name, val);
@@ -365,12 +338,8 @@ export function withMapping<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._mapping) {
-        const mappings: any = {};
-        this._mapping.forEach((val, key) => {
-          mappings[key] = val.toJSON();
-        });
         Object.defineProperty(json, "mapping", {
-          value: mappings,
+          value: this._mapping,
           enumerable: true,
         });
       }
@@ -379,7 +348,7 @@ export function withMapping<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiSchema
+ * @fieldType Map<string,OpenApiSchema>
  * @serializedName extensions
  */
 export function withExtensions<TBase extends GConstructor>(Base: TBase) {
@@ -390,7 +359,7 @@ export function withExtensions<TBase extends GConstructor>(Base: TBase) {
         throw new Error("Extension names must start with x-");
       }
       return {
-        with: (val: OpenApiSchema) => {
+        with: (val: Map<string, OpenApiSchema>) => {
           const copy: this = Object.create(this);
           copy._extensions = new Map(this._extensions);
           copy._extensions.set(name, val);
@@ -407,6 +376,54 @@ export function withExtensions<TBase extends GConstructor>(Base: TBase) {
             enumerable: true,
           });
         }
+      }
+    }
+  };
+}
+
+/**
+ * @fieldType number
+ * @serializedName minLength
+ */
+export function withMax<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _minLength?: number;
+    minLength(val: number) {
+      const copy: this = Object.create(this);
+      copy._minLength = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._minLength) {
+        Object.defineProperty(json, "minLength", {
+          value: this._minLength,
+          enumerable: true,
+        });
+      }
+    }
+  };
+}
+
+/**
+ * @fieldType number
+ * @serializedName maxLength
+ */
+export function withMin<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _maxLength?: number;
+    maxLength(val: number) {
+      const copy: this = Object.create(this);
+      copy._maxLength = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._maxLength) {
+        Object.defineProperty(json, "maxLength", {
+          value: this._maxLength,
+          enumerable: true,
+        });
       }
     }
   };
@@ -485,22 +502,22 @@ export function withMaxLength<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType number
- * @serializedName minLength
+ * @fieldType string
+ * @serializedName url
  */
-export function withMax<TBase extends GConstructor>(Base: TBase) {
+export function withURL<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _minLength?: number;
-    minLength(val: number) {
+    private _url?: string;
+    url(val: string) {
       const copy: this = Object.create(this);
-      copy._minLength = val;
+      copy._url = val;
       return copy;
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._minLength) {
-        Object.defineProperty(json, "minLength", {
-          value: this._minLength,
+      if (this._url) {
+        Object.defineProperty(json, "url", {
+          value: this._url,
           enumerable: true,
         });
       }
@@ -509,22 +526,46 @@ export function withMax<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType number
- * @serializedName maxLength
+ * @fieldType string
+ * @serializedName propertyName
  */
-export function withMin<TBase extends GConstructor>(Base: TBase) {
+export function withPropertyName<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _maxLength?: number;
-    maxLength(val: number) {
+    private _propertyName?: string;
+    propertyName(val: string) {
       const copy: this = Object.create(this);
-      copy._maxLength = val;
+      copy._propertyName = val;
       return copy;
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._maxLength) {
-        Object.defineProperty(json, "maxLength", {
-          value: this._maxLength,
+      if (this._propertyName) {
+        Object.defineProperty(json, "propertyName", {
+          value: this._propertyName,
+          enumerable: true,
+        });
+      }
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiDocumentation
+ * @serializedName externalDocs
+ */
+export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    private _externalDocs?: OpenApiDocumentation;
+    externalDocs(val: OpenApiDocumentation) {
+      const copy: this = Object.create(this);
+      copy._externalDocs = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._externalDocs) {
+        Object.defineProperty(json, "externalDocs", {
+          value: this._externalDocs.toJSON(),
           enumerable: true,
         });
       }

@@ -12,7 +12,7 @@ export class FunctionTemplateBuilder extends FunctionBuilder {
   }
   protected buildField(writer: CodeBlockWriter): void {
     writer.writeLine(
-      `private _${this.serializedName} : ${FunctionBuilder.genericName};`
+      `private _${this.serializedName}? : ${FunctionBuilder.genericName};`
     );
   }
   protected buildBuilderMethod(writer: CodeBlockWriter): void {

@@ -3,6 +3,7 @@ import {
   FunctionDeclaration,
   FunctionDeclarationStructure,
   OptionalKind,
+  Project,
   StructureKind,
 } from "ts-morph";
 import { TemplateBuilder } from "./TemplateBuilder";
@@ -23,6 +24,7 @@ export abstract class FunctionBuilder {
   public static readonly genericName = "T";
   protected fieldType?: string;
   protected serializedName?: string;
+  protected currentProject?: Project;
 
   // Function already has a signature
   public constructor(signature: MixinSignatureArgs) {
@@ -132,8 +134,9 @@ export abstract class FunctionBuilder {
   }
 
   public write(template: TemplateBuilder) {
-    const func = template.write().writeFunction(this.signature);
+    let func = template.write().writeFunction(this.signature);
     this.populateTypeMaps(func);
-    func.setBodyText(this.buildFunction.bind(this));
+    this.currentProject = func.getProject();
+    func = func.setBodyText(this.buildFunction.bind(this));
   }
 }

@@ -61,9 +61,9 @@ export class TemplateBuilder {
   }
 
   public async save() {
-    this.project.getSourceFiles().map(sf => {
-      sf.fixMissingImports();
-    });
+    for (const sourceFile of this.project.getSourceFiles()) {
+      sourceFile.fixMissingImports();
+    }
     await this.project.save();
   }
 }
