@@ -12,5 +12,5 @@ const OAuthFlowBase = withScopes(
 
 class _OpenApiOAuthFlow extends OAuthFlowBase {}
 
-export const OpenApiOAuthFlow = new _OpenApiOAuthFlow();
+export const OpenApiOAuthFlow = () => new _OpenApiOAuthFlow();
 export type OpenApiOAuthFlow = _OpenApiOAuthFlow;

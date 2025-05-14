@@ -20,5 +20,5 @@ const SecurityBase = withOpenIdConnectURL(
 
 class _OpenApiSecurityScheme extends SecurityBase {}
 
-export const OpenApiSecurityScheme = new _OpenApiSecurityScheme();
+export const OpenApiSecurityScheme = () => new _OpenApiSecurityScheme();
 export type OpenApiSecurityScheme = _OpenApiSecurityScheme;

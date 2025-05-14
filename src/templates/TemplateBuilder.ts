@@ -28,6 +28,11 @@ export class TemplateBuilder {
       typeParameters: ["T = { toJSON(): unknown }"],
       type: write => write.write("new (...args: any[]) => T"),
     });
+    sourceFile.addTypeAlias({
+      name: "OpenApiExtensionString",
+      isExported: true,
+      type: write => write.write("`x-${string}`"),
+    });
   }
 
   public write() {

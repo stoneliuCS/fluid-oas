@@ -8,7 +8,7 @@ export class PrimitiveTemplateBuilder extends FunctionBuilder {
     return this.writeClassReturnBody(writer).writeBody;
   }
   protected buildField(writer: CodeBlockWriter): void {
-    writer.writeLine(`private _${this.serializedName}? : ${this.fieldType};`);
+    writer.writeLine(`protected _${this.serializedName}? : ${this.fieldType};`);
   }
   protected buildBuilderMethod(writer: CodeBlockWriter): void {
     let method: (cb: () => void) => CodeBlockWriter;

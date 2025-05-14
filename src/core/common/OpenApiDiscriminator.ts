@@ -4,5 +4,5 @@ import { Base } from "./base";
 const DiscriminatorBase = withMapping(withPropertyName(Base));
 class _OpenApiDiscriminator extends DiscriminatorBase {}
 
-export const OpenApiDiscriminator = new _OpenApiDiscriminator();
+export const OpenApiDiscriminator = () => new _OpenApiDiscriminator();
 export type OpenApiDiscriminator = _OpenApiDiscriminator;

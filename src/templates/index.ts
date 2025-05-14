@@ -34,25 +34,22 @@ const RegExpClass = class extends PrimitiveTemplateBuilder {
 
 const ExtensionClass = class extends MapTemplateBuilder {
   protected buildBuilderMethod(writer: CodeBlockWriter): void {
-    writer.write(`${this.serializedName}(name : string)`).block(() => {
-      writer.writeLine(`if (!name.startsWith("x-"))`).block(() => {
-        writer.writeLine(
-          `throw new Error("Extension names must start with x-")`
-        );
+    writer
+      .write(`${this.serializedName}(name : ${this.parseField().key})`)
+      .block(() => {
+        writer.write(`return`).block(() => {
+          writer
+            .write(`with : (val : ${this.parseField().val}) => `)
+            .block(() => {
+              writer.writeLine("const copy : this = Object.create(this);");
+              writer.writeLine(
+                `copy._${this.serializedName} = new Map(this._${this.serializedName});`
+              );
+              writer.writeLine(`copy._${this.serializedName}.set(name, val);`);
+              writer.writeLine("return copy;");
+            });
+        });
       });
-      writer.write(`return`).block(() => {
-        writer
-          .write(`with : (val : ${this.parseField().val}) => `)
-          .block(() => {
-            writer.writeLine("const copy : this = Object.create(this);");
-            writer.writeLine(
-              `copy._${this.serializedName} = new Map(this._${this.serializedName});`
-            );
-            writer.writeLine(`copy._${this.serializedName}.set(name, val);`);
-            writer.writeLine("return copy;");
-          });
-      });
-    });
   }
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
@@ -142,7 +139,7 @@ async function main() {
     }),
     new FunctionTemplateBuilder({
       fnName: "withType",
-      fieldType: ` "apiKey" | "http"| "mutualTLS"| "oauth2"| "openIdConnect"`,
+      fieldType: `"apiKey" | "http" | "mutualTLS" | "oauth2" |"openIdConnect"`,
       serializedName: "type",
     }),
     new FunctionTemplateBuilder({
@@ -157,7 +154,7 @@ async function main() {
     }),
     new ExtensionClass({
       fnName: "withExtensions",
-      fieldType: "Map<string, OpenApiSchema>",
+      fieldType: "Map<OpenApiExtensionString, OpenApiSchema>",
       serializedName: "extensions",
     }),
     new PrimitiveTemplateBuilder({

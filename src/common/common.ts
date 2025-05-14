@@ -2,7 +2,7 @@ import type { OpenApiDocumentation } from "../core/common/OpenApiDocumentation.t
 import type { OpenApiOAuthFlow } from "../core/common/OpenApiOAuthFlow.ts";
 import type { OpenApiOAuthFlows } from "../core/common/OpenApiOAuthFlows.ts";
 import type { OpenApiSchema } from "../core/schema/OpenApiSchema.ts";
-import type { GConstructor } from "./constructor.ts";
+import type { GConstructor, OpenApiExtensionString } from "./constructor.ts";
 
 /**
  * @fieldType string
@@ -10,7 +10,7 @@ import type { GConstructor } from "./constructor.ts";
  */
 export function withDescription<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _description?: string;
+    protected _description?: string;
     description(val: string) {
       const copy: this = Object.create(this);
       copy._description = val;
@@ -35,7 +35,7 @@ export function withDescription<TBase extends GConstructor>(Base: TBase) {
  */
 export function withSummary<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _summary?: string;
+    protected _summary?: string;
     summary(val: string) {
       const copy: this = Object.create(this);
       copy._summary = val;
@@ -60,7 +60,7 @@ export function withSummary<TBase extends GConstructor>(Base: TBase) {
  */
 export function withAllowReserved<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _allowReserved?: boolean;
+    protected _allowReserved?: boolean;
     allowReserved() {
       const copy: this = Object.create(this);
       copy._allowReserved = true;
@@ -85,7 +85,7 @@ export function withAllowReserved<TBase extends GConstructor>(Base: TBase) {
  */
 export function withDeprecated<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _deprecated?: boolean;
+    protected _deprecated?: boolean;
     deprecated() {
       const copy: this = Object.create(this);
       copy._deprecated = true;
@@ -110,7 +110,7 @@ export function withDeprecated<TBase extends GConstructor>(Base: TBase) {
  */
 export function withRequired<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _required?: boolean;
+    protected _required?: boolean;
     required() {
       const copy: this = Object.create(this);
       copy._required = true;
@@ -135,7 +135,7 @@ export function withRequired<TBase extends GConstructor>(Base: TBase) {
  */
 export function withNullable<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _nullable?: boolean;
+    protected _nullable?: boolean;
     nullable() {
       const copy: this = Object.create(this);
       copy._nullable = true;
@@ -160,7 +160,7 @@ export function withNullable<TBase extends GConstructor>(Base: TBase) {
  */
 export function withName<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _name?: string;
+    protected _name?: string;
     name(val: string) {
       const copy: this = Object.create(this);
       copy._name = val;
@@ -185,7 +185,7 @@ export function withName<TBase extends GConstructor>(Base: TBase) {
  */
 export function withNamespace<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _namespace?: string;
+    protected _namespace?: string;
     namespace(val: string) {
       const copy: this = Object.create(this);
       copy._namespace = val;
@@ -210,7 +210,7 @@ export function withNamespace<TBase extends GConstructor>(Base: TBase) {
  */
 export function withPrefix<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _prefix?: string;
+    protected _prefix?: string;
     prefix(val: string) {
       const copy: this = Object.create(this);
       copy._prefix = val;
@@ -235,7 +235,7 @@ export function withPrefix<TBase extends GConstructor>(Base: TBase) {
  */
 export function withWrapped<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _wrapped?: boolean;
+    protected _wrapped?: boolean;
     wrapped() {
       const copy: this = Object.create(this);
       copy._wrapped = true;
@@ -260,7 +260,7 @@ export function withWrapped<TBase extends GConstructor>(Base: TBase) {
  */
 export function withAttribute<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _attribute?: boolean;
+    protected _attribute?: boolean;
     attribute() {
       const copy: this = Object.create(this);
       copy._attribute = true;
@@ -286,7 +286,7 @@ export function withAttribute<TBase extends GConstructor>(Base: TBase) {
 export function withValue<TBase extends GConstructor>(Base: TBase) {
   return <T extends string | unknown>() => {
     return class extends Base {
-      private _value?: T;
+      protected _value?: T;
       value(val: T) {
         const copy: this = Object.create(this);
         copy._value = val;
@@ -313,7 +313,7 @@ export function withValue<TBase extends GConstructor>(Base: TBase) {
 export function withFormat<TBase extends GConstructor>(Base: TBase) {
   return <T extends string>() => {
     return class extends Base {
-      private _format?: T;
+      protected _format?: T;
       format(val: T) {
         const copy: this = Object.create(this);
         copy._format = val;
@@ -342,7 +342,7 @@ export function withType<TBase extends GConstructor>(Base: TBase) {
     T extends "apiKey" | "http" | "mutualTLS" | "oauth2" | "openIdConnect",
   >() => {
     return class extends Base {
-      private _type?: T;
+      protected _type?: T;
       type(val: T) {
         const copy: this = Object.create(this);
         copy._type = val;
@@ -369,7 +369,7 @@ export function withType<TBase extends GConstructor>(Base: TBase) {
 export function withIn<TBase extends GConstructor>(Base: TBase) {
   return <T extends "query" | "header" | "cookie">() => {
     return class extends Base {
-      private _in?: T;
+      protected _in?: T;
       in(val: T) {
         const copy: this = Object.create(this);
         copy._in = val;
@@ -395,7 +395,7 @@ export function withIn<TBase extends GConstructor>(Base: TBase) {
  */
 export function withMapping<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _mapping?: Map<string, string>;
+    protected _mapping?: Map<string, string>;
     mapping(name: string) {
       return {
         with: (val: string) => {
@@ -424,16 +424,13 @@ export function withMapping<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType Map<string,OpenApiSchema>
+ * @fieldType Map<OpenApiExtensionString,OpenApiSchema>
  * @serializedName extensions
  */
 export function withExtensions<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _extensions?: Map<string, OpenApiSchema>;
-    extensions(name: string) {
-      if (!name.startsWith("x-")) {
-        throw new Error("Extension names must start with x-");
-      }
+    protected _extensions?: Map<OpenApiExtensionString, OpenApiSchema>;
+    extensions(name: OpenApiExtensionString) {
       return {
         with: (val: OpenApiSchema) => {
           const copy: this = Object.create(this);
@@ -464,7 +461,7 @@ export function withExtensions<TBase extends GConstructor>(Base: TBase) {
  */
 export function withMax<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _minLength?: number;
+    protected _minLength?: number;
     minLength(val: number) {
       const copy: this = Object.create(this);
       copy._minLength = val;
@@ -489,7 +486,7 @@ export function withMax<TBase extends GConstructor>(Base: TBase) {
  */
 export function withMin<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _maxLength?: number;
+    protected _maxLength?: number;
     maxLength(val: number) {
       const copy: this = Object.create(this);
       copy._maxLength = val;
@@ -514,7 +511,7 @@ export function withMin<TBase extends GConstructor>(Base: TBase) {
  */
 export function withPattern<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _pattern?: RegExp;
+    protected _pattern?: RegExp;
     pattern(val: RegExp) {
       const copy: this = Object.create(this);
       copy._pattern = val;
@@ -539,7 +536,7 @@ export function withPattern<TBase extends GConstructor>(Base: TBase) {
  */
 export function withMinLength<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _minLength?: number;
+    protected _minLength?: number;
     minLength(val: number) {
       const copy: this = Object.create(this);
       copy._minLength = val;
@@ -564,7 +561,7 @@ export function withMinLength<TBase extends GConstructor>(Base: TBase) {
  */
 export function withMaxLength<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _maxLength?: number;
+    protected _maxLength?: number;
     maxLength(val: number) {
       const copy: this = Object.create(this);
       copy._maxLength = val;
@@ -589,7 +586,7 @@ export function withMaxLength<TBase extends GConstructor>(Base: TBase) {
  */
 export function withURL<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _url?: string;
+    protected _url?: string;
     url(val: string) {
       const copy: this = Object.create(this);
       copy._url = val;
@@ -614,7 +611,7 @@ export function withURL<TBase extends GConstructor>(Base: TBase) {
  */
 export function withPropertyName<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _propertyName?: string;
+    protected _propertyName?: string;
     propertyName(val: string) {
       const copy: this = Object.create(this);
       copy._propertyName = val;
@@ -639,7 +636,7 @@ export function withPropertyName<TBase extends GConstructor>(Base: TBase) {
  */
 export function withScheme<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _scheme?: string;
+    protected _scheme?: string;
     scheme(val: string) {
       const copy: this = Object.create(this);
       copy._scheme = val;
@@ -664,7 +661,7 @@ export function withScheme<TBase extends GConstructor>(Base: TBase) {
  */
 export function withBearerFormat<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _bearerFormat?: string;
+    protected _bearerFormat?: string;
     bearerFormat(val: string) {
       const copy: this = Object.create(this);
       copy._bearerFormat = val;
@@ -689,7 +686,7 @@ export function withBearerFormat<TBase extends GConstructor>(Base: TBase) {
  */
 export function withAuthorizationURL<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _authorizationUrl?: string;
+    protected _authorizationUrl?: string;
     authorizationUrl(val: string) {
       const copy: this = Object.create(this);
       copy._authorizationUrl = val;
@@ -714,7 +711,7 @@ export function withAuthorizationURL<TBase extends GConstructor>(Base: TBase) {
  */
 export function withTokenURL<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _tokenUrl?: string;
+    protected _tokenUrl?: string;
     tokenUrl(val: string) {
       const copy: this = Object.create(this);
       copy._tokenUrl = val;
@@ -739,7 +736,7 @@ export function withTokenURL<TBase extends GConstructor>(Base: TBase) {
  */
 export function withRefreshURL<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _refreshUrl?: string;
+    protected _refreshUrl?: string;
     refreshUrl(val: string) {
       const copy: this = Object.create(this);
       copy._refreshUrl = val;
@@ -764,7 +761,7 @@ export function withRefreshURL<TBase extends GConstructor>(Base: TBase) {
  */
 export function withScopes<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _scopes?: Map<string, string>;
+    protected _scopes?: Map<string, string>;
     scopes(name: string) {
       return {
         with: (val: string) => {
@@ -798,7 +795,7 @@ export function withScopes<TBase extends GConstructor>(Base: TBase) {
  */
 export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _externalDocs?: OpenApiDocumentation;
+    protected _externalDocs?: OpenApiDocumentation;
     externalDocs(val: OpenApiDocumentation) {
       const copy: this = Object.create(this);
       copy._externalDocs = val;
@@ -823,7 +820,7 @@ export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
  */
 export function withImplicit<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _implicit?: OpenApiOAuthFlow;
+    protected _implicit?: OpenApiOAuthFlow;
     implicit(val: OpenApiOAuthFlow) {
       const copy: this = Object.create(this);
       copy._implicit = val;
@@ -848,7 +845,7 @@ export function withImplicit<TBase extends GConstructor>(Base: TBase) {
  */
 export function withPassword<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _password?: OpenApiOAuthFlow;
+    protected _password?: OpenApiOAuthFlow;
     password(val: OpenApiOAuthFlow) {
       const copy: this = Object.create(this);
       copy._password = val;
@@ -873,7 +870,7 @@ export function withPassword<TBase extends GConstructor>(Base: TBase) {
  */
 export function withClientCredentials<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _clientCredentials?: OpenApiOAuthFlow;
+    protected _clientCredentials?: OpenApiOAuthFlow;
     clientCredentials(val: OpenApiOAuthFlow) {
       const copy: this = Object.create(this);
       copy._clientCredentials = val;
@@ -898,7 +895,7 @@ export function withClientCredentials<TBase extends GConstructor>(Base: TBase) {
  */
 export function withAuthorizationCode<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _authorizationCode?: OpenApiOAuthFlow;
+    protected _authorizationCode?: OpenApiOAuthFlow;
     authorizationCode(val: OpenApiOAuthFlow) {
       const copy: this = Object.create(this);
       copy._authorizationCode = val;
@@ -923,7 +920,7 @@ export function withAuthorizationCode<TBase extends GConstructor>(Base: TBase) {
  */
 export function withFlows<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _flows?: OpenApiOAuthFlows;
+    protected _flows?: OpenApiOAuthFlows;
     flows(val: OpenApiOAuthFlows) {
       const copy: this = Object.create(this);
       copy._flows = val;
@@ -948,7 +945,7 @@ export function withFlows<TBase extends GConstructor>(Base: TBase) {
  */
 export function withOpenIdConnectURL<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    private _openIdConnectUrl?: string;
+    protected _openIdConnectUrl?: string;
     openIdConnectUrl(val: string) {
       const copy: this = Object.create(this);
       copy._openIdConnectUrl = val;

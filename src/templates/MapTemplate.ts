@@ -31,7 +31,7 @@ export class MapTemplateBuilder extends FunctionBuilder {
   }
   protected buildField(writer: CodeBlockWriter): void {
     this.parseField();
-    writer.writeLine(`private _${this.serializedName}? : ${this.fieldType};`);
+    writer.writeLine(`protected _${this.serializedName}? : ${this.fieldType};`);
   }
   protected buildBuilderMethod(writer: CodeBlockWriter): void {
     writer
