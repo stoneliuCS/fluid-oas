@@ -1,1 +1,1 @@
-export * as salt from "./external.ts";
+export * as s from "./external.ts";

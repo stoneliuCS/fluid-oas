@@ -1,4 +1,5 @@
 import {
+  withDefault,
   withFormat,
   withMaxLength,
   withMinLength,
@@ -6,9 +7,9 @@ import {
 } from "../../common/common";
 import { SchemaBase } from "../common/base";
 
-const StringBase = withPattern(
-  withMaxLength(withMinLength(withFormat(SchemaBase)<string>()))
-);
+const StringBase = withDefault(
+  withPattern(withMaxLength(withMinLength(withFormat(SchemaBase)<string>())))
+)<string>();
 
 class _OpenApiString extends StringBase {
   toJSON(): unknown {

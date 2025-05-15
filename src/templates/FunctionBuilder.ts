@@ -19,6 +19,9 @@ type MixinSignatureArgs = {
   comments?: string;
 };
 
+/**
+ * An Abstract Interface for creating Function definitions using the TypeScript compiler.
+ */
 export abstract class FunctionBuilder {
   private signature: OptionalKind<FunctionDeclarationStructure>;
   public static readonly genericName = "T";
@@ -125,11 +128,13 @@ export abstract class FunctionBuilder {
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this._${this.serializedName})`).block(() => {
-        writer.writeLine(
-          `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}, enumerable : true })`
-        );
-      });
+      writer
+        .write(`if (this._${this.serializedName} !== undefined)`)
+        .block(() => {
+          writer.writeLine(
+            `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}, enumerable : true })`
+          );
+        });
       writer.writeLine("return json;");
     });
   }

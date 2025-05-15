@@ -21,7 +21,7 @@ export function withDescription<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._description) {
+      if (this._description !== undefined) {
         Object.defineProperty(json, "description", {
           value: this._description,
           enumerable: true,
@@ -46,7 +46,7 @@ export function withSummary<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._summary) {
+      if (this._summary !== undefined) {
         Object.defineProperty(json, "summary", {
           value: this._summary,
           enumerable: true,
@@ -71,7 +71,7 @@ export function withAllowReserved<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._allowReserved) {
+      if (this._allowReserved !== undefined) {
         Object.defineProperty(json, "allowReserved", {
           value: this._allowReserved,
           enumerable: true,
@@ -96,7 +96,7 @@ export function withDeprecated<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._deprecated) {
+      if (this._deprecated !== undefined) {
         Object.defineProperty(json, "deprecated", {
           value: this._deprecated,
           enumerable: true,
@@ -121,7 +121,7 @@ export function withRequired<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._required) {
+      if (this._required !== undefined) {
         Object.defineProperty(json, "required", {
           value: this._required,
           enumerable: true,
@@ -146,7 +146,7 @@ export function withNullable<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._nullable) {
+      if (this._nullable !== undefined) {
         Object.defineProperty(json, "nullable", {
           value: this._nullable,
           enumerable: true,
@@ -171,7 +171,7 @@ export function withName<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._name) {
+      if (this._name !== undefined) {
         Object.defineProperty(json, "name", {
           value: this._name,
           enumerable: true,
@@ -196,7 +196,7 @@ export function withNamespace<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._namespace) {
+      if (this._namespace !== undefined) {
         Object.defineProperty(json, "namespace", {
           value: this._namespace,
           enumerable: true,
@@ -221,7 +221,7 @@ export function withPrefix<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._prefix) {
+      if (this._prefix !== undefined) {
         Object.defineProperty(json, "prefix", {
           value: this._prefix,
           enumerable: true,
@@ -246,7 +246,7 @@ export function withWrapped<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._wrapped) {
+      if (this._wrapped !== undefined) {
         Object.defineProperty(json, "wrapped", {
           value: this._wrapped,
           enumerable: true,
@@ -271,7 +271,7 @@ export function withAttribute<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._attribute) {
+      if (this._attribute !== undefined) {
         Object.defineProperty(json, "attribute", {
           value: this._attribute,
           enumerable: true,
@@ -297,7 +297,7 @@ export function withValue<TBase extends GConstructor>(Base: TBase) {
       }
       toJSON() {
         const json = super.toJSON();
-        if (this._value) {
+        if (this._value !== undefined) {
           Object.defineProperty(json, "value", {
             value: this._value,
             enumerable: true,
@@ -324,9 +324,36 @@ export function withFormat<TBase extends GConstructor>(Base: TBase) {
       }
       toJSON() {
         const json = super.toJSON();
-        if (this._format) {
+        if (this._format !== undefined) {
           Object.defineProperty(json, "format", {
             value: this._format,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType T
+ * @serializedName default
+ */
+export function withDefault<TBase extends GConstructor>(Base: TBase) {
+  return <T>() => {
+    return class extends Base {
+      protected _default?: T;
+      default(val: T) {
+        const copy: this = Object.create(this);
+        copy._default = val;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._default !== undefined) {
+          Object.defineProperty(json, "default", {
+            value: this._default,
             enumerable: true,
           });
         }
@@ -353,7 +380,7 @@ export function withType<TBase extends GConstructor>(Base: TBase) {
       }
       toJSON() {
         const json = super.toJSON();
-        if (this._type) {
+        if (this._type !== undefined) {
           Object.defineProperty(json, "type", {
             value: this._type,
             enumerable: true,
@@ -380,7 +407,7 @@ export function withIn<TBase extends GConstructor>(Base: TBase) {
       }
       toJSON() {
         const json = super.toJSON();
-        if (this._in) {
+        if (this._in !== undefined) {
           Object.defineProperty(json, "in", {
             value: this._in,
             enumerable: true,
@@ -472,7 +499,7 @@ export function withMax<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._minLength) {
+      if (this._minLength !== undefined) {
         Object.defineProperty(json, "minLength", {
           value: this._minLength,
           enumerable: true,
@@ -497,7 +524,7 @@ export function withMin<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._maxLength) {
+      if (this._maxLength !== undefined) {
         Object.defineProperty(json, "maxLength", {
           value: this._maxLength,
           enumerable: true,
@@ -547,7 +574,7 @@ export function withMinLength<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._minLength) {
+      if (this._minLength !== undefined) {
         Object.defineProperty(json, "minLength", {
           value: this._minLength,
           enumerable: true,
@@ -572,7 +599,7 @@ export function withMaxLength<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._maxLength) {
+      if (this._maxLength !== undefined) {
         Object.defineProperty(json, "maxLength", {
           value: this._maxLength,
           enumerable: true,
@@ -597,7 +624,7 @@ export function withURL<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._url) {
+      if (this._url !== undefined) {
         Object.defineProperty(json, "url", {
           value: this._url,
           enumerable: true,
@@ -622,7 +649,7 @@ export function withPropertyName<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._propertyName) {
+      if (this._propertyName !== undefined) {
         Object.defineProperty(json, "propertyName", {
           value: this._propertyName,
           enumerable: true,
@@ -647,7 +674,7 @@ export function withScheme<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._scheme) {
+      if (this._scheme !== undefined) {
         Object.defineProperty(json, "scheme", {
           value: this._scheme,
           enumerable: true,
@@ -672,7 +699,7 @@ export function withBearerFormat<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._bearerFormat) {
+      if (this._bearerFormat !== undefined) {
         Object.defineProperty(json, "bearerFormat", {
           value: this._bearerFormat,
           enumerable: true,
@@ -697,7 +724,7 @@ export function withAuthorizationURL<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._authorizationUrl) {
+      if (this._authorizationUrl !== undefined) {
         Object.defineProperty(json, "authorizationUrl", {
           value: this._authorizationUrl,
           enumerable: true,
@@ -722,7 +749,7 @@ export function withTokenURL<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._tokenUrl) {
+      if (this._tokenUrl !== undefined) {
         Object.defineProperty(json, "tokenUrl", {
           value: this._tokenUrl,
           enumerable: true,
@@ -747,7 +774,7 @@ export function withRefreshURL<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._refreshUrl) {
+      if (this._refreshUrl !== undefined) {
         Object.defineProperty(json, "refreshUrl", {
           value: this._refreshUrl,
           enumerable: true,
@@ -981,7 +1008,7 @@ export function withOpenIdConnectURL<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._openIdConnectUrl) {
+      if (this._openIdConnectUrl !== undefined) {
         Object.defineProperty(json, "openIdConnectUrl", {
           value: this._openIdConnectUrl,
           enumerable: true,
@@ -1006,7 +1033,7 @@ export function withExternalValue<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._externalValue) {
+      if (this._externalValue !== undefined) {
         Object.defineProperty(json, "externalValue", {
           value: this._externalValue,
           enumerable: true,

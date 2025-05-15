@@ -138,6 +138,11 @@ async function main() {
       serializedName: "format",
     }),
     new FunctionTemplateBuilder({
+      fnName: "withDefault",
+      fieldType: "T",
+      serializedName: "default",
+    }),
+    new FunctionTemplateBuilder({
       fnName: "withType",
       fieldType: `"apiKey" | "http" | "mutualTLS" | "oauth2" |"openIdConnect"`,
       serializedName: "type",
