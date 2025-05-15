@@ -1,6 +1,6 @@
 # S.A.L.T
 
-Structured Application Programming Interface Language for TypeScript.
+Structured Application Programming Interface Language using TypeScript.
 
 1. [Overview](#overview)
 2. [Schema Design](#schemas)
