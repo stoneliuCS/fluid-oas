@@ -5,7 +5,7 @@ import type {
   Example,
 } from "../core/index.ts";
 import type { OpenApiSchema } from "../core/schema/OpenApiSchema.ts";
-import type { GConstructor, OpenApiExtensionString } from "./constructor.ts";
+import type { GConstructor, OpenApiExtensionString } from "./types.ts";
 
 /**
  * @fieldType string

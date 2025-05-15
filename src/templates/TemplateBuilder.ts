@@ -8,7 +8,7 @@ import {
 export class TemplateBuilder {
   private readonly project: Project;
   private readonly workingDir = "./src/common/";
-  private readonly typeDeclarationFilePath = "constructor.ts";
+  private readonly typeDeclarationFilePath = "types.ts";
   private readonly outputFile: string;
   public constructor(project: Project, outputFile: string) {
     this.project = project;
