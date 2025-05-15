@@ -5,3 +5,4 @@ export * from "./OpenApiOAuthFlows.ts";
 export * from "./OpenApiSecurityScheme.ts";
 export * from "./OpenApiTag.ts";
 export * from "./OpenApiXML.ts";
+export * from "./OpenApiExample.ts";

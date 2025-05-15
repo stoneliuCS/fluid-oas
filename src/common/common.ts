@@ -1,6 +1,9 @@
-import type { OpenApiDocumentation } from "../core/common/OpenApiDocumentation.ts";
-import type { OpenApiOAuthFlow } from "../core/common/OpenApiOAuthFlow.ts";
-import type { OpenApiOAuthFlows } from "../core/common/OpenApiOAuthFlows.ts";
+import type {
+  Documentation,
+  OAuthFlow,
+  OAuthFlows,
+  Example,
+} from "../core/index.ts";
 import type { OpenApiSchema } from "../core/schema/OpenApiSchema.ts";
 import type { GConstructor, OpenApiExtensionString } from "./constructor.ts";
 
@@ -790,13 +793,13 @@ export function withScopes<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiDocumentation
+ * @fieldType Documentation
  * @serializedName externalDocs
  */
 export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _externalDocs?: OpenApiDocumentation;
-    externalDocs(val: OpenApiDocumentation) {
+    protected _externalDocs?: Documentation;
+    externalDocs(val: Documentation) {
       const copy: this = Object.create(this);
       copy._externalDocs = val;
       return copy;
@@ -815,13 +818,13 @@ export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiOAuthFlow
+ * @fieldType OAuthFlow
  * @serializedName implicit
  */
 export function withImplicit<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _implicit?: OpenApiOAuthFlow;
-    implicit(val: OpenApiOAuthFlow) {
+    protected _implicit?: OAuthFlow;
+    implicit(val: OAuthFlow) {
       const copy: this = Object.create(this);
       copy._implicit = val;
       return copy;
@@ -840,13 +843,13 @@ export function withImplicit<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiOAuthFlow
+ * @fieldType OAuthFlow
  * @serializedName password
  */
 export function withPassword<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _password?: OpenApiOAuthFlow;
-    password(val: OpenApiOAuthFlow) {
+    protected _password?: OAuthFlow;
+    password(val: OAuthFlow) {
       const copy: this = Object.create(this);
       copy._password = val;
       return copy;
@@ -865,13 +868,13 @@ export function withPassword<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiOAuthFlow
+ * @fieldType OAuthFlow
  * @serializedName clientCredentials
  */
 export function withClientCredentials<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _clientCredentials?: OpenApiOAuthFlow;
-    clientCredentials(val: OpenApiOAuthFlow) {
+    protected _clientCredentials?: OAuthFlow;
+    clientCredentials(val: OAuthFlow) {
       const copy: this = Object.create(this);
       copy._clientCredentials = val;
       return copy;
@@ -890,13 +893,13 @@ export function withClientCredentials<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiOAuthFlow
+ * @fieldType OAuthFlow
  * @serializedName authorizationCode
  */
 export function withAuthorizationCode<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _authorizationCode?: OpenApiOAuthFlow;
-    authorizationCode(val: OpenApiOAuthFlow) {
+    protected _authorizationCode?: OAuthFlow;
+    authorizationCode(val: OAuthFlow) {
       const copy: this = Object.create(this);
       copy._authorizationCode = val;
       return copy;
@@ -915,13 +918,13 @@ export function withAuthorizationCode<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiOAuthFlows
+ * @fieldType OAuthFlows
  * @serializedName flows
  */
 export function withFlows<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _flows?: OpenApiOAuthFlows;
-    flows(val: OpenApiOAuthFlows) {
+    protected _flows?: OAuthFlows;
+    flows(val: OAuthFlows) {
       const copy: this = Object.create(this);
       copy._flows = val;
       return copy;
@@ -931,6 +934,31 @@ export function withFlows<TBase extends GConstructor>(Base: TBase) {
       if (this._flows) {
         Object.defineProperty(json, "flows", {
           value: this._flows.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType Example
+ * @serializedName example
+ */
+export function withExample<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _example?: Example;
+    example(val: Example) {
+      const copy: this = Object.create(this);
+      copy._example = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._example) {
+        Object.defineProperty(json, "example", {
+          value: this._example.toJSON(),
           enumerable: true,
         });
       }
@@ -956,6 +984,31 @@ export function withOpenIdConnectURL<TBase extends GConstructor>(Base: TBase) {
       if (this._openIdConnectUrl) {
         Object.defineProperty(json, "openIdConnectUrl", {
           value: this._openIdConnectUrl,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName externalValue
+ */
+export function withExternalValue<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _externalValue?: string;
+    externalValue(val: string) {
+      const copy: this = Object.create(this);
+      copy._externalValue = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._externalValue) {
+        Object.defineProperty(json, "externalValue", {
+          value: this._externalValue,
           enumerable: true,
         });
       }

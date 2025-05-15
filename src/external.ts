@@ -1,1 +1,1 @@
-export * from "./core/common/index.ts";
+export * from "./core";

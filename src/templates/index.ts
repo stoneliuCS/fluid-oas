@@ -224,38 +224,48 @@ async function main() {
     }),
     new OpenApiClass({
       fnName: "withExternalDocs",
-      fieldType: "OpenApiDocumentation",
+      fieldType: "Documentation",
       serializedName: "externalDocs",
     }),
     new OpenApiClass({
       fnName: "withImplicit",
-      fieldType: "OpenApiOAuthFlow",
+      fieldType: "OAuthFlow",
       serializedName: "implicit",
     }),
     new OpenApiClass({
       fnName: "withPassword",
-      fieldType: "OpenApiOAuthFlow",
+      fieldType: "OAuthFlow",
       serializedName: "password",
     }),
     new OpenApiClass({
       fnName: "withClientCredentials",
-      fieldType: "OpenApiOAuthFlow",
+      fieldType: "OAuthFlow",
       serializedName: "clientCredentials",
     }),
     new OpenApiClass({
       fnName: "withAuthorizationCode",
-      fieldType: "OpenApiOAuthFlow",
+      fieldType: "OAuthFlow",
       serializedName: "authorizationCode",
     }),
     new OpenApiClass({
       fnName: "withFlows",
-      fieldType: "OpenApiOAuthFlows",
+      fieldType: "OAuthFlows",
       serializedName: "flows",
+    }),
+    new OpenApiClass({
+      fnName: "withExample",
+      fieldType: "Example",
+      serializedName: "example",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withOpenIdConnectURL",
       fieldType: "string",
       serializedName: "openIdConnectUrl",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withExternalValue",
+      fieldType: "string",
+      serializedName: "externalValue",
     }),
   ].forEach(fn => fn.write(MainProject));
 
