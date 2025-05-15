@@ -78,22 +78,27 @@ OpenApiInteger()
 #### Defining a String
 
 ```ts
-OpenApiString()
+s.string()
   .description("Unique identifier")
   .default("1238971891792")
   .format("uuid")
   .pattern(
     /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/
-  );
+  )
+  .maxLength(0)
+  .minLength(9)
+  .toJSON();
 ```
 
 ```json
 {
-  "type": "string",
   "description": "Unique identifier",
-  "example": "643ad75f-0514-49f1-a68e-18a87ba017f0",
   "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$"
+  "minLength": 9,
+  "maxLength": 0,
+  "pattern": "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$",
+  "default": "1238971891792",
+  "type": "string"
 }
 ```
 
