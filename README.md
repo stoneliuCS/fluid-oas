@@ -16,6 +16,12 @@ S.A.L.T is an embedded, functional _domain specific language_ for expressing typ
 - Focus on core business logic, design systems in an _API-first manner_.
 - Leverage TypeScript's advanced type-system to get autocomplete and compile-time checks for building your OpenAPI specification.
 
+## Features
+
+- _Extensible_, the core architecture revolves around chaining methods on OAS specifications to better easily write, maintain, and modularize specifications. Under the hood, SALT leverges the TypeScript compiler to code-gen _Mixins_ to extend onto base class specifications. If there is a field missing or something that you want to utilize, it can be done with the _FunctionBuilder_ API.
+
+- _Great Development Experience_, write the least amount of code to express any OAS your team would like, all with help from the TypeScript Compiler.
+
 ## Schemas
 
 ### Primitive Data types
@@ -105,10 +111,7 @@ String()
 #### Defining a Boolean
 
 ```ts
-Boolean()
-  .description("I am a OpenAPI boolean!")
-  .default(false)
-  .nullable();
+Boolean().description("I am a OpenAPI boolean!").default(false).nullable();
 ```
 
 ```json
@@ -124,92 +127,3 @@ Boolean()
 
 Chain the `property` method on `OpenApiObject` to fluidly build complex API Schemas:
 
-```ts
-const Pet = OpenApiObject()
-  .property("id")
-  .schema(OpenApiInteger().format("int64").example("10"))
-  .property("name")
-  .schema(OpenApiString().example("doggie"))
-  .property("category")
-  .schema(
-    OpenApiObject()
-      .property("id")
-      .schema(OpenApiInteger().format("int64"))
-      .property("name")
-      .schema(OpenApiString().example("dogs"))
-  )
-  .property("photoUrls")
-  .schema(OpenApiArray(OpenApiArray(OpenApiString())))
-  .property("tags")
-  .schema(
-    OpenApiObject()
-      .property("id")
-      .schema(OpenApiInteger().format("int64"))
-      .property("name")
-      .schema(OpenApiString())
-  )
-  .property("status")
-  .schema(
-    OpenApiString()
-      .enum("available")
-      .enum("pending")
-      .enum("sold")
-      .description("pet status in the store.")
-  );
-```
-
-```json
-{
-  "type": "object",
-  "properties": {
-    "id": {
-      "example": "10",
-      "format": "int64",
-      "type": "integer"
-    },
-    "name": {
-      "example": "doggie",
-      "type": "string"
-    },
-    "category": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "format": "int64",
-          "type": "integer"
-        },
-        "name": {
-          "example": "dogs",
-          "type": "string"
-        }
-      }
-    },
-    "photoUrls": {
-      "type": "array",
-      "items": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      }
-    },
-    "tags": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "format": "int64",
-          "type": "integer"
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "status": {
-      "description": "pet status in the store.",
-      "enum": ["available", "pending", "sold"],
-      "type": "string"
-    }
-  }
-}
-```
