@@ -1,3 +1,3 @@
-import { String } from "../core";
+import { String, Number, Example } from "../core";
 
-String().default("1");
+String().example(Example());

@@ -30,7 +30,7 @@ The OAS 3.0.0 _OpenAPI Specification_ defines the following primitive data types
 #### Number
 
 ```ts
-OpenApiNumber()
+Number()
   .description("I am a OpenAPI Number!")
   .format("double")
   .default(1)
@@ -54,7 +54,7 @@ OpenApiNumber()
 #### Integer
 
 ```ts
-OpenApiInteger()
+Integer()
   .description("I am a OpenAPI Integer!")
   .format("int64")
   .default(1)
@@ -78,7 +78,7 @@ OpenApiInteger()
 #### Defining a String
 
 ```ts
-s.string()
+String()
   .description("Unique identifier")
   .default("1238971891792")
   .format("uuid")
@@ -105,7 +105,7 @@ s.string()
 #### Defining a Boolean
 
 ```ts
-OpenApiBoolean()
+Boolean()
   .description("I am a OpenAPI boolean!")
   .default(false)
   .nullable();
