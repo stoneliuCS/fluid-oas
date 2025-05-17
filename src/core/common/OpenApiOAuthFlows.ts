@@ -11,5 +11,5 @@ const OAuthFlowsBase = withAuthorizationCode(
 );
 class _OpenApiOAuthFlows extends OAuthFlowsBase {}
 
-export const oauthflows = () => new _OpenApiOAuthFlows();
+export const OAuthFlows = () => new _OpenApiOAuthFlows();
 export type OAuthFlows = _OpenApiOAuthFlows;

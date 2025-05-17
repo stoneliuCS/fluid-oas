@@ -487,21 +487,21 @@ export function withExtensions<TBase extends GConstructor>(Base: TBase) {
 
 /**
  * @fieldType number
- * @serializedName minLength
+ * @serializedName minimum
  */
-export function withMax<TBase extends GConstructor>(Base: TBase) {
+export function withMaximum<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _minLength?: number;
-    minLength(val: number) {
+    protected _minimum?: number;
+    minimum(val: number) {
       const copy: this = Object.create(this);
-      copy._minLength = val;
+      copy._minimum = val;
       return copy;
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._minLength !== undefined) {
-        Object.defineProperty(json, "minLength", {
-          value: this._minLength,
+      if (this._minimum !== undefined) {
+        Object.defineProperty(json, "minimum", {
+          value: this._minimum,
           enumerable: true,
         });
       }
@@ -512,21 +512,96 @@ export function withMax<TBase extends GConstructor>(Base: TBase) {
 
 /**
  * @fieldType number
- * @serializedName maxLength
+ * @serializedName maximum
  */
-export function withMin<TBase extends GConstructor>(Base: TBase) {
+export function withMinimum<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _maxLength?: number;
-    maxLength(val: number) {
+    protected _maximum?: number;
+    maximum(val: number) {
       const copy: this = Object.create(this);
-      copy._maxLength = val;
+      copy._maximum = val;
       return copy;
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._maxLength !== undefined) {
-        Object.defineProperty(json, "maxLength", {
-          value: this._maxLength,
+      if (this._maximum !== undefined) {
+        Object.defineProperty(json, "maximum", {
+          value: this._maximum,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType boolean
+ * @serializedName exclusiveMinimum
+ */
+export function withExclusiveMinimum<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _exclusiveMinimum?: boolean;
+    exclusiveMinimum() {
+      const copy: this = Object.create(this);
+      copy._exclusiveMinimum = true;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._exclusiveMinimum !== undefined) {
+        Object.defineProperty(json, "exclusiveMinimum", {
+          value: this._exclusiveMinimum,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType boolean
+ * @serializedName exclusiveMaximum
+ */
+export function withExclusiveMaximum<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _exclusiveMaximum?: boolean;
+    exclusiveMaximum() {
+      const copy: this = Object.create(this);
+      copy._exclusiveMaximum = true;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._exclusiveMaximum !== undefined) {
+        Object.defineProperty(json, "exclusiveMaximum", {
+          value: this._exclusiveMaximum,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType number
+ * @serializedName multipleOf
+ */
+export function withMultipleOf<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _multipleOf?: number;
+    multipleOf(val: number) {
+      const copy: this = Object.create(this);
+      copy._multipleOf = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._multipleOf !== undefined) {
+        Object.defineProperty(json, "multipleOf", {
+          value: this._multipleOf,
           enumerable: true,
         });
       }

@@ -1,1 +1,1 @@
-export * as s from "./external.ts";
+export * from "./external.ts";

@@ -163,14 +163,29 @@ async function main() {
       serializedName: "extensions",
     }),
     new PrimitiveTemplateBuilder({
-      fnName: "withMax",
+      fnName: "withMaximum",
       fieldType: "number",
-      serializedName: "minLength",
+      serializedName: "minimum",
     }),
     new PrimitiveTemplateBuilder({
-      fnName: "withMin",
+      fnName: "withMinimum",
       fieldType: "number",
-      serializedName: "maxLength",
+      serializedName: "maximum",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withExclusiveMinimum",
+      fieldType: "boolean",
+      serializedName: "exclusiveMinimum",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withExclusiveMaximum",
+      fieldType: "boolean",
+      serializedName: "exclusiveMaximum",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withMultipleOf",
+      fieldType: "number",
+      serializedName: "multipleOf",
     }),
     new RegExpClass({
       fnName: "withPattern",

@@ -13,5 +13,5 @@ const XMLBase = withWrapped(
 
 class _OpenApiXML extends XMLBase {}
 
-export const xml = () => new _OpenApiXML();
+export const XML = () => new _OpenApiXML();
 export type XML = _OpenApiXML;

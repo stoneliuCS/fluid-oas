@@ -10,7 +10,6 @@ import { SchemaBase } from "../common/base";
 const StringBase = withDefault(
   withPattern(withMaxLength(withMinLength(withFormat(SchemaBase)<string>())))
 )<string>();
-
 class _OpenApiString extends StringBase {
   toJSON(): unknown {
     const json = super.toJSON();
@@ -19,5 +18,5 @@ class _OpenApiString extends StringBase {
   }
 }
 
-export const string = () => new _OpenApiString();
+export const String = () => new _OpenApiString();
 export type String = _OpenApiString;
