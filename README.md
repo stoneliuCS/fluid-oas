@@ -126,4 +126,3 @@ Boolean().description("I am a OpenAPI boolean!").default(false).nullable();
 #### Objects
 
 Chain the `property` method on `OpenApiObject` to fluidly build complex API Schemas:
-

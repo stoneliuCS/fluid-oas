@@ -110,7 +110,7 @@ export abstract class FunctionBuilder {
     };
   }
 
-  protected buildFunction(writer: CodeBlockWriter): void {
+  private buildFunction(writer: CodeBlockWriter): void {
     if (!this.fieldType || !this.serializedName) {
       throw new Error("Not enough information to perform build.");
     }
@@ -120,6 +120,7 @@ export abstract class FunctionBuilder {
       this.buildJSONMethod(writer);
     });
   }
+
   protected abstract buildAbstractBody(
     writer: CodeBlockWriter
   ): (cb: () => void) => CodeBlockWriter;

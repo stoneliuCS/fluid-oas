@@ -4,6 +4,20 @@ import { PrimitiveTemplateBuilder } from "./PrimitiveTemplate";
 import { MainProject } from "./TemplateBuilder";
 import { MapTemplateBuilder } from "./MapTemplate";
 
+const ObjectProperty = class extends MapTemplateBuilder {
+  protected buildJSONMethod(writer: CodeBlockWriter): void {
+    writer.write("toJSON()").block(() => {
+      writer.writeLine("const json = super.toJSON();");
+      writer.write(`if (this._${this.serializedName})`).block(() => {
+        writer.writeLine(
+          `this._${this.serializedName}.forEach((val, key) => { Object.defineProperty(json, key, { value : val.toJSON(), enumerable : true }) })`
+        );
+      });
+      writer.writeLine("return json;");
+    });
+  }
+};
+
 const OpenApiClass = class extends PrimitiveTemplateBuilder {
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
@@ -286,6 +300,11 @@ async function main() {
       fnName: "withExternalValue",
       fieldType: "string",
       serializedName: "externalValue",
+    }),
+    new ObjectProperty({
+      fnName: "withProperty",
+      fieldType: "Map<string, OpenApiSchema>",
+      serializedName: "property",
     }),
   ].forEach(fn => fn.write(MainProject));
 
