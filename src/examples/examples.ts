@@ -1,4 +1,4 @@
-import { String, Number, Example, Object } from "../core";
+import { String, Example, Object } from "../core";
 
 const uuidSchema = String()
   .format("uuid")
@@ -12,6 +12,6 @@ const user = Object()
   .with(String())
   .property("id")
   .with(uuidSchema)
-  .nullable();
-
-console.log(user.toJSON());
+  .nullable()
+  .extensions("x-stone")
+  .with(uuidSchema);

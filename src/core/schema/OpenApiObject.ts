@@ -4,10 +4,12 @@ import { SchemaBase } from "../common/base";
 const ObjectBase = withProperty(withDefault(SchemaBase)<Object>());
 
 class _OpenApiObject extends ObjectBase {
-
   toJSON(): unknown {
     const json = super.toJSON();
-    json.type = "object";
+    globalThis.Object.defineProperty(json, "type", {
+      value: "object",
+      enumerable: true,
+    });
     return json;
   }
 }

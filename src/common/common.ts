@@ -1120,6 +1120,56 @@ export function withExternalValue<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
+ * @fieldType string
+ * @serializedName title
+ */
+export function withTitle<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _title?: string;
+    title(val: string) {
+      const copy: this = Object.create(this);
+      copy._title = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._title !== undefined) {
+        Object.defineProperty(json, "title", {
+          value: this._title,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName version
+ */
+export function withVersion<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _version?: string;
+    version(val: string) {
+      const copy: this = Object.create(this);
+      copy._version = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._version !== undefined) {
+        Object.defineProperty(json, "version", {
+          value: this._version,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
  * @fieldType Map<string,OpenApiSchema>
  * @serializedName property
  */

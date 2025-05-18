@@ -301,6 +301,16 @@ async function main() {
       fieldType: "string",
       serializedName: "externalValue",
     }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withTitle",
+      fieldType: "string",
+      serializedName: "title",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withVersion",
+      fieldType: "string",
+      serializedName: "version",
+    }),
     new ObjectProperty({
       fnName: "withProperty",
       fieldType: "Map<string, OpenApiSchema>",
