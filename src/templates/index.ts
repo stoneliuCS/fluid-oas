@@ -3,6 +3,25 @@ import { FunctionTemplateBuilder } from "./FunctionTemplate";
 import { PrimitiveTemplateBuilder } from "./PrimitiveTemplate";
 import { MainProject } from "./TemplateBuilder";
 import { MapTemplateBuilder } from "./MapTemplate";
+import { ArrayTemplateBuilder } from "./ArrayTemplate";
+import { FunctionBuilder } from "./FunctionBuilder";
+
+const Enum = class extends ArrayTemplateBuilder {
+  protected buildBuilderMethod(writer: CodeBlockWriter): void {
+    writer
+      .write(
+        `${this.serializedName}(...val : ${FunctionBuilder.genericName}[])`
+      )
+      .block(() => {
+        writer.writeLine("const copy: this = Object.create(this);");
+        writer.writeLine(
+          `copy._${this.serializedName} = this._${this.serializedName} === undefined 
+            ? [...val] : [...this._${this.serializedName}, ...val]`
+        );
+        writer.writeLine("return copy;");
+      });
+  }
+};
 
 const ObjectProperty = class extends MapTemplateBuilder {
   protected buildJSONMethod(writer: CodeBlockWriter): void {
@@ -311,10 +330,25 @@ async function main() {
       fieldType: "string",
       serializedName: "version",
     }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withMinItems",
+      fieldType: "number",
+      serializedName: "minItems",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withMaxItems",
+      fieldType: "number",
+      serializedName: "maxItems",
+    }),
     new ObjectProperty({
       fnName: "withProperty",
       fieldType: "Map<string, OpenApiSchema>",
       serializedName: "property",
+    }),
+    new Enum({
+      fnName: "withEnum",
+      fieldType: "T",
+      serializedName: "enum",
     }),
   ].forEach(fn => fn.write(MainProject));
 

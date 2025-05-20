@@ -1,5 +1,6 @@
 import {
   withDefault,
+  withEnum,
   withExclusiveMaximum,
   withExclusiveMinimum,
   withFormat,
@@ -9,12 +10,14 @@ import {
 } from "../../common/common";
 import { SchemaBase } from "../common/base";
 
-const NumberBase = withDefault(
-  withMultipleOf(
-    withExclusiveMinimum(
-      withExclusiveMaximum(withMaximum(withMinimum(SchemaBase)))
+const NumberBase = withEnum(
+  withDefault(
+    withMultipleOf(
+      withExclusiveMinimum(
+        withExclusiveMaximum(withMaximum(withMinimum(SchemaBase)))
+      )
     )
-  )
+  )<number>()
 )<number>();
 const _NumberBaseImpl = withFormat(NumberBase)<"float" | "double">();
 

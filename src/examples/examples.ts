@@ -14,4 +14,5 @@ const user = Object()
   .with(uuidSchema)
   .nullable()
   .extensions("x-stone")
-  .with(uuidSchema);
+  .with(uuidSchema)
+  .property("enums");

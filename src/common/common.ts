@@ -1170,6 +1170,56 @@ export function withVersion<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
+ * @fieldType number
+ * @serializedName minItems
+ */
+export function withMinItems<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _minItems?: number;
+    minItems(val: number) {
+      const copy: this = Object.create(this);
+      copy._minItems = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._minItems !== undefined) {
+        Object.defineProperty(json, "minItems", {
+          value: this._minItems,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType number
+ * @serializedName maxItems
+ */
+export function withMaxItems<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _maxItems?: number;
+    maxItems(val: number) {
+      const copy: this = Object.create(this);
+      copy._maxItems = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._maxItems !== undefined) {
+        Object.defineProperty(json, "maxItems", {
+          value: this._maxItems,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
  * @fieldType Map<string,OpenApiSchema>
  * @serializedName property
  */
@@ -1198,5 +1248,33 @@ export function withProperty<TBase extends GConstructor>(Base: TBase) {
       }
       return json;
     }
+  };
+}
+
+/**
+ * @fieldType T
+ * @serializedName enum
+ */
+export function withEnum<TBase extends GConstructor>(Base: TBase) {
+  return <T>() => {
+    return class extends Base {
+      protected _enum?: T[];
+      enum(...val: T[]) {
+        const copy: this = Object.create(this);
+        copy._enum =
+          this._enum === undefined ? [...val] : [...this._enum, ...val];
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._enum !== undefined) {
+          Object.defineProperty(json, "enum", {
+            value: this._enum,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
   };
 }
