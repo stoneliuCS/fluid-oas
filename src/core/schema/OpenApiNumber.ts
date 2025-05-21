@@ -40,6 +40,6 @@ class _OpenApiInteger extends _IntegerBaseImpl {
 }
 
 export const Number = () => new _OpenApiNumber();
-export type Number = _OpenApiNumber;
+export type OpenApiNumber = _OpenApiNumber;
 export const Integer = () => new _OpenApiInteger();
-export type Integer = _OpenApiInteger;
+export type OpenApiInteger = _OpenApiInteger;

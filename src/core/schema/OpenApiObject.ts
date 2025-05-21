@@ -14,5 +14,5 @@ class _OpenApiObject extends ObjectBase {
   }
 }
 
-export type Object = _OpenApiObject;
+export type OpenApiObject = _OpenApiObject;
 export const Object = () => new _OpenApiObject();

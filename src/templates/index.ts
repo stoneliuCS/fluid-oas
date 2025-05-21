@@ -380,6 +380,16 @@ async function main() {
       fieldType: "string",
       serializedName: "contentType",
     }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withOperationRef",
+      fieldType: "string",
+      serializedName: "operationRef",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withOperationId",
+      fieldType: "string",
+      serializedName: "operationId",
+    }),
     new OpenApiMapClass({
       fnName: "withHeaders",
       fieldType: "Map<string, OpenApiHeader>",

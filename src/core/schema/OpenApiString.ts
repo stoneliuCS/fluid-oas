@@ -22,4 +22,4 @@ class _OpenApiString extends StringBase {
 }
 
 export const String = () => new _OpenApiString();
-export type String = _OpenApiString;
+export type OpenApiString = _OpenApiString;
