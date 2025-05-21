@@ -16,6 +16,10 @@ S.A.L.T is an embedded, functional _domain specific language_ for expressing typ
 - Focus on core business logic, design systems in an _API-first manner_.
 - Leverage TypeScript's advanced type-system to get autocomplete and compile-time checks for building your OpenAPI specification.
 
+## Goals
+
+Normal OAS _DSLs_ either make the developers write decorators or objects that end up to be very similar to writing JSON. This library takes it one step further by introducing _compile-time_ protections when writing specifications and also additionally abstracts over the entire specification through Objects.
+
 ## Features
 
 - _Extensible_, the core architecture revolves around chaining methods on OAS specifications to better easily write, maintain, and modularize specifications. Under the hood, SALT leverges the TypeScript compiler to code-gen _Mixins_ to extend onto base class specifications. If there is a field missing or something that you want to utilize, it can be done with the _FunctionBuilder_ API.
