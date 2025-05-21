@@ -9,7 +9,7 @@ Structured Application Programming Interface Language using TypeScript.
 
 ## Overview
 
-S.A.L.T is an embedded, functional _domain specific language_ for expressing type-safe REST APIs written in TypeScript through the OpenAPI specification.
+S.A.L.T is an embedded, functional _domain specific language_ for expressing type-safe HTTP APIs written in TypeScript through the OpenAPI specification.
 
 - No dependencies, use as is.
 - Write the most complex OpenAPI specification you want, use whatever framework you want.
