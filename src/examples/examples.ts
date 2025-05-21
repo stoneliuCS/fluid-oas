@@ -1,6 +1,4 @@
-import { String, Example, Object, Array } from "../core";
-
-const arrays = Array(String());
+import { String, Example, Object } from "../core";
 
 const uuidSchema = String()
   .format("uuid")
@@ -9,12 +7,17 @@ const uuidSchema = String()
   .pattern(/stone/)
   .default("uuid");
 
+const nameSchema = String()
+  .minLength(1)
+  .maxLength(10)
+  .description("Name Schema.");
+
 const user = Object()
-  .property("stone")
-  .with(String())
+  .property("firstName")
+  .with(nameSchema)
   .property("id")
   .with(uuidSchema)
-  .nullable()
-  .extensions("x-stone")
-  .with(uuidSchema)
-  .property("enums");
+  .property("lastName")
+  .with(nameSchema);
+
+console.log(user.toJSON())
