@@ -5,4 +5,4 @@ const DiscriminatorBase = withMapping(withPropertyName(Base));
 class _OpenApiDiscriminator extends DiscriminatorBase {}
 
 export const Discriminator = () => new _OpenApiDiscriminator();
-export type Discriminator = _OpenApiDiscriminator;
+export type OpenApiDiscriminator = _OpenApiDiscriminator;

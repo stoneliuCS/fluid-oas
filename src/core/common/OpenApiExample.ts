@@ -12,4 +12,4 @@ const ExampleBase = withValue(
 class _OpenApiExample extends ExampleBase {}
 
 export const Example = () => new _OpenApiExample();
-export type Example = _OpenApiExample;
+export type OpenApiExample = _OpenApiExample;

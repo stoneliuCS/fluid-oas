@@ -65,7 +65,7 @@ const RegExpClass = class extends PrimitiveTemplateBuilder {
   }
 };
 
-const ExtensionClass = class extends MapTemplateBuilder {
+const OpenApiMapClass = class extends MapTemplateBuilder {
   protected buildBuilderMethod(writer: CodeBlockWriter): void {
     writer
       .write(`${this.serializedName}(name : ${this.parseField().key})`)
@@ -89,7 +89,7 @@ const ExtensionClass = class extends MapTemplateBuilder {
       writer.writeLine("const json = super.toJSON();");
       writer.write(`if (this._${this.serializedName})`).block(() => {
         writer.write(`
-        for (let [key, val] of this._extensions.entries()) {
+        for (let [key, val] of this._${this.serializedName}.entries()) {
           Object.defineProperty(json, key, {
             value: val.toJSON(),
             enumerable: true,
@@ -190,7 +190,12 @@ async function main() {
       fieldType: "Map<string,string>",
       serializedName: "mapping",
     }),
-    new ExtensionClass({
+    new OpenApiMapClass({
+      fnName: "withExamples",
+      fieldType: "Map<string, OpenApiExample>",
+      serializedName: "examples",
+    }),
+    new OpenApiMapClass({
       fnName: "withExtensions",
       fieldType: "Map<OpenApiExtensionString, OpenApiSchema>",
       serializedName: "extensions",
@@ -277,37 +282,42 @@ async function main() {
     }),
     new OpenApiClass({
       fnName: "withExternalDocs",
-      fieldType: "Documentation",
+      fieldType: "OpenApiDocumentation",
       serializedName: "externalDocs",
     }),
     new OpenApiClass({
       fnName: "withImplicit",
-      fieldType: "OAuthFlow",
+      fieldType: "OpenApiOAuthFlow",
       serializedName: "implicit",
     }),
     new OpenApiClass({
       fnName: "withPassword",
-      fieldType: "OAuthFlow",
+      fieldType: "OpenApiOAuthFlow",
       serializedName: "password",
     }),
     new OpenApiClass({
       fnName: "withClientCredentials",
-      fieldType: "OAuthFlow",
+      fieldType: "OpenApiOAuthFlow",
       serializedName: "clientCredentials",
     }),
     new OpenApiClass({
       fnName: "withAuthorizationCode",
-      fieldType: "OAuthFlow",
+      fieldType: "OpenApiOAuthFlow",
       serializedName: "authorizationCode",
     }),
     new OpenApiClass({
+      fnName: "withSchema",
+      fieldType: "OpenApiSchema",
+      serializedName: "schema",
+    }),
+    new OpenApiClass({
       fnName: "withFlows",
-      fieldType: "OAuthFlows",
+      fieldType: "OpenApiOAuthFlows",
       serializedName: "flows",
     }),
     new OpenApiClass({
       fnName: "withExample",
-      fieldType: "Example",
+      fieldType: "OpenApiExample",
       serializedName: "example",
     }),
     new OpenApiClass({
@@ -354,6 +364,36 @@ async function main() {
       fnName: "withEnum",
       fieldType: "T",
       serializedName: "enum",
+    }),
+    new FunctionTemplateBuilder({
+      fnName: "withStyle",
+      fieldType: `string`,
+      serializedName: "style",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withExplode",
+      fieldType: "boolean",
+      serializedName: "explode",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withContentType",
+      fieldType: "string",
+      serializedName: "contentType",
+    }),
+    new OpenApiMapClass({
+      fnName: "withHeaders",
+      fieldType: "Map<string, OpenApiHeader>",
+      serializedName: "headers",
+    }),
+    new OpenApiMapClass({
+      fnName: "withContent",
+      fieldType: "Map<string, OpenApiMediaType>",
+      serializedName: "content",
+    }),
+    new OpenApiMapClass({
+      fnName: "withEncoding",
+      fieldType: "Map<string, OpenApiEncoding>",
+      serializedName: "encoding",
     }),
   ].forEach(fn => fn.write(MainProject));
 

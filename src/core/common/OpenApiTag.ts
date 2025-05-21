@@ -9,4 +9,4 @@ const TagBase = withExternalDocs(withName(withDescription(Base)));
 class _OpenApiTag extends TagBase {}
 
 export const Tag = () => new _OpenApiTag();
-export type Tag = _OpenApiTag;
+export type OpenApiTag = _OpenApiTag;

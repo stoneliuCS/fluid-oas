@@ -1,8 +1,11 @@
+import type { OpenApiEncoding } from "../core/common/OpenApiEncoding.ts";
+import type { OpenApiHeader } from "../core/common/OpenApiHeader.ts";
+import type { OpenApiMediaType } from "../core/common/OpenApiMedia.ts";
 import type {
-  Documentation,
-  OAuthFlow,
-  OAuthFlows,
-  Example,
+  OpenApiExample,
+  OpenApiDocumentation,
+  OpenApiOAuthFlow,
+  OpenApiOAuthFlows,
 } from "../core/index.ts";
 import type { OpenApiSchema } from "../core/schema/OpenApiSchema.ts";
 import type { GConstructor, OpenApiExtensionString } from "./types.ts";
@@ -454,6 +457,38 @@ export function withMapping<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
+ * @fieldType Map<string,OpenApiExample>
+ * @serializedName examples
+ */
+export function withExamples<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _examples?: Map<string, OpenApiExample>;
+    examples(name: string) {
+      return {
+        with: (val: OpenApiExample) => {
+          const copy: this = Object.create(this);
+          copy._examples = new Map(this._examples);
+          copy._examples.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._examples) {
+        for (let [key, val] of this._examples.entries()) {
+          Object.defineProperty(json, key, {
+            value: val.toJSON(),
+            enumerable: true,
+          });
+        }
+      }
+      return json;
+    }
+  };
+}
+
+/**
  * @fieldType Map<OpenApiExtensionString,OpenApiSchema>
  * @serializedName extensions
  */
@@ -895,13 +930,13 @@ export function withScopes<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType Documentation
+ * @fieldType OpenApiDocumentation
  * @serializedName externalDocs
  */
 export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _externalDocs?: Documentation;
-    externalDocs(val: Documentation) {
+    protected _externalDocs?: OpenApiDocumentation;
+    externalDocs(val: OpenApiDocumentation) {
       const copy: this = Object.create(this);
       copy._externalDocs = val;
       return copy;
@@ -920,13 +955,13 @@ export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OAuthFlow
+ * @fieldType OpenApiOAuthFlow
  * @serializedName implicit
  */
 export function withImplicit<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _implicit?: OAuthFlow;
-    implicit(val: OAuthFlow) {
+    protected _implicit?: OpenApiOAuthFlow;
+    implicit(val: OpenApiOAuthFlow) {
       const copy: this = Object.create(this);
       copy._implicit = val;
       return copy;
@@ -945,13 +980,13 @@ export function withImplicit<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OAuthFlow
+ * @fieldType OpenApiOAuthFlow
  * @serializedName password
  */
 export function withPassword<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _password?: OAuthFlow;
-    password(val: OAuthFlow) {
+    protected _password?: OpenApiOAuthFlow;
+    password(val: OpenApiOAuthFlow) {
       const copy: this = Object.create(this);
       copy._password = val;
       return copy;
@@ -970,13 +1005,13 @@ export function withPassword<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OAuthFlow
+ * @fieldType OpenApiOAuthFlow
  * @serializedName clientCredentials
  */
 export function withClientCredentials<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _clientCredentials?: OAuthFlow;
-    clientCredentials(val: OAuthFlow) {
+    protected _clientCredentials?: OpenApiOAuthFlow;
+    clientCredentials(val: OpenApiOAuthFlow) {
       const copy: this = Object.create(this);
       copy._clientCredentials = val;
       return copy;
@@ -995,13 +1030,13 @@ export function withClientCredentials<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OAuthFlow
+ * @fieldType OpenApiOAuthFlow
  * @serializedName authorizationCode
  */
 export function withAuthorizationCode<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _authorizationCode?: OAuthFlow;
-    authorizationCode(val: OAuthFlow) {
+    protected _authorizationCode?: OpenApiOAuthFlow;
+    authorizationCode(val: OpenApiOAuthFlow) {
       const copy: this = Object.create(this);
       copy._authorizationCode = val;
       return copy;
@@ -1020,13 +1055,38 @@ export function withAuthorizationCode<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OAuthFlows
+ * @fieldType OpenApiSchema
+ * @serializedName schema
+ */
+export function withSchema<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _schema?: OpenApiSchema;
+    schema(val: OpenApiSchema) {
+      const copy: this = Object.create(this);
+      copy._schema = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._schema) {
+        Object.defineProperty(json, "schema", {
+          value: this._schema.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiOAuthFlows
  * @serializedName flows
  */
 export function withFlows<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _flows?: OAuthFlows;
-    flows(val: OAuthFlows) {
+    protected _flows?: OpenApiOAuthFlows;
+    flows(val: OpenApiOAuthFlows) {
       const copy: this = Object.create(this);
       copy._flows = val;
       return copy;
@@ -1045,13 +1105,13 @@ export function withFlows<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType Example
+ * @fieldType OpenApiExample
  * @serializedName example
  */
 export function withExample<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _example?: Example;
-    example(val: Example) {
+    protected _example?: OpenApiExample;
+    example(val: OpenApiExample) {
       const copy: this = Object.create(this);
       copy._example = val;
       return copy;
@@ -1301,5 +1361,178 @@ export function withEnum<TBase extends GConstructor>(Base: TBase) {
         return json;
       }
     };
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName style
+ */
+export function withStyle<TBase extends GConstructor>(Base: TBase) {
+  return <T extends string>() => {
+    return class extends Base {
+      protected _style?: T;
+      style(val: T) {
+        const copy: this = Object.create(this);
+        copy._style = val;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._style !== undefined) {
+          Object.defineProperty(json, "style", {
+            value: this._style,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType boolean
+ * @serializedName explode
+ */
+export function withExplode<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _explode?: boolean;
+    explode() {
+      const copy: this = Object.create(this);
+      copy._explode = true;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._explode !== undefined) {
+        Object.defineProperty(json, "explode", {
+          value: this._explode,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName contentType
+ */
+export function withContentType<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _contentType?: string;
+    contentType(val: string) {
+      const copy: this = Object.create(this);
+      copy._contentType = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._contentType !== undefined) {
+        Object.defineProperty(json, "contentType", {
+          value: this._contentType,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType Map<string,OpenApiHeader>
+ * @serializedName headers
+ */
+export function withHeaders<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _headers?: Map<string, OpenApiHeader>;
+    headers(name: string) {
+      return {
+        with: (val: OpenApiHeader) => {
+          const copy: this = Object.create(this);
+          copy._headers = new Map(this._headers);
+          copy._headers.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._headers) {
+        for (let [key, val] of this._headers.entries()) {
+          Object.defineProperty(json, key, {
+            value: val.toJSON(),
+            enumerable: true,
+          });
+        }
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType Map<string,OpenApiMediaType>
+ * @serializedName content
+ */
+export function withContent<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _content?: Map<string, OpenApiMediaType>;
+    content(name: string) {
+      return {
+        with: (val: OpenApiMediaType) => {
+          const copy: this = Object.create(this);
+          copy._content = new Map(this._content);
+          copy._content.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._content) {
+        for (let [key, val] of this._content.entries()) {
+          Object.defineProperty(json, key, {
+            value: val.toJSON(),
+            enumerable: true,
+          });
+        }
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType Map<string,OpenApiEncoding>
+ * @serializedName encoding
+ */
+export function withEncoding<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _encoding?: Map<string, OpenApiEncoding>;
+    encoding(name: string) {
+      return {
+        with: (val: OpenApiEncoding) => {
+          const copy: this = Object.create(this);
+          copy._encoding = new Map(this._encoding);
+          copy._encoding.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._encoding) {
+        for (let [key, val] of this._encoding.entries()) {
+          Object.defineProperty(json, key, {
+            value: val.toJSON(),
+            enumerable: true,
+          });
+        }
+      }
+      return json;
+    }
   };
 }

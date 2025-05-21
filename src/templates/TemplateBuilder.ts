@@ -33,6 +33,11 @@ export class TemplateBuilder {
       isExported: true,
       type: write => write.write("`x-${string}`"),
     });
+    sourceFile.addTypeAlias({
+      name: "OpenApiSchemaOrContent",
+      isExported: true,
+      type: write => write.write(`"schema" | "content"`),
+    });
   }
 
   public write() {

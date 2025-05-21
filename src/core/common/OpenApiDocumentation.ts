@@ -5,4 +5,4 @@ const DocumentationBase = withURL(withDescription(Base));
 class _OpenApiDocumentation extends DocumentationBase {}
 
 export const Documentation = () => new _OpenApiDocumentation();
-export type Documentation = _OpenApiDocumentation;
+export type OpenApiDocumentation = _OpenApiDocumentation;

@@ -16,4 +16,4 @@ export const Info = (title: string) => {
     },
   };
 };
-export type Info = _OpenApiInfo;
+export type OpenApiInfo = _OpenApiInfo;
