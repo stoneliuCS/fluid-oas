@@ -1,6 +1,10 @@
-import { withMaxItems, withMinItems } from "../../common/common";
-import { Base, SchemaBase } from "../common/base";
+import { withItems, withMaxItems, withMinItems } from "../../common/common";
+import { SchemaBase } from "../common/base";
+import type { OpenApiSchema } from "./OpenApiSchema";
 
-const ArrayBase = withMaxItems(withMinItems(SchemaBase));
+const ArrayBase = withItems(withMaxItems(withMinItems(SchemaBase)));
 
 class _OpenApiArray extends ArrayBase {}
+
+export const Array = (item: OpenApiSchema) => new _OpenApiArray().items(item);
+export type Array = _OpenApiArray;

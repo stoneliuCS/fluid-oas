@@ -1070,6 +1070,31 @@ export function withExample<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
+ * @fieldType OpenApiSchema
+ * @serializedName items
+ */
+export function withItems<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _items?: OpenApiSchema;
+    items(val: OpenApiSchema) {
+      const copy: this = Object.create(this);
+      copy._items = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._items) {
+        Object.defineProperty(json, "items", {
+          value: this._items.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
  * @fieldType string
  * @serializedName openIdConnectUrl
  */

@@ -310,6 +310,11 @@ async function main() {
       fieldType: "Example",
       serializedName: "example",
     }),
+    new OpenApiClass({
+      fnName: "withItems",
+      fieldType: "OpenApiSchema",
+      serializedName: "items",
+    }),
     new PrimitiveTemplateBuilder({
       fnName: "withOpenIdConnectURL",
       fieldType: "string",

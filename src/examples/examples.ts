@@ -1,4 +1,6 @@
-import { String, Example, Object } from "../core";
+import { String, Example, Object, Array } from "../core";
+
+const arrays = Array(String());
 
 const uuidSchema = String()
   .format("uuid")
