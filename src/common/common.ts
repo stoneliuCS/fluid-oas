@@ -1,6 +1,8 @@
 import type { OpenApiEncoding } from "../core/common/OpenApiEncoding.ts";
 import type { OpenApiHeader } from "../core/common/OpenApiHeader.ts";
 import type { OpenApiMediaType } from "../core/common/OpenApiMedia.ts";
+import type { OpenApiServer } from "../core/common/OpenApiServer.ts";
+import type { OpenApiServerVariable } from "../core/common/OpenApiServerVariable.ts";
 import type {
   OpenApiExample,
   OpenApiDocumentation,
@@ -1583,6 +1585,122 @@ export function withEncoding<TBase extends GConstructor>(Base: TBase) {
             enumerable: true,
           });
         }
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType Map<string,OpenApiServerVariable>
+ * @serializedName variables
+ */
+export function withVariables<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _variables?: Map<string, OpenApiServerVariable>;
+    variables(name: string) {
+      return {
+        with: (val: OpenApiServerVariable) => {
+          const copy: this = Object.create(this);
+          copy._variables = new Map(this._variables);
+          copy._variables.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._variables) {
+        for (let [key, val] of this._variables.entries()) {
+          Object.defineProperty(json, key, {
+            value: val.toJSON(),
+            enumerable: true,
+          });
+        }
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiServer
+ * @serializedName server
+ */
+export function withServer<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _server?: OpenApiServer;
+    server(val: OpenApiServer) {
+      const copy: this = Object.create(this);
+      copy._server = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._server) {
+        Object.defineProperty(json, "server", {
+          value: this._server.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType Map<string,string>
+ * @serializedName parameters
+ */
+export function withParameters<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _parameters?: Map<string, string>;
+    parameters(name: string) {
+      return {
+        with: (val: string) => {
+          const copy: this = Object.create(this);
+          copy._parameters = new Map(this._parameters);
+          copy._parameters.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._parameters) {
+        const mappings: any = {};
+        this._parameters.forEach((val, key) => {
+          mappings[key] = val;
+        });
+        Object.defineProperty(json, "parameters", {
+          value: mappings,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName requestBody
+ */
+export function withRequestBody<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _requestBody?: string;
+    requestBody(val: string) {
+      const copy: this = Object.create(this);
+      copy._requestBody = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._requestBody !== undefined) {
+        Object.defineProperty(json, "requestBody", {
+          value: this._requestBody,
+          enumerable: true,
+        });
       }
       return json;
     }

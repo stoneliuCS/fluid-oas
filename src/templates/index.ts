@@ -409,6 +409,26 @@ async function main() {
       fieldType: "Map<string, OpenApiEncoding>",
       serializedName: "encoding",
     }),
+    new OpenApiMapClass({
+      fnName: "withVariables",
+      fieldType: "Map<string, OpenApiServerVariable>",
+      serializedName: "variables",
+    }),
+    new OpenApiClass({
+      fnName: "withServer",
+      fieldType: "OpenApiServer",
+      serializedName: "server",
+    }),
+    new MapTemplateBuilder({
+      fnName: "withParameters",
+      fieldType: "Map<string, string>",
+      serializedName: "parameters",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withRequestBody",
+      fieldType: "string",
+      serializedName: "requestBody",
+    }),
   ].forEach(fn => fn.write(MainProject));
 
   await MainProject.save();
