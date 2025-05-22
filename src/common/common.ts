@@ -1324,11 +1324,13 @@ export function withProperty<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._property) {
+        const mappings: any = {};
         this._property.forEach((val, key) => {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
+          mappings[key] = val.toJSON();
+        });
+        Object.defineProperty(json, "properties", {
+          value: mappings,
+          enumerable: true,
         });
       }
       return json;
@@ -1433,6 +1435,56 @@ export function withContentType<TBase extends GConstructor>(Base: TBase) {
       if (this._contentType !== undefined) {
         Object.defineProperty(json, "contentType", {
           value: this._contentType,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName operationRef
+ */
+export function withOperationRef<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _operationRef?: string;
+    operationRef(val: string) {
+      const copy: this = Object.create(this);
+      copy._operationRef = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._operationRef !== undefined) {
+        Object.defineProperty(json, "operationRef", {
+          value: this._operationRef,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName operationId
+ */
+export function withOperationId<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _operationId?: string;
+    operationId(val: string) {
+      const copy: this = Object.create(this);
+      copy._operationId = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._operationId !== undefined) {
+        Object.defineProperty(json, "operationId", {
+          value: this._operationId,
           enumerable: true,
         });
       }

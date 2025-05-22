@@ -28,8 +28,12 @@ const ObjectProperty = class extends MapTemplateBuilder {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
       writer.write(`if (this._${this.serializedName})`).block(() => {
+        writer.writeLine("const mappings : any = {};");
         writer.writeLine(
-          `this._${this.serializedName}.forEach((val, key) => { Object.defineProperty(json, key, { value : val.toJSON(), enumerable : true }) })`
+          `this._${this.serializedName}.forEach((val, key) => { mappings[key] = val.toJSON() })`
+        );
+        writer.writeLine(
+          `Object.defineProperty(json, "properties", { value : mappings, enumerable : true })`
         );
       });
       writer.writeLine("return json;");

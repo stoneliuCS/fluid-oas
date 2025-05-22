@@ -1,3 +1,3 @@
 import { Base } from "./base";
 
-const LinkBase = Base
+const LinkBase = Base;
