@@ -414,6 +414,11 @@ async function main() {
       fieldType: "Map<string, OpenApiServerVariable>",
       serializedName: "variables",
     }),
+    new OpenApiMapClass({
+      fnName: "withLinks",
+      fieldType: "Map<string, OpenApiLink>",
+      serializedName: "links",
+    }),
     new OpenApiClass({
       fnName: "withServer",
       fieldType: "OpenApiServer",

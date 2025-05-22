@@ -1,5 +1,6 @@
 import type { OpenApiEncoding } from "../core/common/OpenApiEncoding.ts";
 import type { OpenApiHeader } from "../core/common/OpenApiHeader.ts";
+import type { OpenApiLink } from "../core/common/OpenApiLink.ts";
 import type { OpenApiMediaType } from "../core/common/OpenApiMedia.ts";
 import type { OpenApiServer } from "../core/common/OpenApiServer.ts";
 import type { OpenApiServerVariable } from "../core/common/OpenApiServerVariable.ts";
@@ -1612,6 +1613,38 @@ export function withVariables<TBase extends GConstructor>(Base: TBase) {
       const json = super.toJSON();
       if (this._variables) {
         for (let [key, val] of this._variables.entries()) {
+          Object.defineProperty(json, key, {
+            value: val.toJSON(),
+            enumerable: true,
+          });
+        }
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType Map<string,OpenApiLink>
+ * @serializedName links
+ */
+export function withLinks<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _links?: Map<string, OpenApiLink>;
+    links(name: string) {
+      return {
+        with: (val: OpenApiLink) => {
+          const copy: this = Object.create(this);
+          copy._links = new Map(this._links);
+          copy._links.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._links) {
+        for (let [key, val] of this._links.entries()) {
           Object.defineProperty(json, key, {
             value: val.toJSON(),
             enumerable: true,
