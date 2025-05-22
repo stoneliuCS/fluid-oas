@@ -7,3 +7,7 @@ export * from "./OpenApiTag.ts";
 export * from "./OpenApiXML.ts";
 export * from "./OpenApiExample.ts";
 export * from "./OpenApiInfo.ts";
+export * from "./OpenApiLink.ts";
+export * from "./OpenApiResponse.ts";
+export * from "./OpenApiServer.ts";
+export * from "./OpenApiServerVariable.ts";
