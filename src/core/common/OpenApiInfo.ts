@@ -9,11 +9,11 @@ import { Base } from "./base";
 const InfoBase = withVersion(withTitle(withDescription(withSummary(Base))));
 class _OpenApiInfo extends InfoBase {}
 
-export const Info = (title: string) => {
+export function Info(title: string) {
   return {
     withVersion: (version: string) => {
       return new _OpenApiInfo().title(title).version(version);
     },
   };
-};
+}
 export type OpenApiInfo = _OpenApiInfo;

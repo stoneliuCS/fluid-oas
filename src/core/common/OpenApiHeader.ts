@@ -26,8 +26,10 @@ class _OpenApiHeaderContent extends ContentHeaderBase {}
 
 export type OpenApiHeader = _OpenApiHeaderSchema | _OpenApiHeaderContent;
 
-export const Header = (type: OpenApiSchemaOrContent) => {
+export function Header(type: "schema"): _OpenApiHeaderSchema;
+export function Header(type: "content"): _OpenApiHeaderContent;
+export function Header(type: OpenApiSchemaOrContent) {
   return type === "schema"
     ? new _OpenApiHeaderSchema()
     : new _OpenApiHeaderContent();
-};
+}

@@ -16,5 +16,7 @@ const LinkBase = withServer(
 
 class _OpenApiLink extends LinkBase {}
 
-export const Link = () => new _OpenApiLink();
+export function Link() {
+  return new _OpenApiLink();
+}
 export type OpenApiLink = _OpenApiLink;

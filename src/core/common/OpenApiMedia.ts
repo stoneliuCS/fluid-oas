@@ -10,5 +10,7 @@ const MediaTypeBase = withEncoding(withExamples(withExample(withSchema(Base))));
 
 class _OpenApiMediaType extends MediaTypeBase {}
 
-export const MediaType = () => new _OpenApiMediaType();
+export function MediaType() {
+  return new _OpenApiMediaType();
+}
 export type OpenApiMediaType = _OpenApiMediaType;

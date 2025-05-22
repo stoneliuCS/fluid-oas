@@ -7,5 +7,7 @@ const ServerVariableBase = withDescription(
 
 class _OpenApiServerVariable extends ServerVariableBase {}
 
-export const ServerVariable = () => new _OpenApiServerVariable();
+export function ServerVariable() {
+  return new _OpenApiServerVariable();
+}
 export type OpenApiServerVariable = _OpenApiServerVariable;

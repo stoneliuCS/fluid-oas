@@ -5,5 +5,7 @@ const ServerBase = withVariables(withDescription(withURL(Base)));
 
 class _OpenApiServer extends ServerBase {}
 
-export const Server = () => new _OpenApiServer();
+export function Server() {
+  return new _OpenApiServer();
+}
 export type OpenApiServer = _OpenApiServer;

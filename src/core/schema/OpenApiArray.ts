@@ -6,5 +6,7 @@ const ArrayBase = withItems(withMaxItems(withMinItems(SchemaBase)));
 
 class _OpenApiArray extends ArrayBase {}
 
-export const Array = (item: OpenApiSchema) => new _OpenApiArray().items(item);
+export function Array(item: OpenApiSchema) {
+  return new _OpenApiArray().items(item);
+}
 export type OpenApiArray = _OpenApiArray;

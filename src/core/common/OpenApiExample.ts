@@ -11,5 +11,7 @@ const ExampleBase = withValue(
 )<unknown>();
 class _OpenApiExample extends ExampleBase {}
 
-export const Example = () => new _OpenApiExample();
+export function Example() {
+  return new _OpenApiExample();
+}
 export type OpenApiExample = _OpenApiExample;

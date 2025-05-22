@@ -1,4 +1,4 @@
-import { String, Example, Object } from "../core";
+import { String, Example, Object, Response, Header, Number } from "../core";
 
 const uuidSchema = String()
   .format("uuid")
@@ -19,5 +19,9 @@ const user = Object()
   .with(uuidSchema)
   .property("lastName")
   .with(nameSchema);
+
+Response("My new Response!")
+  .headers("content")
+  .with(Header("schema").schema(Number()));
 
 console.log(JSON.stringify(user, undefined, 2));

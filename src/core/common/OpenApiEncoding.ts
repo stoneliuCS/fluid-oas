@@ -13,5 +13,7 @@ const EncodingBase = withAllowReserved(
 
 class _OpenApiEncoding extends EncodingBase {}
 
-export const Encoding = () => new _OpenApiEncoding();
+export function Encoding() {
+  return new _OpenApiEncoding();
+}
 export type OpenApiEncoding = _OpenApiEncoding;
