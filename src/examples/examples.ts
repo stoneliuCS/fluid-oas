@@ -20,4 +20,4 @@ const user = Object()
   .property("lastName")
   .with(nameSchema);
 
-console.log(user.toJSON());
+console.log(JSON.stringify(user, undefined, 2));

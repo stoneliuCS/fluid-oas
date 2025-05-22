@@ -155,28 +155,30 @@ const user = Object()
 
 ```json
 {
-  properties: {
-    firstName: {
-      description: "Name Schema.",
-      minLength: 1,
-      maxLength: 10,
-      type: "string",
+  "properties": {
+    "firstName": {
+      "description": "Name Schema.",
+      "minLength": 1,
+      "maxLength": 10,
+      "type": "string"
     },
-    id: {
-      description: "Id of the user.",
-      example: [Object ...],
-      format: "uuid",
-      pattern: "stone",
-      default: "uuid",
-      type: "string",
+    "id": {
+      "description": "Id of the user.",
+      "example": {
+        "value": "5e91507e-5630-4efd-9fd4-799178870b10"
+      },
+      "format": "uuid",
+      "pattern": "stone",
+      "default": "uuid",
+      "type": "string"
     },
-    lastName: {
-      description: "Name Schema.",
-      minLength: 1,
-      maxLength: 10,
-      type: "string",
-    },
+    "lastName": {
+      "description": "Name Schema.",
+      "minLength": 1,
+      "maxLength": 10,
+      "type": "string"
+    }
   },
-  type: "object",
+  "type": "object"
 }
 ```
