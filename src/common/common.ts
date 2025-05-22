@@ -1,14 +1,14 @@
-import type { OpenApiEncoding } from "../core/common/OpenApiEncoding.ts";
-import type { OpenApiHeader } from "../core/common/OpenApiHeader.ts";
-import type { OpenApiLink } from "../core/common/OpenApiLink.ts";
 import type { OpenApiMediaType } from "../core/common/OpenApiMedia.ts";
-import type { OpenApiServer } from "../core/common/OpenApiServer.ts";
-import type { OpenApiServerVariable } from "../core/common/OpenApiServerVariable.ts";
 import type {
   OpenApiExample,
   OpenApiDocumentation,
   OpenApiOAuthFlow,
   OpenApiOAuthFlows,
+  OpenApiHeader,
+  OpenApiEncoding,
+  OpenApiServerVariable,
+  OpenApiLink,
+  OpenApiServer,
 } from "../core/index.ts";
 import type { OpenApiSchema } from "../core/schema/OpenApiSchema.ts";
 import type { GConstructor, OpenApiExtensionString } from "./types.ts";
