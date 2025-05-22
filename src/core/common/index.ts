@@ -11,3 +11,5 @@ export * from "./OpenApiLink.ts";
 export * from "./OpenApiResponse.ts";
 export * from "./OpenApiServer.ts";
 export * from "./OpenApiServerVariable.ts";
+export * from "./OpenApiEncoding.ts";
+export * from "./OpenApiHeader.ts";
