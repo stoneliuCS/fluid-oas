@@ -10,6 +10,7 @@ import type {
   OpenApiLink,
   OpenApiServer,
   OpenApiResponse,
+  OpenApiParameter,
 } from "../core/index.ts";
 import type { OpenApiSchema } from "../core/schema/OpenApiSchema.ts";
 import type {
@@ -1774,5 +1775,60 @@ export function withResponses<TBase extends GConstructor>(Base: TBase) {
       }
       return json;
     }
+  };
+}
+
+/**
+ * @fieldType OpenApiParameter
+ * @serializedName parameters
+ */
+export function withParametersArray<TBase extends GConstructor>(Base: TBase) {
+  return <T extends OpenApiParameter>() => {
+    return class extends Base {
+      protected _parameters?: T[];
+      parameters(val: T) {
+        const copy: this = Object.create(this);
+        copy._parameters =
+          this._parameters === undefined ? [val] : [...this._parameters, val];
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._parameters !== undefined) {
+          Object.defineProperty(json, "parameters", {
+            value: this._parameters.map(val => val.toJSON()),
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName tags
+ */
+export function withTags<TBase extends GConstructor>(Base: TBase) {
+  return <T extends string>() => {
+    return class extends Base {
+      protected _tags?: T[];
+      tags(val: T) {
+        const copy: this = Object.create(this);
+        copy._tags = this._tags === undefined ? [val] : [...this._tags, val];
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._tags !== undefined) {
+          Object.defineProperty(json, "tags", {
+            value: this._tags,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
   };
 }

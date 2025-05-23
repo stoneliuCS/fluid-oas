@@ -16,6 +16,6 @@
   },
   "scripts": {
     "format": "prettier --log-level silent --write .",
-    "generate": "rm -rf ./src/common/*.ts && bun run ./src/templates/index.ts && bun run format"
+    "generate": "rm -rf ./src/common/*.ts && bun run ./src/templates/index.ts && bun run format && tsc"
   }
 }

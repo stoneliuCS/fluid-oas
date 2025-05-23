@@ -6,7 +6,7 @@ import {
   withNullable,
 } from "../../common/common.ts";
 
-class _base {
+export class _base {
   toJSON(): unknown {
     return {};
   }

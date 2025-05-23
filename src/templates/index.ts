@@ -120,6 +120,22 @@ const OpenApiMapClass = class extends MapTemplateBuilder {
   }
 };
 
+const OpenApiArrayClass = class extends ArrayTemplateBuilder {
+  protected buildJSONMethod(writer: CodeBlockWriter): void {
+    writer.write("toJSON()").block(() => {
+      writer.writeLine("const json = super.toJSON();");
+      writer
+        .write(`if (this._${this.serializedName} !== undefined)`)
+        .block(() => {
+          writer.writeLine(
+            `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}.map(val => val.toJSON()), enumerable : true })`
+          );
+        });
+      writer.writeLine("return json;");
+    });
+  }
+};
+
 async function main() {
   // Generic Function Generators
   [
@@ -452,6 +468,16 @@ async function main() {
       fnName: "withResponses",
       fieldType: "Map<OpenApiHTTPStatusCode, OpenApiResponse>",
       serializedName: "response",
+    }),
+    new OpenApiArrayClass({
+      fnName: "withParametersArray",
+      fieldType: "OpenApiParameter",
+      serializedName: "parameters",
+    }),
+    new ArrayTemplateBuilder({
+      fnName: "withTags",
+      fieldType: "string",
+      serializedName: "tags",
     }),
   ].forEach(fn => fn.write(MainProject));
 
