@@ -9,9 +9,14 @@ import type {
   OpenApiServerVariable,
   OpenApiLink,
   OpenApiServer,
+  OpenApiResponse,
 } from "../core/index.ts";
 import type { OpenApiSchema } from "../core/schema/OpenApiSchema.ts";
-import type { GConstructor, OpenApiExtensionString } from "./types.ts";
+import type {
+  GConstructor,
+  OpenApiExtensionString,
+  OpenApiHTTPStatusCode,
+} from "./types.ts";
 
 /**
  * @fieldType string
@@ -1733,6 +1738,38 @@ export function withRequestBody<TBase extends GConstructor>(Base: TBase) {
         Object.defineProperty(json, "requestBody", {
           value: this._requestBody,
           enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType Map<OpenApiHTTPStatusCode,OpenApiResponse>
+ * @serializedName response
+ */
+export function withResponses<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _response?: Map<OpenApiHTTPStatusCode, OpenApiResponse>;
+    response(name: OpenApiHTTPStatusCode) {
+      return {
+        with: (val: OpenApiResponse) => {
+          const copy: this = Object.create(this);
+          copy._response = new Map(this._response);
+          copy._response.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._response) {
+        this._response.forEach((val, key) => {
+          Object.defineProperty(json, key, {
+            value: val.toJSON(),
+            enumerable: true,
+          });
         });
       }
       return json;

@@ -23,6 +23,20 @@ const Enum = class extends ArrayTemplateBuilder {
   }
 };
 
+const HTTPStatusCode = class extends MapTemplateBuilder {
+  protected buildJSONMethod(writer: CodeBlockWriter): void {
+    writer.write("toJSON()").block(() => {
+      writer.writeLine("const json = super.toJSON();");
+      writer.write(`if (this._${this.serializedName})`).block(() => {
+        writer.writeLine(
+          `this._${this.serializedName}.forEach((val, key) => { Object.defineProperty(json, key, { value : val.toJSON(), enumerable : true }) })`
+        );
+      });
+      writer.writeLine("return json;");
+    });
+  }
+};
+
 const ObjectProperty = class extends MapTemplateBuilder {
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
@@ -433,6 +447,11 @@ async function main() {
       fnName: "withRequestBody",
       fieldType: "string",
       serializedName: "requestBody",
+    }),
+    new HTTPStatusCode({
+      fnName: "withResponses",
+      fieldType: "Map<OpenApiHTTPStatusCode, OpenApiResponse>",
+      serializedName: "response",
     }),
   ].forEach(fn => fn.write(MainProject));
 

@@ -2,9 +2,6 @@ import {
   String,
   Example,
   Object,
-  Response,
-  Header,
-  Number,
   RequestBody,
 } from "../core";
 import { MediaType } from "../core/common/OpenApiMedia";
@@ -28,10 +25,6 @@ const user = Object()
   .with(uuidSchema)
   .property("lastName")
   .with(nameSchema);
-
-Response("My new Response!")
-  .headers("content")
-  .with(Header("schema").schema(Number()));
 
 RequestBody("application/json").with(MediaType().schema(user));
 
