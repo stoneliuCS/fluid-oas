@@ -16,3 +16,4 @@ export * from "./OpenApiHeader.ts";
 export * from "./OpenApiRequestBody.ts";
 export * from "./OpenApiResponses.ts";
 export * from "./OpenApiResponse.ts";
+export * from "./OpenApiParameter.ts";

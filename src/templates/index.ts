@@ -200,7 +200,7 @@ async function main() {
     }),
     new FunctionTemplateBuilder({
       fnName: "withIn",
-      fieldType: `"query" | "header" | "cookie"`,
+      fieldType: `T`,
       serializedName: "in",
     }),
     new MapTemplateBuilder({

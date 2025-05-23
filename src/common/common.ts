@@ -404,11 +404,11 @@ export function withType<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType "query"|"header"|"cookie"
+ * @fieldType T
  * @serializedName in
  */
 export function withIn<TBase extends GConstructor>(Base: TBase) {
-  return <T extends "query" | "header" | "cookie">() => {
+  return <T>() => {
     return class extends Base {
       protected _in?: T;
       in(val: T) {

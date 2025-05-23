@@ -1,10 +1,4 @@
-import {
-  String,
-  Example,
-  Object,
-  RequestBody,
-} from "../core";
-import { MediaType } from "../core/common/OpenApiMedia";
+import { String, Example, Object } from "../core";
 
 const uuidSchema = String()
   .format("uuid")
@@ -25,7 +19,3 @@ const user = Object()
   .with(uuidSchema)
   .property("lastName")
   .with(nameSchema);
-
-RequestBody("application/json").with(MediaType().schema(user));
-
-console.log(JSON.stringify(user, undefined, 2));

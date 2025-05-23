@@ -13,7 +13,11 @@ import { Base } from "./base";
 const SecurityBase = withOpenIdConnectURL(
   withFlows(
     withBearerFormat(
-      withScheme(withIn(withName(withDescription(withType(Base)())))())
+      withScheme(
+        withIn(withName(withDescription(withType(Base)())))<
+          "query" | "header" | "cookie"
+        >()
+      )
     )
   )
 );
