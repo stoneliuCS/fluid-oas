@@ -497,12 +497,14 @@ export function withExamples<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._examples) {
-        for (let [key, val] of this._examples.entries()) {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
-        }
+        const mappings: any = {};
+        this._examples.forEach((val, key) => {
+          mappings[key] = val.toJSON();
+        });
+        Object.defineProperty(json, "examples", {
+          value: mappings,
+          enumerable: true,
+        });
       }
       return json;
     }
@@ -529,12 +531,14 @@ export function withExtensions<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._extensions) {
-        for (let [key, val] of this._extensions.entries()) {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
-        }
+        const mappings: any = {};
+        this._extensions.forEach((val, key) => {
+          mappings[key] = val.toJSON();
+        });
+        Object.defineProperty(json, "extensions", {
+          value: mappings,
+          enumerable: true,
+        });
       }
       return json;
     }
@@ -1534,12 +1538,14 @@ export function withHeaders<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._headers) {
-        for (let [key, val] of this._headers.entries()) {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
-        }
+        const mappings: any = {};
+        this._headers.forEach((val, key) => {
+          mappings[key] = val.toJSON();
+        });
+        Object.defineProperty(json, "headers", {
+          value: mappings,
+          enumerable: true,
+        });
       }
       return json;
     }
@@ -1566,12 +1572,14 @@ export function withContent<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._content) {
-        for (let [key, val] of this._content.entries()) {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
-        }
+        const mappings: any = {};
+        this._content.forEach((val, key) => {
+          mappings[key] = val.toJSON();
+        });
+        Object.defineProperty(json, "content", {
+          value: mappings,
+          enumerable: true,
+        });
       }
       return json;
     }
@@ -1598,12 +1606,14 @@ export function withEncoding<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._encoding) {
-        for (let [key, val] of this._encoding.entries()) {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
-        }
+        const mappings: any = {};
+        this._encoding.forEach((val, key) => {
+          mappings[key] = val.toJSON();
+        });
+        Object.defineProperty(json, "encoding", {
+          value: mappings,
+          enumerable: true,
+        });
       }
       return json;
     }
@@ -1630,12 +1640,14 @@ export function withCallback<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._callback) {
-        for (let [key, val] of this._callback.entries()) {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
-        }
+        const mappings: any = {};
+        this._callback.forEach((val, key) => {
+          mappings[key] = val.toJSON();
+        });
+        Object.defineProperty(json, "callback", {
+          value: mappings,
+          enumerable: true,
+        });
       }
       return json;
     }
@@ -1662,12 +1674,14 @@ export function withVariables<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._variables) {
-        for (let [key, val] of this._variables.entries()) {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
-        }
+        const mappings: any = {};
+        this._variables.forEach((val, key) => {
+          mappings[key] = val.toJSON();
+        });
+        Object.defineProperty(json, "variables", {
+          value: mappings,
+          enumerable: true,
+        });
       }
       return json;
     }
@@ -1694,12 +1708,14 @@ export function withLinks<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._links) {
-        for (let [key, val] of this._links.entries()) {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
-        }
+        const mappings: any = {};
+        this._links.forEach((val, key) => {
+          mappings[key] = val.toJSON();
+        });
+        Object.defineProperty(json, "links", {
+          value: mappings,
+          enumerable: true,
+        });
       }
       return json;
     }
@@ -1751,12 +1767,14 @@ export function withCallbacks<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._callbacks) {
-        for (let [key, val] of this._callbacks.entries()) {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
-        }
+        const mappings: any = {};
+        this._callbacks.forEach((val, key) => {
+          mappings[key] = val.toJSON();
+        });
+        Object.defineProperty(json, "callbacks", {
+          value: mappings,
+          enumerable: true,
+        });
       }
       return json;
     }
@@ -2415,12 +2433,14 @@ export function withWebhooks<TBase extends GConstructor>(Base: TBase) {
     toJSON() {
       const json = super.toJSON();
       if (this._webhooks) {
-        for (let [key, val] of this._webhooks.entries()) {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
-        }
+        const mappings: any = {};
+        this._webhooks.forEach((val, key) => {
+          mappings[key] = val.toJSON();
+        });
+        Object.defineProperty(json, "webhooks", {
+          value: mappings,
+          enumerable: true,
+        });
       }
       return json;
     }

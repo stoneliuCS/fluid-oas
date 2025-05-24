@@ -5,68 +5,45 @@ import {
   PathItem,
   Operation,
   Response,
-  SecurityRequirement,
-  RequestBody,
+  Info,
+  Responses,
+  OpenApi,
 } from "../core";
 import { MediaType } from "../core/common/OpenApiMedia";
 
-const stringSchema = String().minLength(1).maxLength(100);
-
-const userSchema = Object()
-  .property("name")
-  .with(stringSchema.description("Name of the user"))
-  .property("username")
-  .with(stringSchema.description("The username of the user"))
-  .property("mode")
-  .with(
-    String()
-      .enum("BASIC", "ADVANCED", null)
-      .description("Mode of the user.")
-      .nullable()
+const info = Info("Dearly API")
+  .withVersion("1.0.0")
+  .description(
+    `Dearly is a private family-sharing app that bridges generational gaps 
+       and makes staying connected easier and more meaningful. 
+       The platform allows families to share photos, voice memos, 
+       and other media in a secure, invite-only space. 
+       With two thoughtfully designed modes, Dearly caters to every generation: 
+       a streamlined, user-friendly interface for those less familiar with technology and a dynamic, 
+       feature-rich experience for younger users.`
   )
-  .property("profilePhoto")
-  .with(String().nullable().description("A URL to the user's profile photo."))
-  .required("username")
-  .additionalProperties();
+  .summary("Dearly makes connecting with loved ones easy.");
 
-const healthCheckPath = PathItem()
+const healthcheck = PathItem()
   .method("get")
   .with(
-    Operation()
-      .tags("HealthCheck")
-      .summary("Health Check Endpoint")
-      .description("Pings the server to check the health of the current server")
-      .response("200")
-      .with(
-        Response("Success!")
-          .content("application/json")
-          .with(
-            MediaType().schema(
-              Object().property("message").with(String().enum("OK"))
+    Operation().responses(
+      Responses()
+        .response("200")
+        .with(
+          Response("Success!")
+            .content("application/json")
+            .with(
+              MediaType().schema(
+                Object().property("message").with(String().enum("OK"))
+              )
             )
-          )
-      )
+        )
+    )
   );
 
-const userPostOperation = Operation()
-  .tags("user")
-  .summary("Creates a User")
-  .description(
-    "Creates a user from the specified body (with ID being the decoded ID from JWT)."
-  )
-  .security(SecurityRequirement().field("BearerAuth").with())
-  .requestBody(
-    RequestBody("application/json").with(MediaType().schema(userSchema))
-  );
+const path = Path().endpoint("/healthcheck").with(healthcheck);
 
-const userPath = PathItem().method("post").with(userPostOperation);
+const api = OpenApi("3.0.0").withInfo(info).paths(path);
 
-const paths = Path()
-  .endpoint("/healthcheck")
-  .with(healthCheckPath)
-  .beginGroup("/api/v1") // Everything inside the beginGroup clause will be prefixed with /api/v1
-  .endpoint("/users")
-  .with(userPath)
-  .endGroup();
-
-console.log(JSON.stringify(paths.toJSON(), undefined, 2));
+console.log(JSON.stringify(api, undefined, 2));

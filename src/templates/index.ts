@@ -144,14 +144,13 @@ const OpenApiMapClass = class extends MapTemplateBuilder {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
       writer.write(`if (this._${this.serializedName})`).block(() => {
-        writer.write(`
-        for (let [key, val] of this._${this.serializedName}.entries()) {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
-        }
-  `);
+        writer.writeLine("const mappings : any = {};");
+        writer.writeLine(
+          `this._${this.serializedName}.forEach((val, key) => { mappings[key] = val.toJSON() })`
+        );
+        writer.writeLine(
+          `Object.defineProperty(json, "${this.serializedName}", { value : mappings, enumerable : true })`
+        );
       });
       writer.writeLine("return json;");
     });
