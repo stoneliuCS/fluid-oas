@@ -5,7 +5,12 @@ Structured Application Programming Interface Language using TypeScript.
 ## Setup
 
 ```bash
+# With NPM
 npm i @qwantumstone/salt
+```
+
+```bash
+# With Bun
 bun add @qwantumstone/salt
 ```
 

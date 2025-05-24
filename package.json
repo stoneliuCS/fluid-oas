@@ -16,6 +16,7 @@
   },
   "scripts": {
     "format": "prettier --log-level silent --write .",
-    "generate": "rm -rf ./src/common/*.ts && bun run ./src/templates/index.ts && bun run format && tsc"
+    "generate": "rm -rf ./src/common/*.ts && bun run ./src/templates/index.ts && bun run format && tsc",
+    "publish" : "bunx npm version patch && bun publish --access public"
   }
 }
