@@ -182,3 +182,134 @@ const user = Object()
   "type": "object"
 }
 ```
+
+### Paths
+
+Modularize the way you write your API endpoints:
+
+```ts
+const stringSchema = String().minLength(1).maxLength(100);
+
+const userSchema = Object()
+  .property("name")
+  .with(stringSchema.description("Name of the user"))
+  .property("username")
+  .with(stringSchema.description("The username of the user"))
+  .property("mode")
+  .with(String().enum("BASIC", "ADVANCED", null))
+  .property("profilePhoto")
+  .with(String().nullable().description("A URL to the user's profile photo."))
+  .required("username")
+  .additionalProperties();
+
+const healthCheckPath = PathItem()
+  .method("get")
+  .with(
+    Operation()
+      .tags("HealthCheck")
+      .summary("Health Check Endpoint")
+      .description("Pings the server to check the health of the current server")
+      .response("200")
+      .with(
+        Response("Success!")
+          .content("application/json")
+          .with(
+            MediaType().schema(
+              Object().property("message").with(String().enum("OK"))
+            )
+          )
+      )
+  );
+
+const userPath = PathItem()
+  .method("post")
+  .with(
+    Operation()
+      .tags("user")
+      .summary("Creates a User")
+      .description(
+        "Creates a user from the specified body (with ID being the decoded ID from JWT)."
+      )
+      .security(SecurityRequirement().field("BearerAuth").with())
+      .requestBody(
+        RequestBody("application/json").with(MediaType().schema(userSchema))
+      )
+  );
+
+const paths = Path()
+  .endpoint("/healthcheck")
+  .with(healthCheckPath)
+  .beginGroup("/api/v1")
+  .endpoint("/users")
+  .with(userPath);
+```
+
+```json
+{
+  "/healthcheck": {
+    "get": {
+      "200": {
+        "description": "Success!",
+        "application/json": {
+          "schema": {
+            "properties": {
+              "message": {
+                "enum": ["OK"],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        }
+      },
+      "tags": ["HealthCheck"],
+      "summary": "Health Check Endpoint",
+      "description": "Pings the server to check the health of the current server"
+    }
+  },
+  "/api/v1/users": {
+    "post": {
+      "tags": ["user"],
+      "summary": "Creates a User",
+      "description": "Creates a user from the specified body (with ID being the decoded ID from JWT).",
+      "requestBody": {
+        "application/json": {
+          "schema": {
+            "properties": {
+              "name": {
+                "description": "Name of the user",
+                "minLength": 1,
+                "maxLength": 100,
+                "type": "string"
+              },
+              "username": {
+                "description": "The username of the user",
+                "minLength": 1,
+                "maxLength": 100,
+                "type": "string"
+              },
+              "mode": {
+                "enum": ["BASIC", "ADVANCED", null],
+                "type": "string"
+              },
+              "profilePhoto": {
+                "description": "A URL to the user's profile photo.",
+                "nullable": true,
+                "type": "string"
+              }
+            },
+            "required": ["username"],
+            "additionalProperties": true,
+            "type": "object"
+          }
+        }
+      },
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ]
+    }
+  }
+}
+```

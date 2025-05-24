@@ -1988,6 +1988,63 @@ export function withTags<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
+ * @fieldType T
+ * @serializedName required
+ */
+export function withRequiredEnumerable<TBase extends GConstructor>(
+  Base: TBase
+) {
+  return <T>() => {
+    return class extends Base {
+      protected _required?: T[];
+      required(...val: T[]) {
+        const copy: this = Object.create(this);
+        copy._required =
+          this._required === undefined ? [...val] : [...this._required, ...val];
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._required !== undefined) {
+          Object.defineProperty(json, "required", {
+            value: this._required,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType boolean
+ * @serializedName additionalProperties
+ */
+export function withAdditionalProperties<TBase extends GConstructor>(
+  Base: TBase
+) {
+  return class extends Base {
+    protected _additionalProperties?: boolean;
+    additionalProperties() {
+      const copy: this = Object.create(this);
+      copy._additionalProperties = true;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._additionalProperties !== undefined) {
+        Object.defineProperty(json, "additionalProperties", {
+          value: this._additionalProperties,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
  * @fieldType Map<string,string[]>
  * @serializedName field
  */

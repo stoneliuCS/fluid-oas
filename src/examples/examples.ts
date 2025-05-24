@@ -20,49 +20,49 @@ const userSchema = Object()
   .property("mode")
   .with(String().enum("BASIC", "ADVANCED", null))
   .property("profilePhoto")
-  .with(String().nullable().description("A URL to the user's profile photo."));
+  .with(String().nullable().description("A URL to the user's profile photo."))
+  .required("username")
+  .additionalProperties();
 
-const paths = Path()
-  .endpoint("/healthcheck")
+const healthCheckPath = PathItem()
+  .method("get")
   .with(
-    PathItem()
-      .method("get")
+    Operation()
+      .tags("HealthCheck")
+      .summary("Health Check Endpoint")
+      .description("Pings the server to check the health of the current server")
+      .response("200")
       .with(
-        Operation()
-          .tags("HealthCheck")
-          .summary("Health Check Endpoint")
-          .description(
-            "Pings the server to check the health of the current server"
-          )
-          .response("200")
+        Response("Success!")
+          .content("application/json")
           .with(
-            Response("Success!")
-              .content("application/json")
-              .with(
-                MediaType().schema(
-                  Object().property("message").with(String().enum("OK"))
-                )
-              )
-          )
-      )
-  )
-  .beginGroup("/api/v1")
-  .endpoint("/users")
-  .with(
-    PathItem()
-      .method("post")
-      .with(
-        Operation()
-          .tags("user")
-          .summary("Creates a User")
-          .description(
-            "Creates a user from the specified body (with ID being the decoded ID from JWT)."
-          )
-          .security(SecurityRequirement().field("BearerAuth").with())
-          .requestBody(
-            RequestBody("application/json").with(MediaType().schema(userSchema))
+            MediaType().schema(
+              Object().property("message").with(String().enum("OK"))
+            )
           )
       )
   );
+
+const userPath = PathItem()
+  .method("post")
+  .with(
+    Operation()
+      .tags("user")
+      .summary("Creates a User")
+      .description(
+        "Creates a user from the specified body (with ID being the decoded ID from JWT)."
+      )
+      .security(SecurityRequirement().field("BearerAuth").with())
+      .requestBody(
+        RequestBody("application/json").with(MediaType().schema(userSchema))
+      )
+  );
+
+const paths = Path()
+  .endpoint("/healthcheck")
+  .with(healthCheckPath)
+  .beginGroup("/api/v1")
+  .endpoint("/users")
+  .with(userPath);
 
 console.log(JSON.stringify(paths.toJSON(), undefined, 2));

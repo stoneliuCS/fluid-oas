@@ -1,7 +1,16 @@
-import { withDefault, withProperty } from "../../common/common";
+import {
+  withAdditionalProperties,
+  withDefault,
+  withProperty,
+  withRequiredEnumerable,
+} from "../../common/common";
 import { SchemaBase } from "../common/base";
 
-const ObjectBase = withProperty(withDefault(SchemaBase)<Object>());
+const ObjectBase = withAdditionalProperties(
+  withRequiredEnumerable(
+    withProperty(withDefault(SchemaBase)<Object>())
+  )<string>()
+);
 
 class _OpenApiObject extends ObjectBase {
   toJSON(): unknown {

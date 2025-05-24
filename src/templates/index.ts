@@ -542,6 +542,16 @@ async function main() {
       fieldType: "T",
       serializedName: "tags",
     }),
+    new Enumerable({
+      fnName: "withRequiredEnumerable",
+      fieldType: "T",
+      serializedName: "required",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withAdditionalProperties",
+      fieldType: "boolean",
+      serializedName: "additionalProperties",
+    }),
     new SecurityRequirementClass({
       fnName: "withSecurityRequirement",
       fieldType: "Map<string, string[]>",
