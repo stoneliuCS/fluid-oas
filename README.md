@@ -2,6 +2,17 @@
 
 Structured Application Programming Interface Language using TypeScript.
 
+## Setup
+
+```bash
+npm i @qwantumstone/salt
+bun add @qwantumstone/salt
+```
+
+```ts
+import * "@qwantumstone/salt/src"
+```
+
 1. [Overview](#overview)
 2. [Schema Design](#schemas)
    - [Primitives](#primitive-data-types)
