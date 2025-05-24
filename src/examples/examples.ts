@@ -64,7 +64,7 @@ const userPath = PathItem().method("post").with(userPost);
 const paths = Path()
   .endpoint("/healthcheck")
   .with(healthCheckPath)
-  .beginGroup("/api/v1")
+  .beginGroup("/api/v1") // Everything inside the beginGroup clause will be prefixed with /api/v1
   .endpoint("/users")
   .with(userPath)
   .endGroup();

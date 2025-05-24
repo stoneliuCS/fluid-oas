@@ -196,7 +196,12 @@ const userSchema = Object()
   .property("username")
   .with(stringSchema.description("The username of the user"))
   .property("mode")
-  .with(String().enum("BASIC", "ADVANCED", null))
+  .with(
+    String()
+      .enum("BASIC", "ADVANCED", null)
+      .description("Mode of the user.")
+      .nullable()
+  )
   .property("profilePhoto")
   .with(String().nullable().description("A URL to the user's profile photo."))
   .required("username")
@@ -221,27 +226,26 @@ const healthCheckPath = PathItem()
       )
   );
 
-const userPath = PathItem()
-  .method("post")
-  .with(
-    Operation()
-      .tags("user")
-      .summary("Creates a User")
-      .description(
-        "Creates a user from the specified body (with ID being the decoded ID from JWT)."
-      )
-      .security(SecurityRequirement().field("BearerAuth").with())
-      .requestBody(
-        RequestBody("application/json").with(MediaType().schema(userSchema))
-      )
+const userPost = Operation()
+  .tags("user")
+  .summary("Creates a User")
+  .description(
+    "Creates a user from the specified body (with ID being the decoded ID from JWT)."
+  )
+  .security(SecurityRequirement().field("BearerAuth").with())
+  .requestBody(
+    RequestBody("application/json").with(MediaType().schema(userSchema))
   );
+
+const userPath = PathItem().method("post").with(userPost);
 
 const paths = Path()
   .endpoint("/healthcheck")
   .with(healthCheckPath)
-  .beginGroup("/api/v1")
+  .beginGroup("/api/v1") // Everything inside the beginGroup clause will be prefixed with /api/v1
   .endpoint("/users")
-  .with(userPath);
+  .with(userPath)
+  .endGroup();
 ```
 
 ```json
@@ -254,7 +258,9 @@ const paths = Path()
           "schema": {
             "properties": {
               "message": {
-                "enum": ["OK"],
+                "enum": [
+                  "OK"
+                ],
                 "type": "string"
               }
             },
@@ -262,14 +268,18 @@ const paths = Path()
           }
         }
       },
-      "tags": ["HealthCheck"],
+      "tags": [
+        "HealthCheck"
+      ],
       "summary": "Health Check Endpoint",
       "description": "Pings the server to check the health of the current server"
     }
   },
   "/api/v1/users": {
     "post": {
-      "tags": ["user"],
+      "tags": [
+        "user"
+      ],
       "summary": "Creates a User",
       "description": "Creates a user from the specified body (with ID being the decoded ID from JWT).",
       "requestBody": {
@@ -289,7 +299,13 @@ const paths = Path()
                 "type": "string"
               },
               "mode": {
-                "enum": ["BASIC", "ADVANCED", null],
+                "description": "Mode of the user.",
+                "nullable": true,
+                "enum": [
+                  "BASIC",
+                  "ADVANCED",
+                  null
+                ],
                 "type": "string"
               },
               "profilePhoto": {
@@ -298,7 +314,9 @@ const paths = Path()
                 "type": "string"
               }
             },
-            "required": ["username"],
+            "required": [
+              "username"
+            ],
             "additionalProperties": true,
             "type": "object"
           }
