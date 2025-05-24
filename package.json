@@ -1,6 +1,6 @@
 {
   "name": "@qwantumstone/salt",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "module": "./src/index.ts",
   "type": "module",
   "files": [
@@ -17,6 +17,6 @@
   "scripts": {
     "format": "prettier --log-level silent --write .",
     "generate": "rm -rf ./src/common/*.ts && bun run ./src/templates/index.ts && bun run format && tsc",
-    "publish" : "bunx npm version patch && bun publish --access public"
+    "publish": "bunx npm version patch && bun publish --access public"
   }
 }
