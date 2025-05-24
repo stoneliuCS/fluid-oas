@@ -1,4 +1,5 @@
 import {
+  withCallbacks,
   withDeprecated,
   withDescription,
   withExternalDocs,
@@ -13,23 +14,25 @@ import {
 } from "../../common/common";
 import { Base } from "./base";
 
-const OperationBase = withServersArray(
-  withSecurityArray(
-    withDeprecated(
-      withResponses(
-        withRequestBody(
-          withParametersArray(
-            withOperationId(
-              withExternalDocs(
-                withDescription(withSummary(withTags(Base)<string>()))
+const OperationBase = withCallbacks(
+  withServersArray(
+    withSecurityArray(
+      withDeprecated(
+        withResponses(
+          withRequestBody(
+            withParametersArray(
+              withOperationId(
+                withExternalDocs(
+                  withDescription(withSummary(withTags(Base)<string>()))
+                )
               )
-            )
-          )()
+            )()
+          )
         )
       )
-    )
+    )()
   )()
-)();
+);
 
 class _OpenApiOperation extends OperationBase {}
 

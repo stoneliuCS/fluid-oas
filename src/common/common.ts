@@ -6,13 +6,14 @@ import type {
   OpenApiOAuthFlows,
   OpenApiHeader,
   OpenApiEncoding,
+  OpenApiPathItem,
   OpenApiServerVariable,
   OpenApiLink,
   OpenApiServer,
+  OpenApiCallback,
   OpenApiRequestBody,
   OpenApiResponse,
   OpenApiOperation,
-  OpenApiPathItem,
   OpenApiParameter,
   OpenApiSecurityRequirement,
 } from "../core/index.ts";
@@ -1605,6 +1606,38 @@ export function withEncoding<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
+ * @fieldType Map<string,OpenApiPathItem>
+ * @serializedName callback
+ */
+export function withCallback<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _callback?: Map<string, OpenApiPathItem>;
+    callback(name: string) {
+      return {
+        with: (val: OpenApiPathItem) => {
+          const copy: this = Object.create(this);
+          copy._callback = new Map(this._callback);
+          copy._callback.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._callback) {
+        for (let [key, val] of this._callback.entries()) {
+          Object.defineProperty(json, key, {
+            value: val.toJSON(),
+            enumerable: true,
+          });
+        }
+      }
+      return json;
+    }
+  };
+}
+
+/**
  * @fieldType Map<string,OpenApiServerVariable>
  * @serializedName variables
  */
@@ -1687,6 +1720,38 @@ export function withServer<TBase extends GConstructor>(Base: TBase) {
           value: this._server.toJSON(),
           enumerable: true,
         });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType Map<string,OpenApiCallback>
+ * @serializedName callbacks
+ */
+export function withCallbacks<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _callbacks?: Map<string, OpenApiCallback>;
+    callbacks(name: string) {
+      return {
+        with: (val: OpenApiCallback) => {
+          const copy: this = Object.create(this);
+          copy._callbacks = new Map(this._callbacks);
+          copy._callbacks.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._callbacks) {
+        for (let [key, val] of this._callbacks.entries()) {
+          Object.defineProperty(json, key, {
+            value: val.toJSON(),
+            enumerable: true,
+          });
+        }
       }
       return json;
     }

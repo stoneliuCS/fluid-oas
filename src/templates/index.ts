@@ -478,6 +478,11 @@ async function main() {
       serializedName: "encoding",
     }),
     new OpenApiMapClass({
+      fnName: "withCallback",
+      fieldType: "Map<string, OpenApiPathItem>",
+      serializedName: "callback",
+    }),
+    new OpenApiMapClass({
       fnName: "withVariables",
       fieldType: "Map<string, OpenApiServerVariable>",
       serializedName: "variables",
@@ -491,6 +496,11 @@ async function main() {
       fnName: "withServer",
       fieldType: "OpenApiServer",
       serializedName: "server",
+    }),
+    new OpenApiMapClass({
+      fnName: "withCallbacks",
+      fieldType: "Map<string, OpenApiCallback>",
+      serializedName: "callbacks",
     }),
     new MapTemplateBuilder({
       fnName: "withParameters",

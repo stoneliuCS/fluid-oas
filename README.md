@@ -185,7 +185,7 @@ const user = Object()
 
 ## Paths
 
-Modularize the way you write your API endpoints. Define _PathItems_ and _Schemas_, composing them to create 
+Modularize the way you write your API endpoints. Define _PathItems_ and _Schemas_, composing them to create
 complex API endpoints.
 
 ```ts
@@ -259,9 +259,7 @@ const paths = Path()
           "schema": {
             "properties": {
               "message": {
-                "enum": [
-                  "OK"
-                ],
+                "enum": ["OK"],
                 "type": "string"
               }
             },
@@ -269,18 +267,14 @@ const paths = Path()
           }
         }
       },
-      "tags": [
-        "HealthCheck"
-      ],
+      "tags": ["HealthCheck"],
       "summary": "Health Check Endpoint",
       "description": "Pings the server to check the health of the current server"
     }
   },
   "/api/v1/users": {
     "post": {
-      "tags": [
-        "user"
-      ],
+      "tags": ["user"],
       "summary": "Creates a User",
       "description": "Creates a user from the specified body (with ID being the decoded ID from JWT).",
       "requestBody": {
@@ -302,11 +296,7 @@ const paths = Path()
               "mode": {
                 "description": "Mode of the user.",
                 "nullable": true,
-                "enum": [
-                  "BASIC",
-                  "ADVANCED",
-                  null
-                ],
+                "enum": ["BASIC", "ADVANCED", null],
                 "type": "string"
               },
               "profilePhoto": {
@@ -315,9 +305,7 @@ const paths = Path()
                 "type": "string"
               }
             },
-            "required": [
-              "username"
-            ],
+            "required": ["username"],
             "additionalProperties": true,
             "type": "object"
           }
