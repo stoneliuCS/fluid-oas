@@ -608,6 +608,11 @@ async function main() {
       serializedName: "contact",
     }),
     new OpenApiClass({
+      fnName: "withResponsesObject",
+      fieldType: "OpenApiResponses",
+      serializedName: "responses",
+    }),
+    new OpenApiClass({
       fnName: "withLicense",
       fieldType: "OpenApiLicense",
       serializedName: "license",

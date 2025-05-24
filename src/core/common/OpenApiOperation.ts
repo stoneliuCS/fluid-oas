@@ -6,7 +6,7 @@ import {
   withOperationId,
   withParametersArray,
   withRequestBody,
-  withResponses,
+  withResponsesObject,
   withSecurityArray,
   withServersArray,
   withSummary,
@@ -18,7 +18,7 @@ const OperationBase = withCallbacks(
   withServersArray(
     withSecurityArray(
       withDeprecated(
-        withResponses(
+        withResponsesObject(
           withRequestBody(
             withParametersArray(
               withOperationId(

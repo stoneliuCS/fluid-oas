@@ -1,5 +1,3 @@
-import type { OpenApiContact } from "../core/common/OpenApiContact.ts";
-import type { OpenApiLicense } from "../core/common/OpenApiLicense.ts";
 import type { OpenApiMediaType } from "../core/common/OpenApiMedia.ts";
 import type {
   OpenApiExample,
@@ -20,6 +18,9 @@ import type {
   OpenApiSecurityRequirement,
   OpenApiInfo,
   OpenApiPath,
+  OpenApiContact,
+  OpenApiResponses,
+  OpenApiLicense,
 } from "../core/index.ts";
 import type { OpenApiSchema } from "../core/schema/OpenApiSchema.ts";
 import type {
@@ -2336,6 +2337,31 @@ export function withContact<TBase extends GConstructor>(Base: TBase) {
       if (this._contact) {
         Object.defineProperty(json, "contact", {
           value: this._contact.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiResponses
+ * @serializedName responses
+ */
+export function withResponsesObject<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _responses?: OpenApiResponses;
+    responses(val: OpenApiResponses) {
+      const copy: this = Object.create(this);
+      copy._responses = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._responses) {
+        Object.defineProperty(json, "responses", {
+          value: this._responses.toJSON(),
           enumerable: true,
         });
       }
