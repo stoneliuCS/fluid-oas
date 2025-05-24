@@ -1,3 +1,5 @@
+import type { OpenApiContact } from "../core/common/OpenApiContact.ts";
+import type { OpenApiLicense } from "../core/common/OpenApiLicense.ts";
 import type { OpenApiMediaType } from "../core/common/OpenApiMedia.ts";
 import type {
   OpenApiExample,
@@ -16,6 +18,8 @@ import type {
   OpenApiOperation,
   OpenApiParameter,
   OpenApiSecurityRequirement,
+  OpenApiInfo,
+  OpenApiPath,
 } from "../core/index.ts";
 import type { OpenApiSchema } from "../core/schema/OpenApiSchema.ts";
 import type {
@@ -2137,5 +2141,290 @@ export function withSecurityRequirement<TBase extends GConstructor>(
       }
       return json;
     }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName openapi
+ */
+export function withOpenApi<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _openapi?: string;
+    openapi(val: string) {
+      const copy: this = Object.create(this);
+      copy._openapi = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._openapi !== undefined) {
+        Object.defineProperty(json, "openapi", {
+          value: this._openapi,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName termsOfService
+ */
+export function withTermsOfService<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _termsOfService?: string;
+    termsOfService(val: string) {
+      const copy: this = Object.create(this);
+      copy._termsOfService = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._termsOfService !== undefined) {
+        Object.defineProperty(json, "termsOfService", {
+          value: this._termsOfService,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName jsonSchemaDialect
+ */
+export function withJSONSchemaDialect<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _jsonSchemaDialect?: string;
+    jsonSchemaDialect(val: string) {
+      const copy: this = Object.create(this);
+      copy._jsonSchemaDialect = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._jsonSchemaDialect !== undefined) {
+        Object.defineProperty(json, "jsonSchemaDialect", {
+          value: this._jsonSchemaDialect,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName email
+ */
+export function withEmail<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _email?: string;
+    email(val: string) {
+      const copy: this = Object.create(this);
+      copy._email = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._email !== undefined) {
+        Object.defineProperty(json, "email", {
+          value: this._email,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName identifier
+ */
+export function withIdentifier<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _identifier?: string;
+    identifier(val: string) {
+      const copy: this = Object.create(this);
+      copy._identifier = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._identifier !== undefined) {
+        Object.defineProperty(json, "identifier", {
+          value: this._identifier,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiInfo
+ * @serializedName info
+ */
+export function withInfo<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _info?: OpenApiInfo;
+    info(val: OpenApiInfo) {
+      const copy: this = Object.create(this);
+      copy._info = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._info) {
+        Object.defineProperty(json, "info", {
+          value: this._info.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiPath
+ * @serializedName paths
+ */
+export function withPaths<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _paths?: OpenApiPath;
+    paths(val: OpenApiPath) {
+      const copy: this = Object.create(this);
+      copy._paths = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._paths) {
+        Object.defineProperty(json, "paths", {
+          value: this._paths.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiContact
+ * @serializedName contact
+ */
+export function withContact<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _contact?: OpenApiContact;
+    contact(val: OpenApiContact) {
+      const copy: this = Object.create(this);
+      copy._contact = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._contact) {
+        Object.defineProperty(json, "contact", {
+          value: this._contact.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiLicense
+ * @serializedName license
+ */
+export function withLicense<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _license?: OpenApiLicense;
+    license(val: OpenApiLicense) {
+      const copy: this = Object.create(this);
+      copy._license = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._license) {
+        Object.defineProperty(json, "license", {
+          value: this._license.toJSON(),
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType Map<string,OpenApiPathItem>
+ * @serializedName webhooks
+ */
+export function withWebhooks<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _webhooks?: Map<string, OpenApiPathItem>;
+    webhooks(name: string) {
+      return {
+        with: (val: OpenApiPathItem) => {
+          const copy: this = Object.create(this);
+          copy._webhooks = new Map(this._webhooks);
+          copy._webhooks.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._webhooks) {
+        for (let [key, val] of this._webhooks.entries()) {
+          Object.defineProperty(json, key, {
+            value: val.toJSON(),
+            enumerable: true,
+          });
+        }
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType T
+ * @serializedName tags
+ */
+export function withTagsEnumerable<TBase extends GConstructor>(Base: TBase) {
+  return <T>() => {
+    return class extends Base {
+      protected _tags?: T[];
+      tags(...val: T[]) {
+        const copy: this = Object.create(this);
+        copy._tags =
+          this._tags === undefined ? [...val] : [...this._tags, ...val];
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._tags !== undefined) {
+          Object.defineProperty(json, "tags", {
+            value: this._tags,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
   };
 }

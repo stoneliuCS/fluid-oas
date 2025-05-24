@@ -1,12 +1,21 @@
 import {
+  withContact,
   withDescription,
+  withLicense,
   withSummary,
+  withTermsOfService,
   withTitle,
   withVersion,
 } from "../../common/common";
 import { Base } from "./base";
 
-const InfoBase = withVersion(withTitle(withDescription(withSummary(Base))));
+const InfoBase = withLicense(
+  withContact(
+    withTermsOfService(
+      withVersion(withTitle(withDescription(withSummary(Base))))
+    )
+  )
+);
 class _OpenApiInfo extends InfoBase {}
 
 export function Info(title: string) {

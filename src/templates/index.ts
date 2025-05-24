@@ -567,6 +567,61 @@ async function main() {
       fieldType: "Map<string, string[]>",
       serializedName: "field",
     }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withOpenApi",
+      fieldType: "string",
+      serializedName: "openapi",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withTermsOfService",
+      fieldType: "string",
+      serializedName: "termsOfService",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withJSONSchemaDialect",
+      fieldType: "string",
+      serializedName: "jsonSchemaDialect",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withEmail",
+      fieldType: "string",
+      serializedName: "email",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withIdentifier",
+      fieldType: "string",
+      serializedName: "identifier",
+    }),
+    new OpenApiClass({
+      fnName: "withInfo",
+      fieldType: "OpenApiInfo",
+      serializedName: "info",
+    }),
+    new OpenApiClass({
+      fnName: "withPaths",
+      fieldType: "OpenApiPath",
+      serializedName: "paths",
+    }),
+    new OpenApiClass({
+      fnName: "withContact",
+      fieldType: "OpenApiContact",
+      serializedName: "contact",
+    }),
+    new OpenApiClass({
+      fnName: "withLicense",
+      fieldType: "OpenApiLicense",
+      serializedName: "license",
+    }),
+    new OpenApiMapClass({
+      fnName: "withWebhooks",
+      fieldType: "Map<string, OpenApiPathItem>",
+      serializedName: "webhooks",
+    }),
+    new Enumerable({
+      fnName: "withTagsEnumerable",
+      fieldType: "T",
+      serializedName: "tags",
+    }),
   ].forEach(fn => fn.write(MainProject));
 
   await MainProject.save();

@@ -22,3 +22,6 @@ export * from "./OpenApiPath.ts";
 export * from "./OpenApiPathItem.ts";
 export * from "./OpenApiSecurityRequirement.ts";
 export * from "./OpenApiCallback.ts";
+export * from "./OpenApiContact.ts";
+export * from "./OpenApiLicense.ts";
+export * from "./OpenApiInfo.ts";

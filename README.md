@@ -18,7 +18,7 @@ S.A.L.T is an embedded, functional _domain specific language_ for expressing typ
 
 ## Goals
 
-Normal OAS _DSLs_ either make the developers write decorators or objects that end up to be very similar to writing JSON. This library takes it one step further by introducing _compile-time_ protections when writing specifications and also additionally abstracts over the entire specification through Objects.
+Normal OAS _DSLs_ either make the developers write decorators or objects that end up being very similar to writing JSON. This library takes it one step further by introducing _compile-time_ protections when writing specifications and also additionally abstracts over the entire specification through Objects.
 
 ## Features
 
