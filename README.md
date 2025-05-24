@@ -227,7 +227,7 @@ const healthCheckPath = PathItem()
       )
   );
 
-const userPost = Operation()
+const userPostOperation = Operation()
   .tags("user")
   .summary("Creates a User")
   .description(
@@ -238,7 +238,7 @@ const userPost = Operation()
     RequestBody("application/json").with(MediaType().schema(userSchema))
   );
 
-const userPath = PathItem().method("post").with(userPost);
+const userPath = PathItem().method("post").with(userPostOperation);
 
 const paths = Path()
   .endpoint("/healthcheck")
