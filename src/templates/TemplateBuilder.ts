@@ -39,6 +39,31 @@ export class TemplateBuilder {
       type: write => write.write(`"schema" | "content"`),
     });
     sourceFile.addTypeAlias({
+      name: "OpenApiHTTPMethod",
+      isExported: true,
+      type: write =>
+        write.write(
+          `"get" | "put" | "patch" | "post" | "delete" | "options" | "head" | "trace"`
+        ),
+    });
+    sourceFile.addTypeAlias({
+      name: "OpenApiMediaContentType",
+      isExported: true,
+      type: write =>
+        write.write(
+          `
+            "application/json" |
+            "application/xml" |
+            "application/x-www-form-urlencoded" |
+            "multipart/form-data" |
+            "text/plain; charset=utf-8" |
+            "text/html" |
+            "application/pdf" |
+            "image/png" 
+          `
+        ),
+    });
+    sourceFile.addTypeAlias({
       name: "OpenApiHTTPStatusCode",
       isExported: true,
       type: write =>

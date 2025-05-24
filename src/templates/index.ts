@@ -6,7 +6,45 @@ import { MapTemplateBuilder } from "./MapTemplate";
 import { ArrayTemplateBuilder } from "./ArrayTemplate";
 import { FunctionBuilder } from "./FunctionBuilder";
 
-const Enum = class extends ArrayTemplateBuilder {
+const SecurityRequirementClass = class extends MapTemplateBuilder {
+  protected buildBuilderMethod(writer: CodeBlockWriter): void {
+    writer
+      .write(`${this.serializedName}(name : ${this.parseField().key})`)
+      .block(() => {
+        writer.write(`return`).block(() => {
+          writer
+            .write(`with : (...val : ${this.parseField().val}) => `)
+            .block(() => {
+              writer.writeLine("const copy : this = Object.create(this);");
+              writer.writeLine(
+                `copy._${this.serializedName} = new Map(this._${this.serializedName});`
+              );
+              writer.writeLine(
+                `copy._${this.serializedName}.set(name, [...val]);`
+              );
+              writer.writeLine("return copy;");
+            });
+        });
+      });
+  }
+  protected buildJSONMethod(writer: CodeBlockWriter): void {
+    writer.write("toJSON()").block(() => {
+      writer.writeLine("const json = super.toJSON();");
+      writer
+        .write(`if (this._${this.serializedName} !== undefined)`)
+        .block(() => {
+          writer.writeLine(
+            `this._${this.serializedName}.forEach((val, key) => {
+              Object.defineProperty(json, key, { value : val, enumerable : true })
+            }) `
+          );
+        });
+      writer.writeLine("return json;");
+    });
+  }
+};
+
+const Enumerable = class extends ArrayTemplateBuilder {
   protected buildBuilderMethod(writer: CodeBlockWriter): void {
     writer
       .write(
@@ -23,7 +61,7 @@ const Enum = class extends ArrayTemplateBuilder {
   }
 };
 
-const HTTPStatusCode = class extends MapTemplateBuilder {
+const KeyNameClass = class extends MapTemplateBuilder {
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
@@ -394,7 +432,7 @@ async function main() {
       fieldType: "Map<string, OpenApiSchema>",
       serializedName: "property",
     }),
-    new Enum({
+    new Enumerable({
       fnName: "withEnum",
       fieldType: "T",
       serializedName: "enum",
@@ -431,7 +469,7 @@ async function main() {
     }),
     new OpenApiMapClass({
       fnName: "withContent",
-      fieldType: "Map<string, OpenApiMediaType>",
+      fieldType: "Map<OpenApiMediaContentType, OpenApiMediaType>",
       serializedName: "content",
     }),
     new OpenApiMapClass({
@@ -460,24 +498,54 @@ async function main() {
       serializedName: "parameters",
     }),
     new PrimitiveTemplateBuilder({
-      fnName: "withRequestBody",
+      fnName: "withRequestBodyPrimitive",
       fieldType: "string",
       serializedName: "requestBody",
     }),
-    new HTTPStatusCode({
+    new OpenApiClass({
+      fnName: "withRequestBody",
+      fieldType: "OpenApiRequestBody",
+      serializedName: "requestBody",
+    }),
+    new KeyNameClass({
       fnName: "withResponses",
       fieldType: "Map<OpenApiHTTPStatusCode, OpenApiResponse>",
       serializedName: "response",
+    }),
+    new KeyNameClass({
+      fnName: "withMethods",
+      fieldType: "Map<OpenApiHTTPMethod, OpenApiOperation>",
+      serializedName: "method",
+    }),
+    new KeyNameClass({
+      fnName: "withPath",
+      fieldType: "Map<string, OpenApiPathItem>",
+      serializedName: "endpoint",
     }),
     new OpenApiArrayClass({
       fnName: "withParametersArray",
       fieldType: "OpenApiParameter",
       serializedName: "parameters",
     }),
-    new ArrayTemplateBuilder({
+    new OpenApiArrayClass({
+      fnName: "withSecurityArray",
+      fieldType: "OpenApiSecurityRequirement",
+      serializedName: "security",
+    }),
+    new OpenApiArrayClass({
+      fnName: "withServersArray",
+      fieldType: "OpenApiServer",
+      serializedName: "servers",
+    }),
+    new Enumerable({
       fnName: "withTags",
-      fieldType: "string",
+      fieldType: "T",
       serializedName: "tags",
+    }),
+    new SecurityRequirementClass({
+      fnName: "withSecurityRequirement",
+      fieldType: "Map<string, string[]>",
+      serializedName: "field",
     }),
   ].forEach(fn => fn.write(MainProject));
 

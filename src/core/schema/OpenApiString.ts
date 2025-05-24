@@ -12,7 +12,7 @@ const StringBase = withEnum(
   withDefault(
     withPattern(withMaxLength(withMinLength(withFormat(SchemaBase)<string>())))
   )<string>()
-)<string>();
+)<string | null>();
 class _OpenApiString extends StringBase {
   toJSON(): unknown {
     const json = super.toJSON();

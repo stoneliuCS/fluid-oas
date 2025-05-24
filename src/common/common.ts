@@ -9,14 +9,20 @@ import type {
   OpenApiServerVariable,
   OpenApiLink,
   OpenApiServer,
+  OpenApiRequestBody,
   OpenApiResponse,
+  OpenApiOperation,
+  OpenApiPathItem,
   OpenApiParameter,
+  OpenApiSecurityRequirement,
 } from "../core/index.ts";
 import type { OpenApiSchema } from "../core/schema/OpenApiSchema.ts";
 import type {
   GConstructor,
   OpenApiExtensionString,
+  OpenApiHTTPMethod,
   OpenApiHTTPStatusCode,
+  OpenApiMediaContentType,
 } from "./types.ts";
 
 /**
@@ -1535,13 +1541,13 @@ export function withHeaders<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType Map<string,OpenApiMediaType>
+ * @fieldType Map<OpenApiMediaContentType,OpenApiMediaType>
  * @serializedName content
  */
 export function withContent<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    protected _content?: Map<string, OpenApiMediaType>;
-    content(name: string) {
+    protected _content?: Map<OpenApiMediaContentType, OpenApiMediaType>;
+    content(name: OpenApiMediaContentType) {
       return {
         with: (val: OpenApiMediaType) => {
           const copy: this = Object.create(this);
@@ -1725,7 +1731,9 @@ export function withParameters<TBase extends GConstructor>(Base: TBase) {
  * @fieldType string
  * @serializedName requestBody
  */
-export function withRequestBody<TBase extends GConstructor>(Base: TBase) {
+export function withRequestBodyPrimitive<TBase extends GConstructor>(
+  Base: TBase
+) {
   return class extends Base {
     protected _requestBody?: string;
     requestBody(val: string) {
@@ -1738,6 +1746,31 @@ export function withRequestBody<TBase extends GConstructor>(Base: TBase) {
       if (this._requestBody !== undefined) {
         Object.defineProperty(json, "requestBody", {
           value: this._requestBody,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiRequestBody
+ * @serializedName requestBody
+ */
+export function withRequestBody<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _requestBody?: OpenApiRequestBody;
+    requestBody(val: OpenApiRequestBody) {
+      const copy: this = Object.create(this);
+      copy._requestBody = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._requestBody) {
+        Object.defineProperty(json, "requestBody", {
+          value: this._requestBody.toJSON(),
           enumerable: true,
         });
       }
@@ -1779,6 +1812,70 @@ export function withResponses<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
+ * @fieldType Map<OpenApiHTTPMethod,OpenApiOperation>
+ * @serializedName method
+ */
+export function withMethods<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _method?: Map<OpenApiHTTPMethod, OpenApiOperation>;
+    method(name: OpenApiHTTPMethod) {
+      return {
+        with: (val: OpenApiOperation) => {
+          const copy: this = Object.create(this);
+          copy._method = new Map(this._method);
+          copy._method.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._method) {
+        this._method.forEach((val, key) => {
+          Object.defineProperty(json, key, {
+            value: val.toJSON(),
+            enumerable: true,
+          });
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType Map<string,OpenApiPathItem>
+ * @serializedName endpoint
+ */
+export function withPath<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    protected _endpoint?: Map<string, OpenApiPathItem>;
+    endpoint(name: string) {
+      return {
+        with: (val: OpenApiPathItem) => {
+          const copy: this = Object.create(this);
+          copy._endpoint = new Map(this._endpoint);
+          copy._endpoint.set(name, val);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._endpoint) {
+        this._endpoint.forEach((val, key) => {
+          Object.defineProperty(json, key, {
+            value: val.toJSON(),
+            enumerable: true,
+          });
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
  * @fieldType OpenApiParameter
  * @serializedName parameters
  */
@@ -1807,16 +1904,73 @@ export function withParametersArray<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType string
+ * @fieldType OpenApiSecurityRequirement
+ * @serializedName security
+ */
+export function withSecurityArray<TBase extends GConstructor>(Base: TBase) {
+  return <T extends OpenApiSecurityRequirement>() => {
+    return class extends Base {
+      protected _security?: T[];
+      security(val: T) {
+        const copy: this = Object.create(this);
+        copy._security =
+          this._security === undefined ? [val] : [...this._security, val];
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._security !== undefined) {
+          Object.defineProperty(json, "security", {
+            value: this._security.map(val => val.toJSON()),
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType OpenApiServer
+ * @serializedName servers
+ */
+export function withServersArray<TBase extends GConstructor>(Base: TBase) {
+  return <T extends OpenApiServer>() => {
+    return class extends Base {
+      protected _servers?: T[];
+      servers(val: T) {
+        const copy: this = Object.create(this);
+        copy._servers =
+          this._servers === undefined ? [val] : [...this._servers, val];
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._servers !== undefined) {
+          Object.defineProperty(json, "servers", {
+            value: this._servers.map(val => val.toJSON()),
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType T
  * @serializedName tags
  */
 export function withTags<TBase extends GConstructor>(Base: TBase) {
-  return <T extends string>() => {
+  return <T>() => {
     return class extends Base {
       protected _tags?: T[];
-      tags(val: T) {
+      tags(...val: T[]) {
         const copy: this = Object.create(this);
-        copy._tags = this._tags === undefined ? [val] : [...this._tags, val];
+        copy._tags =
+          this._tags === undefined ? [...val] : [...this._tags, ...val];
         return copy;
       }
       toJSON() {
@@ -1830,5 +1984,36 @@ export function withTags<TBase extends GConstructor>(Base: TBase) {
         return json;
       }
     };
+  };
+}
+
+/**
+ * @fieldType Map<string,string[]>
+ * @serializedName field
+ */
+export function withSecurityRequirement<TBase extends GConstructor>(
+  Base: TBase
+) {
+  return class extends Base {
+    protected _field?: Map<string, string[]>;
+    field(name: string) {
+      return {
+        with: (...val: Array<string>) => {
+          const copy: this = Object.create(this);
+          copy._field = new Map(this._field);
+          copy._field.set(name, [...val]);
+          return copy;
+        },
+      };
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._field !== undefined) {
+        this._field.forEach((val, key) => {
+          Object.defineProperty(json, key, { value: val, enumerable: true });
+        });
+      }
+      return json;
+    }
   };
 }

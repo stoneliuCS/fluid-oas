@@ -1,6 +1,24 @@
 export type GConstructor<T = { toJSON(): unknown }> = new (...args: any[]) => T;
 export type OpenApiExtensionString = `x-${string}`;
 export type OpenApiSchemaOrContent = "schema" | "content";
+export type OpenApiHTTPMethod =
+  | "get"
+  | "put"
+  | "patch"
+  | "post"
+  | "delete"
+  | "options"
+  | "head"
+  | "trace";
+export type OpenApiMediaContentType =
+  | "application/json"
+  | "application/xml"
+  | "application/x-www-form-urlencoded"
+  | "multipart/form-data"
+  | "text/plain; charset=utf-8"
+  | "text/html"
+  | "application/pdf"
+  | "image/png";
 export type OpenApiHTTPStatusCode =
   | "100"
   | "101"

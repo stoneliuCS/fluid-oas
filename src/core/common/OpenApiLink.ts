@@ -3,14 +3,16 @@ import {
   withOperationId,
   withOperationRef,
   withParameters,
-  withRequestBody,
+  withRequestBodyPrimitive,
   withServer,
 } from "../../common/common";
 import { Base } from "./base";
 
 const LinkBase = withServer(
   withDescription(
-    withRequestBody(withParameters(withOperationId(withOperationRef(Base))))
+    withRequestBodyPrimitive(
+      withParameters(withOperationId(withOperationRef(Base)))
+    )
   )
 );
 
