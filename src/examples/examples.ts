@@ -18,7 +18,12 @@ const userSchema = Object()
   .property("username")
   .with(stringSchema.description("The username of the user"))
   .property("mode")
-  .with(String().enum("BASIC", "ADVANCED", null))
+  .with(
+    String()
+      .enum("BASIC", "ADVANCED", null)
+      .description("Mode of the user.")
+      .nullable()
+  )
   .property("profilePhoto")
   .with(String().nullable().description("A URL to the user's profile photo."))
   .required("username")
@@ -43,26 +48,25 @@ const healthCheckPath = PathItem()
       )
   );
 
-const userPath = PathItem()
-  .method("post")
-  .with(
-    Operation()
-      .tags("user")
-      .summary("Creates a User")
-      .description(
-        "Creates a user from the specified body (with ID being the decoded ID from JWT)."
-      )
-      .security(SecurityRequirement().field("BearerAuth").with())
-      .requestBody(
-        RequestBody("application/json").with(MediaType().schema(userSchema))
-      )
+const userPost = Operation()
+  .tags("user")
+  .summary("Creates a User")
+  .description(
+    "Creates a user from the specified body (with ID being the decoded ID from JWT)."
+  )
+  .security(SecurityRequirement().field("BearerAuth").with())
+  .requestBody(
+    RequestBody("application/json").with(MediaType().schema(userSchema))
   );
+
+const userPath = PathItem().method("post").with(userPost);
 
 const paths = Path()
   .endpoint("/healthcheck")
   .with(healthCheckPath)
   .beginGroup("/api/v1")
   .endpoint("/users")
-  .with(userPath);
+  .with(userPath)
+  .endGroup();
 
 console.log(JSON.stringify(paths.toJSON(), undefined, 2));
