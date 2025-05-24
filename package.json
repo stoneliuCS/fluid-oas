@@ -1,10 +1,10 @@
 {
-  "name": "salt",
-  "version": "v0.0.1",
-  "module": "./src/core/schema/index.ts",
+  "name": "@qwantumstone/salt",
+  "version": "0.0.1",
+  "module": "./src/index.ts",
   "type": "module",
   "files": [
-    "src/core/schema"
+    "src/"
   ],
   "devDependencies": {
     "@types/bun": "latest",
