@@ -183,9 +183,10 @@ const user = Object()
 }
 ```
 
-### Paths
+## Paths
 
-Modularize the way you write your API endpoints:
+Modularize the way you write your API endpoints. Define _PathItems_ and _Schemas_, composing them to create 
+complex API endpoints.
 
 ```ts
 const stringSchema = String().minLength(1).maxLength(100);
