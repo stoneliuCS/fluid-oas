@@ -5,15 +5,21 @@ import {
   withHeaders,
   withStyle,
 } from "../../common/common";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
 
 const EncodingBase = withAllowReserved(
   withExplode(withStyle(withHeaders(withContentType(Base)))<string>())
 );
 
-class _OpenApiEncoding extends EncodingBase {}
+interface Encoding extends BaseInterface {
+  explode(): this;
+  allowReserved(): this;
+  addStyle(style: string): this;
+}
 
-export function Encoding() {
+class _OpenApiEncoding extends EncodingBase implements Encoding {}
+
+export function Encoding(): Encoding {
   return new _OpenApiEncoding();
 }
-export type OpenApiEncoding = _OpenApiEncoding;
+export type OpenApiEncoding = Encoding;

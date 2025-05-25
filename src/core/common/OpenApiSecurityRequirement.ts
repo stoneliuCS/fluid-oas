@@ -1,7 +1,7 @@
 import { withSecurityRequirement } from "../../common/common";
-import { _base } from "./base";
+import { Root } from "./base";
 
-const SecurityRequirementBase = withSecurityRequirement(_base);
+const SecurityRequirementBase = withSecurityRequirement(Root);
 
 class _OpenApiSecurityRequirementBase extends SecurityRequirementBase {}
 

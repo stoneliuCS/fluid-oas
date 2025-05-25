@@ -1,12 +1,18 @@
 import { withName, withURL, withEmail } from "../../common/common";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
 
 const ContactBase = withEmail(withURL(withName(Base)));
 
-class _OpenApiContact extends ContactBase {}
+interface Contract extends BaseInterface {
+  addEmail(email: string): this;
+  addUrl(url: string): this;
+  addName(name: string): this;
+}
 
-export function Contact() {
+class _OpenApiContact extends ContactBase implements Contract {}
+
+export function Contact(): Contract {
   return new _OpenApiContact();
 }
 
-export type OpenApiContact = _OpenApiContact;
+export type OpenApiContact = Contract;

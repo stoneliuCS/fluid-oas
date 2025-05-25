@@ -9,7 +9,6 @@ import {
   Responses,
   OpenApi,
 } from "../core";
-import { MediaType } from "../core/common/OpenApiMedia";
 
 const info = Info("Dearly API")
   .withVersion("1.0.0")
@@ -23,27 +22,3 @@ const info = Info("Dearly API")
        feature-rich experience for younger users.`
   )
   .summary("Dearly makes connecting with loved ones easy.");
-
-const healthcheck = PathItem()
-  .method("get")
-  .with(
-    Operation().responses(
-      Responses()
-        .response("200")
-        .with(
-          Response("Success!")
-            .content("application/json")
-            .with(
-              MediaType().schema(
-                Object().property("message").with(String().enum("OK"))
-              )
-            )
-        )
-    )
-  );
-
-const path = Path().endpoint("/healthcheck").with(healthcheck);
-
-const api = OpenApi("3.0.0").withInfo(info).paths(path);
-
-console.log(JSON.stringify(api, undefined, 2));

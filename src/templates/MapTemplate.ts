@@ -31,34 +31,30 @@ export class MapTemplateBuilder extends FunctionBuilder {
   }
   protected buildField(writer: CodeBlockWriter): void {
     this.parseField();
-    writer.writeLine(`#_${this.serializedName}? : ${this.fieldType};`);
+    writer.writeLine(`#${this.serializedName}? : ${this.fieldType};`);
   }
   protected buildBuilderMethod(writer: CodeBlockWriter): void {
     writer
-      .write(`${this.serializedName}(name : ${this.parseField().key})`)
+      .write(
+        `${this.methodName}(name : ${this.parseField().key}, val : ${this.parseField().val})`
+      )
       .block(() => {
-        writer.write(`return`).block(() => {
-          writer
-            .write(`with : (val : ${this.parseField().val}) => `)
-            .block(() => {
-              writer.writeLine("const copy : this = Object.create(this);");
-              writer.writeLine(
-                `copy.#_${this.serializedName} = new Map(this.#_${this.serializedName});`
-              );
-              writer.writeLine(`copy.#_${this.serializedName}.set(name, val);`);
-              writer.writeLine("return copy;");
-            });
-        });
+        writer.writeLine("const copy : this = Object.create(this);");
+        writer.writeLine(
+          `copy.#${this.serializedName} = new Map(this.#${this.serializedName});`
+        );
+        writer.writeLine(`copy.#${this.serializedName}.set(name, val);`);
+        writer.writeLine("return copy;");
       });
   }
 
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this.#_${this.serializedName})`).block(() => {
+      writer.write(`if (this.#${this.serializedName})`).block(() => {
         writer.writeLine("const mappings : any = {};");
         writer.writeLine(
-          `this.#_${this.serializedName}.forEach((val, key) => { mappings[key] = val })`
+          `this.#${this.serializedName}.forEach((val, key) => { mappings[key] = val })`
         );
         writer.writeLine(
           `Object.defineProperty(json, "${this.serializedName}", { value : mappings, enumerable : true })`

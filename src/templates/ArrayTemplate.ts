@@ -12,17 +12,17 @@ export class ArrayTemplateBuilder extends FunctionBuilder {
   }
   protected buildField(writer: CodeBlockWriter): void {
     writer.writeLine(
-      `#_${this.serializedName}? : ${FunctionBuilder.genericName}[];`
+      `#${this.serializedName}? : ${FunctionBuilder.genericName}[];`
     );
   }
   protected buildBuilderMethod(writer: CodeBlockWriter): void {
     writer
-      .write(`${this.serializedName}(val : ${FunctionBuilder.genericName})`)
+      .write(`${this.methodName}(val : ${FunctionBuilder.genericName})`)
       .block(() => {
         writer.writeLine("const copy: this = Object.create(this);");
         writer.writeLine(
-          `copy.#_${this.serializedName} = this.#_${this.serializedName} === undefined 
-            ? [val] : [...this.#_${this.serializedName}, val]`
+          `copy.#${this.serializedName} = this.#${this.serializedName} === undefined 
+            ? [val] : [...this.#${this.serializedName}, val]`
         );
         writer.writeLine("return copy;");
       });

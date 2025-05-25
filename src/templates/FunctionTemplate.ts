@@ -12,15 +12,15 @@ export class FunctionTemplateBuilder extends FunctionBuilder {
   }
   protected buildField(writer: CodeBlockWriter): void {
     writer.writeLine(
-      `#_${this.serializedName}? : ${FunctionBuilder.genericName};`
+      `#${this.serializedName}? : ${FunctionBuilder.genericName};`
     );
   }
   protected buildBuilderMethod(writer: CodeBlockWriter): void {
     writer
-      .write(`${this.serializedName}(val : ${FunctionBuilder.genericName})`)
+      .write(`${this.methodName}(val : ${FunctionBuilder.genericName})`)
       .block(() => {
         writer.writeLine("const copy: this = Object.create(this);");
-        writer.writeLine(`copy.#_${this.serializedName} = val;`);
+        writer.writeLine(`copy.#${this.serializedName} = val;`);
         writer.writeLine("return copy;");
       });
   }

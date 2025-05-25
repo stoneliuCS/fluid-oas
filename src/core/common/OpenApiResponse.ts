@@ -11,6 +11,6 @@ const ResponseBase = withLinks(withContent(withHeaders(withDescription(Base))));
 class _OpenApiResponse extends ResponseBase {}
 
 export function Response(description: string) {
-  return new _OpenApiResponse().description(description);
+  return new _OpenApiResponse().addDescription(description);
 }
 export type OpenApiResponse = _OpenApiResponse;

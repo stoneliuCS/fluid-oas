@@ -14,7 +14,7 @@ class _OpenApiRequestBody extends RequestBodyBase {}
 export function RequestBody(content: OpenApiMediaContentType) {
   return {
     with: (media: OpenApiMediaType) => {
-      return new _OpenApiRequestBody().content(content).with(media);
+      return new _OpenApiRequestBody().addContent(content, media);
     },
   };
 }

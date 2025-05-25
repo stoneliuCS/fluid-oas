@@ -4,14 +4,22 @@ import {
   withSummary,
   withValue,
 } from "../../common/common";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
 
 const ExampleBase = withValue(
   withExternalValue(withSummary(withDescription(Base)))
 )<unknown>();
-class _OpenApiExample extends ExampleBase {}
+
+interface Example extends BaseInterface {
+  addValue(val: string | unknown): this;
+  addExternalValue(val: string): this;
+  addSummary(summary: string): this;
+  addDescription(description: string): this;
+}
+
+class _OpenApiExample extends ExampleBase implements Example {}
 
 export function Example() {
   return new _OpenApiExample();
 }
-export type OpenApiExample = _OpenApiExample;
+export type OpenApiExample = Example;

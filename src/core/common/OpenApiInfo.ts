@@ -7,7 +7,9 @@ import {
   withTitle,
   withVersion,
 } from "../../common/common";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
+import type { OpenApiContact } from "./OpenApiContact";
+import type { OpenApiLicense } from "./OpenApiLicense";
 
 const InfoBase = withLicense(
   withContact(
@@ -16,13 +18,23 @@ const InfoBase = withLicense(
     )
   )
 );
-class _OpenApiInfo extends InfoBase {}
+
+interface Info extends BaseInterface {
+  addDescription(description: string): this;
+  addTitle(title: string): this;
+  addVersion(version: string): this;
+  addTermsOfService(termsOfService: string): this;
+  addContact(contact: OpenApiContact): this;
+  addLicense(license: OpenApiLicense): this;
+}
+
+class _OpenApiInfo extends InfoBase implements Info {}
 
 export function Info(title: string) {
   return {
-    withVersion: (version: string) => {
-      return new _OpenApiInfo().title(title).version(version);
+    withVersion: (version: string): Info => {
+      return new _OpenApiInfo().addTitle(title).addVersion(version);
     },
   };
 }
-export type OpenApiInfo = _OpenApiInfo;
+export type OpenApiInfo = Info;

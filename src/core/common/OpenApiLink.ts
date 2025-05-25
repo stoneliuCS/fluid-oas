@@ -2,23 +2,33 @@ import {
   withDescription,
   withOperationId,
   withOperationRef,
-  withParameters,
+  withParametersPrimitive,
   withRequestBodyPrimitive,
   withServer,
 } from "../../common/common";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
+import type { OpenApiServer } from "./OpenApiServer";
 
 const LinkBase = withServer(
   withDescription(
     withRequestBodyPrimitive(
-      withParameters(withOperationId(withOperationRef(Base)))
+      withParametersPrimitive(withOperationId(withOperationRef(Base)))
     )
   )
 );
 
-class _OpenApiLink extends LinkBase {}
+interface Link extends BaseInterface {
+  addServer(server: OpenApiServer): this;
+  addDescription(description: string): this;
+  addRequestBodyLiteral(literalRequestBody: string): this;
+  addParameterLiteral(name: string, parameter: string): this;
+  addOperationId(id: string): this;
+  addOperationRef(ref: string): this;
+}
 
-export function Link() {
+class _OpenApiLink extends LinkBase implements Link {}
+
+export function Link(): Link {
   return new _OpenApiLink();
 }
-export type OpenApiLink = _OpenApiLink;
+export type OpenApiLink = Link;

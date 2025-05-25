@@ -9,7 +9,7 @@
     "declaration": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "moduleResolution": "bundler",     // Back to bundler
+    "moduleResolution": "bundler", // Back to bundler
     "allowImportingTsExtensions": false, // Ensure this is false
     "verbatimModuleSyntax": true,
     "strict": true,

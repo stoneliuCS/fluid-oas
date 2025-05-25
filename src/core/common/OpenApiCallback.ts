@@ -1,12 +1,17 @@
 import { withCallback } from "../../common/common";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
+import type { OpenApiPathItem } from "./OpenApiPathItem";
 
 const CallbackBase = withCallback(Base);
 
-class _OpenApiCallback extends CallbackBase {}
+interface Callback extends BaseInterface {
+  addCallback(callbackName: string, pathItem: OpenApiPathItem): this;
+}
 
-export function Callback() {
+class _OpenApiCallback extends CallbackBase implements Callback {}
+
+export function Callback(): Callback {
   return new _OpenApiCallback();
 }
 
-export type OpenApiCallback = _OpenApiCallback;
+export type OpenApiCallback = Callback;
