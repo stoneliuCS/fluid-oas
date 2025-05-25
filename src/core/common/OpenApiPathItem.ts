@@ -5,16 +5,26 @@ import {
   withServersArray,
   withSummary,
 } from "../../common/common";
-import { Base } from "./base";
+import type { OpenApiHTTPMethod } from "../../common/types";
+import { Base, type BaseInterface } from "./base";
+import type { OpenApiOperation } from "./OpenApiOperation";
+import type { OpenApiParameter } from "./OpenApiParameter";
+import type { OpenApiServer } from "./OpenApiServer";
 
 const PathItemBase = withParametersArray(
   withServersArray(withMethods(withDescription(withSummary(Base))))()
-)();
+)<OpenApiParameter>();
 
-class _OpenApiPathItem extends PathItemBase {}
-
-export function PathItem() {
-  return new _OpenApiPathItem();
+export interface OpenApiPathItem extends BaseInterface {
+  addSummary(summary: string): this;
+  addDescription(description: string): this;
+  addMethod(method: OpenApiHTTPMethod, operation: OpenApiOperation): this;
+  addServers(servers: OpenApiServer[]): this;
+  addParameters(parameters: OpenApiParameter[]): this;
 }
 
-export type OpenApiPathItem = _OpenApiPathItem;
+class _OpenApiPathItem extends PathItemBase implements OpenApiPathItem {}
+
+export function PathItem(): OpenApiPathItem {
+  return new _OpenApiPathItem();
+}

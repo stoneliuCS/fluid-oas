@@ -1,10 +1,16 @@
 import { withPath } from "../../common/common";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
 import type { OpenApiPathItem } from "./OpenApiPathItem";
 
 const PathBase = withPath(Base);
 
-class _OpenApiPath extends PathBase {
+export interface OpenApiPath extends BaseInterface {
+  addEndpoint(endpoint: string, pathItem: OpenApiPathItem): this;
+  beginGroup(prefix: string): this;
+  endGroup(): this;
+}
+
+class _OpenApiPath extends PathBase implements OpenApiPath {
   private _prefix: string = "";
 
   beginGroup(prefix: string): this {
@@ -25,8 +31,6 @@ class _OpenApiPath extends PathBase {
   }
 }
 
-export function Path() {
+export function Path(): OpenApiPath {
   return new _OpenApiPath();
 }
-
-export type OpenApiPath = _OpenApiPath;

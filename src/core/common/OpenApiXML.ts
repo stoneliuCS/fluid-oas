@@ -5,15 +5,22 @@ import {
   withPrefix,
   withWrapped,
 } from "../../common/common";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
 
 const XMLBase = withWrapped(
   withAttribute(withPrefix(withNamespace(withName(Base))))
 );
 
-class _OpenApiXML extends XMLBase {}
+export interface OpenApiXML extends BaseInterface {
+  addName(name: string): this;
+  addNamespace(val: string): this;
+  addPrefix(val: string): this;
+  attribute(): this;
+  wrapped(): this;
+}
 
-export function XML() {
+class _OpenApiXML extends XMLBase implements OpenApiXML {}
+
+export function XML(): OpenApiXML {
   return new _OpenApiXML();
 }
-export type OpenApiXML = _OpenApiXML;

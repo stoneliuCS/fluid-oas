@@ -3,12 +3,18 @@ import {
   withExternalDocs,
   withName,
 } from "../../common/common";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
+import type { OpenApiDocumentation } from "./OpenApiDocumentation";
 
 const TagBase = withExternalDocs(withName(withDescription(Base)));
-class _OpenApiTag extends TagBase {}
 
-export function Tag() {
+export interface OpenApiTag extends BaseInterface {
+  addDescription(description: string): this;
+  addName(name: string): this;
+  addExternalDocs(docs: OpenApiDocumentation): this;
+}
+class _OpenApiTag extends TagBase implements OpenApiTag {}
+
+export function Tag(): OpenApiTag {
   return new _OpenApiTag();
 }
-export type OpenApiTag = _OpenApiTag;

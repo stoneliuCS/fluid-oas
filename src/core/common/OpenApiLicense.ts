@@ -3,16 +3,14 @@ import { Base, type BaseInterface } from "./base";
 
 const LicenseBase = withURL(withIdentifier(withName(Base)));
 
-interface License extends BaseInterface {
+export interface OpenApiLicense extends BaseInterface {
   addName(name: string): this;
   addIdentifier(id: string): this;
   addUrl(url: string): this;
 }
 
-class _OpenApiLicense extends LicenseBase implements License {}
+class _OpenApiLicense extends LicenseBase implements OpenApiLicense {}
 
-export function License(name: string): License {
+export function License(name: string): OpenApiLicense {
   return new _OpenApiLicense().addName(name);
 }
-
-export type OpenApiLicense = _OpenApiLicense;

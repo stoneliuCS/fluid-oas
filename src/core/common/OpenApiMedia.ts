@@ -11,16 +11,15 @@ import type { OpenApiExample } from "./OpenApiExample";
 
 const MediaTypeBase = withEncoding(withExamples(withExample(withSchema(Base))));
 
-interface MediaType extends BaseInterface {
+export interface OpenApiMediaType extends BaseInterface {
   addSchema(schema: OpenApiSchema): this;
   addExample(example: OpenApiExample): this;
   addExample(name: string, example: OpenApiExample): this;
   addEncoding(name: string, encoding: OpenApiEncoding): this;
 }
 
-class _OpenApiMediaType extends MediaTypeBase implements MediaType {}
+class _OpenApiMediaType extends MediaTypeBase implements OpenApiMediaType {}
 
-export function MediaType(): MediaType {
+export function MediaType(): OpenApiMediaType {
   return new _OpenApiMediaType();
 }
-export type OpenApiMediaType = MediaType;

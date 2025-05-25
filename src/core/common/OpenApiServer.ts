@@ -1,11 +1,17 @@
 import { withDescription, withURL, withVariables } from "../../common/common";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
+import type { OpenApiServerVariable } from "./OpenApiServerVariable";
 
 const ServerBase = withVariables(withDescription(withURL(Base)));
 
-class _OpenApiServer extends ServerBase {}
+export interface OpenApiServer extends BaseInterface {
+  addUrl(url: string): this;
+  addDescription(description: string): this;
+  addVariable(variableName: string, val: OpenApiServerVariable): this;
+}
 
-export function Server() {
+class _OpenApiServer extends ServerBase implements OpenApiServer {}
+
+export function Server(): OpenApiServer {
   return new _OpenApiServer();
 }
-export type OpenApiServer = _OpenApiServer;

@@ -1,12 +1,14 @@
 import { withSecurityRequirement } from "../../common/common";
-import { Root } from "./base";
+import { Root, type RootInterface } from "./base";
 
 const SecurityRequirementBase = withSecurityRequirement(Root);
 
-class _OpenApiSecurityRequirementBase extends SecurityRequirementBase {}
-
-export function SecurityRequirement() {
-  return new _OpenApiSecurityRequirementBase();
+export interface OpenApiSecurityRequirement extends RootInterface {
+  addSecurityRequirement(name: string, val: Array<string>): this;
 }
 
-export type OpenApiSecurityRequirement = _OpenApiSecurityRequirementBase;
+class _OpenApiSecurityRequirementBase extends SecurityRequirementBase {}
+
+export function SecurityRequirement(): OpenApiSecurityRequirement {
+  return new _OpenApiSecurityRequirementBase();
+}

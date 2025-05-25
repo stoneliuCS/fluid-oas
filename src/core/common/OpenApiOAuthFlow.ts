@@ -4,15 +4,21 @@ import {
   withScopes,
   withTokenURL,
 } from "../../common/common";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
 
 const OAuthFlowBase = withScopes(
   withRefreshURL(withTokenURL(withAuthorizationURL(Base)))
 );
 
-class _OpenApiOAuthFlow extends OAuthFlowBase {}
+export interface OpenApiOAuthFlow extends BaseInterface {
+  addAuthorizationUrl(url: string): this;
+  addTokenUrl(url: string): this;
+  addRefreshUrl(url: string): this;
+  addScope(name: string, scope: string): this;
+}
 
-export function OAuthFlow() {
+class _OpenApiOAuthFlow extends OAuthFlowBase implements OpenApiOAuthFlow {}
+
+export function OAuthFlow(): OpenApiOAuthFlow {
   return new _OpenApiOAuthFlow();
 }
-export type OpenApiOAuthFlow = _OpenApiOAuthFlow;

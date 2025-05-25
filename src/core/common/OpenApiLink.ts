@@ -17,7 +17,7 @@ const LinkBase = withServer(
   )
 );
 
-interface Link extends BaseInterface {
+export interface OpenApiLink extends BaseInterface {
   addServer(server: OpenApiServer): this;
   addDescription(description: string): this;
   addRequestBodyLiteral(literalRequestBody: string): this;
@@ -26,9 +26,8 @@ interface Link extends BaseInterface {
   addOperationRef(ref: string): this;
 }
 
-class _OpenApiLink extends LinkBase implements Link {}
+class _OpenApiLink extends LinkBase implements OpenApiLink {}
 
-export function Link(): Link {
+export function Link(): OpenApiLink {
   return new _OpenApiLink();
 }
-export type OpenApiLink = Link;

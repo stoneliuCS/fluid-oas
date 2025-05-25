@@ -4,19 +4,25 @@ import {
   withRequired,
 } from "../../common/common";
 import type { OpenApiMediaContentType } from "../../common/types";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
 import type { OpenApiMediaType } from "./OpenApiMedia";
 
 const RequestBodyBase = withRequired(withContent(withDescription(Base)));
 
-class _OpenApiRequestBody extends RequestBodyBase {}
+export interface OpenApiRequestBody extends BaseInterface {
+  addDescription(description: string): this;
+  addContent(name: OpenApiMediaContentType, val: OpenApiMediaType): this;
+  required(): this;
+}
+
+class _OpenApiRequestBody
+  extends RequestBodyBase
+  implements OpenApiRequestBody {}
 
 export function RequestBody(content: OpenApiMediaContentType) {
   return {
-    with: (media: OpenApiMediaType) => {
+    with: (media: OpenApiMediaType): OpenApiRequestBody => {
       return new _OpenApiRequestBody().addContent(content, media);
     },
   };
 }
-
-export type OpenApiRequestBody = _OpenApiRequestBody;

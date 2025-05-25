@@ -1,13 +1,20 @@
 import { withDefault, withResponses } from "../../common/common";
-import { Base } from "./base";
+import type { OpenApiHTTPStatusCode } from "../../common/types";
+import { Base, type BaseInterface } from "./base";
 import type { OpenApiResponse } from "./OpenApiResponse";
 
 const ResponsesBase = withResponses(withDefault(Base)<OpenApiResponse>());
 
-class _OpenApiResponses extends ResponsesBase {}
-
-export function Responses() {
-  return new _OpenApiResponses();
+export interface OpenApiResponses extends BaseInterface {
+  addDefault(response: OpenApiResponse): this;
+  addResponse(
+    statusCode: OpenApiHTTPStatusCode,
+    response: OpenApiResponse
+  ): this;
 }
 
-export type OpenApiResponses = _OpenApiResponses;
+class _OpenApiResponses extends ResponsesBase implements OpenApiResponses {}
+
+export function Responses(): OpenApiResponses {
+  return new _OpenApiResponses();
+}

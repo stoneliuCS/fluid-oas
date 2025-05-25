@@ -3,16 +3,15 @@ import { Base, type BaseInterface } from "./base";
 
 const DocumentationBase = withURL(withDescription(Base));
 
-interface Documentation extends BaseInterface {
+export interface OpenApiDocumentation extends BaseInterface {
   addUrl(url: string): this;
   addDescription(description: string): this;
 }
 
 class _OpenApiDocumentation
   extends DocumentationBase
-  implements Documentation {}
+  implements OpenApiDocumentation {}
 
-export function Documentation(): Documentation {
+export function Documentation(): OpenApiDocumentation {
   return new _OpenApiDocumentation();
 }
-export type OpenApiDocumentation = Documentation;

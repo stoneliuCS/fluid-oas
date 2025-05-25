@@ -7,6 +7,8 @@ import {
 } from "../../common/common";
 import type { OpenApiExtensionString } from "../../common/types";
 import type { OpenApiSchema } from "../schema/OpenApiSchema";
+import type { OpenApiDocumentation } from "./OpenApiDocumentation";
+import type { OpenApiExample } from "./OpenApiExample";
 
 export class Root {
   toJSON(): unknown {
@@ -20,6 +22,13 @@ export interface RootInterface {
 
 export interface BaseInterface extends RootInterface {
   addExtension(name: OpenApiExtensionString, val: OpenApiSchema): this;
+}
+
+export interface SchemaInterface extends BaseInterface {
+  addDescription(description: string): this;
+  addExternalDocs(docs: OpenApiDocumentation): this;
+  addExample(example: OpenApiExample): this;
+  nullable(): this;
 }
 
 // Base Class which all OpenApi Definitions will inherit.

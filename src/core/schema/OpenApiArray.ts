@@ -1,12 +1,17 @@
 import { withItems, withMaxItems, withMinItems } from "../../common/common";
-import { SchemaBase } from "../common/base";
+import { SchemaBase, type SchemaInterface } from "../common/base";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
 const ArrayBase = withItems(withMaxItems(withMinItems(SchemaBase)));
 
-class _OpenApiArray extends ArrayBase {}
-
-export function Array(item: OpenApiSchema) {
-  return new _OpenApiArray().addItems(item);
+export interface OpenApiArray extends SchemaInterface {
+  addMinItems(minItems: number): this;
+  addMaxItems(maxItems: number): this;
+  addItemTypes(itemTypes: OpenApiSchema): this;
 }
-export type OpenApiArray = _OpenApiArray;
+
+class _OpenApiArray extends ArrayBase implements OpenApiArray {}
+
+export function Array(itemtypes: OpenApiSchema): OpenApiArray {
+  return new _OpenApiArray().addItemTypes(itemtypes);
+}

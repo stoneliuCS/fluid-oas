@@ -19,7 +19,7 @@ const InfoBase = withLicense(
   )
 );
 
-interface Info extends BaseInterface {
+export interface OpenApiInfo extends BaseInterface {
   addDescription(description: string): this;
   addTitle(title: string): this;
   addVersion(version: string): this;
@@ -28,13 +28,12 @@ interface Info extends BaseInterface {
   addLicense(license: OpenApiLicense): this;
 }
 
-class _OpenApiInfo extends InfoBase implements Info {}
+class _OpenApiInfo extends InfoBase implements OpenApiInfo {}
 
 export function Info(title: string) {
   return {
-    withVersion: (version: string): Info => {
+    withVersion: (version: string): OpenApiInfo => {
       return new _OpenApiInfo().addTitle(title).addVersion(version);
     },
   };
 }
-export type OpenApiInfo = Info;

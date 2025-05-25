@@ -12,7 +12,14 @@ import {
   withSummary,
   withTags,
 } from "../../common/common";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
+import type { OpenApiCallback } from "./OpenApiCallback";
+import type { OpenApiDocumentation } from "./OpenApiDocumentation";
+import type { OpenApiParameter } from "./OpenApiParameter";
+import type { OpenApiRequestBody } from "./OpenApiRequestBody";
+import type { OpenApiResponses } from "./OpenApiResponses";
+import type { OpenApiSecurityRequirement } from "./OpenApiSecurityRequirement";
+import type { OpenApiServer } from "./OpenApiServer";
 
 const OperationBase = withCallbacks(
   withServersArray(
@@ -26,7 +33,7 @@ const OperationBase = withCallbacks(
                   withDescription(withSummary(withTags(Base)<string>()))
                 )
               )
-            )()
+            )<OpenApiParameter>()
           )
         )
       )
@@ -34,10 +41,23 @@ const OperationBase = withCallbacks(
   )()
 );
 
-class _OpenApiOperation extends OperationBase {}
-
-export function Operation() {
-  return new _OpenApiOperation();
+export interface OpenApiOperation extends BaseInterface {
+  addTags(tags: string[]): this;
+  addSummary(summary: string): this;
+  addDescription(description: string): this;
+  addExternalDocs(externalDocs: OpenApiDocumentation): this;
+  addOperationId(operationId: string): this;
+  addParameters(parameters: OpenApiParameter[]): this;
+  addRequestBody(body: OpenApiRequestBody): this;
+  addResponses(responses: OpenApiResponses): this;
+  deprecated(): this;
+  addSecurity(security: OpenApiSecurityRequirement[]): this;
+  addServers(servers: OpenApiServer[]): this;
+  addCallback(name: string, callback: OpenApiCallback): this;
 }
 
-export type OpenApiOperation = _OpenApiOperation;
+class _OpenApiOperation extends OperationBase implements OpenApiOperation {}
+
+export function Operation(): OpenApiOperation {
+  return new _OpenApiOperation();
+}

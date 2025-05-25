@@ -225,7 +225,7 @@ async function main() {
       fnName: "withAttribute",
       fieldType: "boolean",
       serializedName: "attribute",
-      methodName: "addAttribute",
+      methodName: "attribute",
     }),
     new FunctionTemplateBuilder({
       fnName: "withValue",
@@ -351,7 +351,7 @@ async function main() {
       fnName: "withAuthorizationURL",
       fieldType: "string",
       serializedName: "authorizationUrl",
-      methodName: "addAuthorizationURL",
+      methodName: "addAuthorizationUrl",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withTokenURL",
@@ -423,7 +423,7 @@ async function main() {
       fnName: "withItems",
       fieldType: "OpenApiSchema",
       serializedName: "items",
-      methodName: "addItems",
+      methodName: "addItemTypes",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withOpenIdConnectURL",

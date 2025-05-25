@@ -1,9 +1,13 @@
 import { withDefault } from "../../common/common";
-import { SchemaBase } from "../common/base";
+import { SchemaBase, type SchemaInterface } from "../common/base";
 
 const BooleanBase = withDefault(SchemaBase)<boolean>();
 
-class _OpenApiBoolean extends BooleanBase {
+export interface OpenApiBoolean extends SchemaInterface {
+  addDefault(val: boolean): this;
+}
+
+class _OpenApiBoolean extends BooleanBase implements OpenApiBoolean {
   toJSON(): unknown {
     const json = super.toJSON();
     Object.defineProperty(json, "type", { value: "boolean", enumerable: true });
@@ -11,7 +15,6 @@ class _OpenApiBoolean extends BooleanBase {
   }
 }
 
-export function Boolean() {
+export function Boolean(): OpenApiBoolean {
   return new _OpenApiBoolean();
 }
-export type OpenApiBoolean = _OpenApiBoolean;

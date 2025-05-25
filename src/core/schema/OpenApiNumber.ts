@@ -8,7 +8,7 @@ import {
   withMinimum,
   withMultipleOf,
 } from "../../common/common";
-import { SchemaBase } from "../common/base";
+import { SchemaBase, type SchemaInterface } from "../common/base";
 
 const NumberBase = withEnum(
   withDefault(
@@ -19,11 +19,30 @@ const NumberBase = withEnum(
     )
   )<number>()
 )<number>();
+
+interface OpenApiBaseNumber extends SchemaInterface {
+  addMinimum(min: number): this;
+  addMaximum(max: number): this;
+  exclusiveMax(): this;
+  exclusiveMin(): this;
+  addMultiple(val: number): this;
+  addDefault(val: number): this;
+  addEnums(val: number[]): this;
+}
+
+export interface OpenApiNumber extends OpenApiBaseNumber {
+  addFormat(val: "float" | "double"): this;
+}
+
+export interface OpenApiInteger extends OpenApiBaseNumber {
+  addFormat(val: "int32" | "int64"): this;
+}
+
 const _NumberBaseImpl = withFormat(NumberBase)<"float" | "double">();
 
 const _IntegerBaseImpl = withFormat(NumberBase)<"int32" | "int64">();
 
-class _OpenApiNumber extends _NumberBaseImpl {
+class _OpenApiNumber extends _NumberBaseImpl implements OpenApiNumber {
   toJSON(): unknown {
     const json = super.toJSON();
     Object.defineProperty(json, "type", { value: "number", enumerable: true });
@@ -31,7 +50,7 @@ class _OpenApiNumber extends _NumberBaseImpl {
   }
 }
 
-class _OpenApiInteger extends _IntegerBaseImpl {
+class _OpenApiInteger extends _IntegerBaseImpl implements OpenApiInteger {
   toJSON(): unknown {
     const json = super.toJSON();
     Object.defineProperty(json, "type", { value: "number", enumerable: true });
@@ -39,11 +58,9 @@ class _OpenApiInteger extends _IntegerBaseImpl {
   }
 }
 
-export function Number() {
+export function Number(): OpenApiNumber {
   return new _OpenApiNumber();
 }
-export type OpenApiNumber = _OpenApiNumber;
-export function Integer() {
+export function Integer(): OpenApiInteger {
   return new _OpenApiInteger();
 }
-export type OpenApiInteger = _OpenApiInteger;

@@ -294,12 +294,12 @@ export function withWrapped<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType boolean
  * @serializedName attribute
- * @methodName addAttribute
+ * @methodName attribute
  */
 export function withAttribute<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     #attribute?: boolean;
-    addAttribute() {
+    attribute() {
       const copy: this = Object.create(this);
       copy.#attribute = true;
       return copy;
@@ -867,12 +867,12 @@ export function withBearerFormat<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType string
  * @serializedName authorizationUrl
- * @methodName addAuthorizationURL
+ * @methodName addAuthorizationUrl
  */
 export function withAuthorizationURL<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     #authorizationUrl?: string;
-    addAuthorizationURL(val: string) {
+    addAuthorizationUrl(val: string) {
       const copy: this = Object.create(this);
       copy.#authorizationUrl = val;
       return copy;
@@ -1184,12 +1184,12 @@ export function withExample<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType OpenApiSchema
  * @serializedName items
- * @methodName addItems
+ * @methodName addItemTypes
  */
 export function withItems<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     #items?: OpenApiSchema;
-    addItems(val: OpenApiSchema) {
+    addItemTypes(val: OpenApiSchema) {
       const copy: this = Object.create(this);
       copy.#items = val;
       return copy;
@@ -1980,10 +1980,9 @@ export function withParametersArray<TBase extends GConstructor>(Base: TBase) {
   return <T extends OpenApiParameter>() => {
     return class extends Base {
       #parameters?: T[];
-      addParameters(val: T) {
+      addParameters(val: T[]) {
         const copy: this = Object.create(this);
-        copy.#parameters =
-          this.#parameters === undefined ? [val] : [...this.#parameters, val];
+        copy.#parameters = val;
         return copy;
       }
       toJSON() {
@@ -2009,10 +2008,9 @@ export function withSecurityArray<TBase extends GConstructor>(Base: TBase) {
   return <T extends OpenApiSecurityRequirement>() => {
     return class extends Base {
       #security?: T[];
-      addSecurity(val: T) {
+      addSecurity(val: T[]) {
         const copy: this = Object.create(this);
-        copy.#security =
-          this.#security === undefined ? [val] : [...this.#security, val];
+        copy.#security = val;
         return copy;
       }
       toJSON() {
@@ -2038,10 +2036,9 @@ export function withServersArray<TBase extends GConstructor>(Base: TBase) {
   return <T extends OpenApiServer>() => {
     return class extends Base {
       #servers?: T[];
-      addServers(val: T) {
+      addServers(val: T[]) {
         const copy: this = Object.create(this);
-        copy.#servers =
-          this.#servers === undefined ? [val] : [...this.#servers, val];
+        copy.#servers = val;
         return copy;
       }
       toJSON() {

@@ -10,16 +10,15 @@ const ExampleBase = withValue(
   withExternalValue(withSummary(withDescription(Base)))
 )<unknown>();
 
-interface Example extends BaseInterface {
+export interface OpenApiExample extends BaseInterface {
   addValue(val: string | unknown): this;
   addExternalValue(val: string): this;
   addSummary(summary: string): this;
   addDescription(description: string): this;
 }
 
-class _OpenApiExample extends ExampleBase implements Example {}
+class _OpenApiExample extends ExampleBase implements OpenApiExample {}
 
 export function Example() {
   return new _OpenApiExample();
 }
-export type OpenApiExample = Example;

@@ -1,13 +1,20 @@
 import { withDefault, withDescription, withEnum } from "../../common/common";
-import { Base } from "./base";
+import { Base, type BaseInterface } from "./base";
 
 const ServerVariableBase = withDescription(
   withDefault(withEnum(Base)<string>())<string>()
 );
 
-class _OpenApiServerVariable extends ServerVariableBase {}
+export interface OpenApiServerVariable extends BaseInterface {
+  addEnums(val: string[]): this;
+  addDefault(val: string): this;
+  addDescription(description: string): this;
+}
 
-export function ServerVariable() {
+class _OpenApiServerVariable
+  extends ServerVariableBase
+  implements OpenApiServerVariable {}
+
+export function ServerVariable(): OpenApiServerVariable {
   return new _OpenApiServerVariable();
 }
-export type OpenApiServerVariable = _OpenApiServerVariable;
