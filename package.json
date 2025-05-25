@@ -1,11 +1,12 @@
 {
   "name": "@qwantumstone/salt",
-  "version": "0.0.6",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "version": "0.1.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "files": [
-    "src/"
+    "README.md",
+    "dist"
   ],
   "devDependencies": {
     "@types/bun": "latest",
@@ -19,6 +20,6 @@
     "build": "rm -rf ./dist && mkdir ./dist && tsc",
     "format": "prettier --log-level silent --write .",
     "generate": "rm -rf ./src/common/*.ts && bun run ./src/templates/index.ts && bun run format",
-    "publish": "bun publish --access public"
+    "publish": "bun run build && bun publish --access public"
   }
 }
