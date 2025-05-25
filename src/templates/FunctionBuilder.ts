@@ -135,10 +135,10 @@ export abstract class FunctionBuilder {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
       writer
-        .write(`if (this.#${this.serializedName} !== undefined)`)
+        .write(`if (this._${this.serializedName} !== undefined)`)
         .block(() => {
           writer.writeLine(
-            `Object.defineProperty(json, "${this.serializedName}", { value : this.#${this.serializedName}, enumerable : true })`
+            `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}, enumerable : true })`
           );
         });
       writer.writeLine("return json;");

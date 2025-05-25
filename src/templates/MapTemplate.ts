@@ -31,7 +31,7 @@ export class MapTemplateBuilder extends FunctionBuilder {
   }
   protected buildField(writer: CodeBlockWriter): void {
     this.parseField();
-    writer.writeLine(`#${this.serializedName}? : ${this.fieldType};`);
+    writer.writeLine(`_${this.serializedName}? : ${this.fieldType};`);
   }
   protected buildBuilderMethod(writer: CodeBlockWriter): void {
     writer
@@ -41,9 +41,9 @@ export class MapTemplateBuilder extends FunctionBuilder {
       .block(() => {
         writer.writeLine("const copy : this = Object.create(this);");
         writer.writeLine(
-          `copy.#${this.serializedName} = new Map(this.#${this.serializedName});`
+          `copy._${this.serializedName} = new Map(this._${this.serializedName});`
         );
-        writer.writeLine(`copy.#${this.serializedName}.set(name, val);`);
+        writer.writeLine(`copy._${this.serializedName}.set(name, val);`);
         writer.writeLine("return copy;");
       });
   }
@@ -51,10 +51,10 @@ export class MapTemplateBuilder extends FunctionBuilder {
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this.#${this.serializedName})`).block(() => {
+      writer.write(`if (this._${this.serializedName})`).block(() => {
         writer.writeLine("const mappings : any = {};");
         writer.writeLine(
-          `this.#${this.serializedName}.forEach((val, key) => { mappings[key] = val })`
+          `this._${this.serializedName}.forEach((val, key) => { mappings[key] = val })`
         );
         writer.writeLine(
           `Object.defineProperty(json, "${this.serializedName}", { value : mappings, enumerable : true })`
