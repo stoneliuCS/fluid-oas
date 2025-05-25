@@ -4,7 +4,7 @@ import {
   withExtensions,
   withExternalDocs,
   withNullable,
-} from "../../common/common.ts";
+} from "../../common/common";
 
 export class _base {
   toJSON(): unknown {

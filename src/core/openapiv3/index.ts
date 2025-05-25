@@ -1,1 +1,1 @@
-export * from "./OpenApiV3.ts";
+export * from "./OpenApiV3";

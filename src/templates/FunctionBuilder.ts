@@ -15,8 +15,6 @@ type MixinSignatureArgs = {
   fieldType: string;
   // Serialized Name
   serializedName: string;
-  // Optional Comments
-  comments?: string;
 };
 
 /**
@@ -38,7 +36,6 @@ export abstract class FunctionBuilder {
     fnName,
     serializedName,
     fieldType,
-    comments,
   }: MixinSignatureArgs): OptionalKind<FunctionDeclarationStructure> {
     return {
       name: fnName,
@@ -47,7 +44,6 @@ export abstract class FunctionBuilder {
       parameters: [{ name: "Base", type: "TBase" }],
       docs: [
         {
-          description: comments,
           tags: [
             {
               tagName: "fieldType",
@@ -130,10 +126,10 @@ export abstract class FunctionBuilder {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
       writer
-        .write(`if (this._${this.serializedName} !== undefined)`)
+        .write(`if (this.#_${this.serializedName} !== undefined)`)
         .block(() => {
           writer.writeLine(
-            `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}, enumerable : true })`
+            `Object.defineProperty(json, "${this.serializedName}", { value : this.#_${this.serializedName}, enumerable : true })`
           );
         });
       writer.writeLine("return json;");

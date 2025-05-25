@@ -17,10 +17,10 @@ const SecurityRequirementClass = class extends MapTemplateBuilder {
             .block(() => {
               writer.writeLine("const copy : this = Object.create(this);");
               writer.writeLine(
-                `copy._${this.serializedName} = new Map(this._${this.serializedName});`
+                `copy.#_${this.serializedName} = new Map(this.#_${this.serializedName});`
               );
               writer.writeLine(
-                `copy._${this.serializedName}.set(name, [...val]);`
+                `copy.#_${this.serializedName}.set(name, [...val]);`
               );
               writer.writeLine("return copy;");
             });
@@ -31,10 +31,10 @@ const SecurityRequirementClass = class extends MapTemplateBuilder {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
       writer
-        .write(`if (this._${this.serializedName} !== undefined)`)
+        .write(`if (this.#_${this.serializedName} !== undefined)`)
         .block(() => {
           writer.writeLine(
-            `this._${this.serializedName}.forEach((val, key) => {
+            `this.#_${this.serializedName}.forEach((val, key) => {
               Object.defineProperty(json, key, { value : val, enumerable : true })
             }) `
           );
@@ -53,8 +53,8 @@ const Enumerable = class extends ArrayTemplateBuilder {
       .block(() => {
         writer.writeLine("const copy: this = Object.create(this);");
         writer.writeLine(
-          `copy._${this.serializedName} = this._${this.serializedName} === undefined 
-            ? [...val] : [...this._${this.serializedName}, ...val]`
+          `copy.#_${this.serializedName} = this.#_${this.serializedName} === undefined 
+            ? [...val] : [...this.#_${this.serializedName}, ...val]`
         );
         writer.writeLine("return copy;");
       });
@@ -65,9 +65,9 @@ const KeyNameClass = class extends MapTemplateBuilder {
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this._${this.serializedName})`).block(() => {
+      writer.write(`if (this.#_${this.serializedName})`).block(() => {
         writer.writeLine(
-          `this._${this.serializedName}.forEach((val, key) => { Object.defineProperty(json, key, { value : val.toJSON(), enumerable : true }) })`
+          `this.#_${this.serializedName}.forEach((val, key) => { Object.defineProperty(json, key, { value : val.toJSON(), enumerable : true }) })`
         );
       });
       writer.writeLine("return json;");
@@ -79,10 +79,10 @@ const ObjectProperty = class extends MapTemplateBuilder {
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this._${this.serializedName})`).block(() => {
+      writer.write(`if (this.#_${this.serializedName})`).block(() => {
         writer.writeLine("const mappings : any = {};");
         writer.writeLine(
-          `this._${this.serializedName}.forEach((val, key) => { mappings[key] = val.toJSON() })`
+          `this.#_${this.serializedName}.forEach((val, key) => { mappings[key] = val.toJSON() })`
         );
         writer.writeLine(
           `Object.defineProperty(json, "properties", { value : mappings, enumerable : true })`
@@ -97,9 +97,9 @@ const OpenApiClass = class extends PrimitiveTemplateBuilder {
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this._${this.serializedName})`).block(() => {
+      writer.write(`if (this.#_${this.serializedName})`).block(() => {
         writer.writeLine(
-          `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}.toJSON(), enumerable : true })`
+          `Object.defineProperty(json, "${this.serializedName}", { value : this.#_${this.serializedName}.toJSON(), enumerable : true })`
         );
       });
       writer.writeLine("return json;");
@@ -111,9 +111,9 @@ const RegExpClass = class extends PrimitiveTemplateBuilder {
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this._${this.serializedName})`).block(() => {
+      writer.write(`if (this.#_${this.serializedName})`).block(() => {
         writer.writeLine(
-          `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}.source, enumerable : true })`
+          `Object.defineProperty(json, "${this.serializedName}", { value : this.#_${this.serializedName}.source, enumerable : true })`
         );
       });
       writer.writeLine("return json;");
@@ -132,9 +132,9 @@ const OpenApiMapClass = class extends MapTemplateBuilder {
             .block(() => {
               writer.writeLine("const copy : this = Object.create(this);");
               writer.writeLine(
-                `copy._${this.serializedName} = new Map(this._${this.serializedName});`
+                `copy.#_${this.serializedName} = new Map(this.#_${this.serializedName});`
               );
-              writer.writeLine(`copy._${this.serializedName}.set(name, val);`);
+              writer.writeLine(`copy.#_${this.serializedName}.set(name, val);`);
               writer.writeLine("return copy;");
             });
         });
@@ -143,10 +143,10 @@ const OpenApiMapClass = class extends MapTemplateBuilder {
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this._${this.serializedName})`).block(() => {
+      writer.write(`if (this.#_${this.serializedName})`).block(() => {
         writer.writeLine("const mappings : any = {};");
         writer.writeLine(
-          `this._${this.serializedName}.forEach((val, key) => { mappings[key] = val.toJSON() })`
+          `this.#_${this.serializedName}.forEach((val, key) => { mappings[key] = val.toJSON() })`
         );
         writer.writeLine(
           `Object.defineProperty(json, "${this.serializedName}", { value : mappings, enumerable : true })`
@@ -162,10 +162,10 @@ const OpenApiArrayClass = class extends ArrayTemplateBuilder {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");
       writer
-        .write(`if (this._${this.serializedName} !== undefined)`)
+        .write(`if (this.#_${this.serializedName} !== undefined)`)
         .block(() => {
           writer.writeLine(
-            `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}.map(val => val.toJSON()), enumerable : true })`
+            `Object.defineProperty(json, "${this.serializedName}", { value : this.#_${this.serializedName}.map(val => val.toJSON()), enumerable : true })`
           );
         });
       writer.writeLine("return json;");

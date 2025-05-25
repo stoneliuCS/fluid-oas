@@ -12,7 +12,7 @@ export class ArrayTemplateBuilder extends FunctionBuilder {
   }
   protected buildField(writer: CodeBlockWriter): void {
     writer.writeLine(
-      `protected _${this.serializedName}? : ${FunctionBuilder.genericName}[];`
+      `#_${this.serializedName}? : ${FunctionBuilder.genericName}[];`
     );
   }
   protected buildBuilderMethod(writer: CodeBlockWriter): void {
@@ -21,8 +21,8 @@ export class ArrayTemplateBuilder extends FunctionBuilder {
       .block(() => {
         writer.writeLine("const copy: this = Object.create(this);");
         writer.writeLine(
-          `copy._${this.serializedName} = this._${this.serializedName} === undefined 
-            ? [val] : [...this._${this.serializedName}, val]`
+          `copy.#_${this.serializedName} = this.#_${this.serializedName} === undefined 
+            ? [val] : [...this.#_${this.serializedName}, val]`
         );
         writer.writeLine("return copy;");
       });
