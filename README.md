@@ -389,3 +389,5 @@ Array(String())
   }
 }
 ```
+
+For further development see the [docs](https://stoneliucs.github.io/fluid-oas/)
