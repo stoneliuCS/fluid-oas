@@ -16,6 +16,8 @@ With Bun:
 bun add --development fluid-oas
 ```
 
+Visit the [docs](https://stoneliucs.github.io/fluid-oas/) here
+
 1. [Overview](#overview)
    - [Example Usage](#example-usage)
 2. [Schema Design](#schemas)
@@ -390,4 +392,3 @@ Array(String())
 }
 ```
 
-For further development see the [docs](https://stoneliucs.github.io/fluid-oas/)
