@@ -120,6 +120,6 @@ class _OpenApi extends OpenApiBase implements OpenApi {
   }
 }
 
-export function OpenApi(info: OpenApiInfo): OpenApi {
-  return new _OpenApi().addOpenApiVersion("3.1.0").addInfo(info);
+export function OpenApiV311(info: OpenApiInfo): OpenApi {
+  return new _OpenApi().addOpenApiVersion("3.1.1").addInfo(info);
 }

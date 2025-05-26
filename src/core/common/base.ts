@@ -34,6 +34,7 @@ export interface SchemaInterface extends BaseInterface {
 // Base Class which all OpenApi Definitions will inherit.
 const _Base = withExtensions(Root);
 export class Base extends _Base implements BaseInterface {}
-export const SchemaBase = withNullable(
+export const _SchemaBase = withNullable(
   withExample(withExternalDocs(withDescription(Base)))
 );
+export class SchemaBase extends _SchemaBase implements SchemaInterface {}

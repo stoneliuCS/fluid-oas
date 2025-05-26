@@ -1,5 +1,5 @@
 import { Info } from "../core";
-import { OpenApi } from "../core/openapiv3";
+import { OpenApiV311 } from "../core/openapiv3";
 
 const info = Info("Dearly API", "1.0.0")
   .addDescription(
@@ -13,4 +13,4 @@ const info = Info("Dearly API", "1.0.0")
   )
   .addSummary("Dearly makes connecting with loved ones easy.");
 
-OpenApi(info).writeOAS()
+OpenApiV311(info).writeOAS();
