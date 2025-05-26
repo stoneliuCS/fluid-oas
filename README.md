@@ -1,18 +1,21 @@
 # Fluid-OAS
 
-Declaratively build _type-safe_ **HTTP APIs** in TypeScript through the **OpenAPI** specification. 
+Declaratively build _type-safe_ **HTTP APIs** in TypeScript through the **OpenAPI** specification.
 
 ## Installation
 
-With NPM:
+With npm:
+
 ```bash
 npm install fluid-oas --save-dev
 ```
 
 With Bun:
+
 ```bash
 bun add --development fluid-oas
 ```
+
 1. [Overview](#overview)
    - [Example Usage](#example-usage)
 2. [Schema Design](#schemas)
@@ -30,6 +33,7 @@ _Fluid-OAS_ is an embedded, completely functional _domain specific language_ for
 - Significantly reduce the amount of boilerplate JSON your team has to write.
 
 ### Example Usage
+
 ```ts
 import {
   Info,
@@ -62,7 +66,7 @@ const uuidSchema = String()
   .addExample(
     Example()
       .addValue("5e91507e-5630-4efd-9fd4-799178870b10")
-      .addDescription("Unique Identifier."),
+      .addDescription("Unique Identifier.")
   );
 
 const userSchema = Object()
@@ -77,15 +81,15 @@ const getUserResponses = Responses()
     "200",
     Response("Successfully Retrieved User!").addContent(
       "application/json",
-      MediaType().addSchema(userSchema),
-    ),
+      MediaType().addSchema(userSchema)
+    )
   )
   .addResponse(
     "401",
     Response("Unauthorized").addContent(
       "application/json",
-      MediaType().addSchema(errorSchema),
-    ),
+      MediaType().addSchema(errorSchema)
+    )
   );
 
 // Declare Path Items
@@ -99,7 +103,7 @@ const getUser = PathItem().addMethod(
         .required()
         .addSchema(uuidSchema),
     ])
-    .addResponses(getUserResponses),
+    .addResponses(getUserResponses)
 );
 
 // Register Paths
@@ -300,5 +304,64 @@ Boolean().description("I am a OpenAPI boolean!").default(false).nullable();
   "description": "I am a OpenAPI boolean!",
   "nullable": true,
   "default": false
+}
+```
+
+### Objects
+
+Declare properties and other metadata on OpenAPI `Object` with the `addProperty` method.
+
+```ts
+const nameSchema = String()
+  .addMinLength(1)
+  .addMaxLength(10)
+  .addExample(Example().addValue("John"))
+  .addDescription("Name of the person.");
+
+const uuidSchema = String()
+  .addFormat("uuid")
+  .addExample(
+    Example()
+      .addValue("5e91507e-5630-4efd-9fd4-799178870b10")
+      .addDescription("Unique Identifier.")
+  );
+
+const userSchema = Object()
+  .addProperty("firstName", nameSchema)
+  .addProperty("lastName", nameSchema)
+  .addProperty("id", uuidSchema);
+```
+
+```json
+{
+  "properties": {
+    "firstName": {
+      "description": "Name of the person.",
+      "example": {
+        "value": "John"
+      },
+      "minLength": 1,
+      "maxLength": 10,
+      "type": "string"
+    },
+    "lastName": {
+      "description": "Name of the person.",
+      "example": {
+        "value": "John"
+      },
+      "minLength": 1,
+      "maxLength": 10,
+      "type": "string"
+    },
+    "id": {
+      "example": {
+        "description": "Unique Identifier.",
+        "value": "5e91507e-5630-4efd-9fd4-799178870b10"
+      },
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "type": "object"
 }
 ```
