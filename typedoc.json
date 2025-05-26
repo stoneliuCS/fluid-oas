@@ -1,3 +1,6 @@
 {
-  "entryPoints": ["./fluid-oas/src/index.ts"]
+  "entryPoints": ["./fluid-oas/src/index.ts"],
+  "projectDocuments": ["documents/*.md"],
+  "readme": "./documents/fluid-oas.md",
+  "hideGenerator": true
 }

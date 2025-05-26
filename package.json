@@ -1,9 +1,10 @@
 {
   "dependencies": {},
   "devDependencies": {
-    "typedoc": "^0.28.5"
+    "typedoc": "^0.28.5",
+    "typedoc-github-theme": "^0.3.0"
   },
   "scripts": {
-    "build-docs" : "bunx typedoc --tsconfig ./tsconfig.json"
+    "build-docs": "bunx typedoc --sort documents-first --plugin typedoc-github-theme --tsconfig ./tsconfig.json"
   }
 }
