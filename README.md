@@ -1,19 +1,21 @@
-# S.A.L.T
+# Fluid-OAS
 
-Structured Application Programming Interface Language using TypeScript.
+Build completely _type-safe_ **HTTP APIs** in TypeScript through the **OpenAPI** specification. 
 
-## Setup
+## Installation
 
+With NPM:
 ```bash
-npm i @qwantumstone/salt
+npm install fluid-oas --save-dev
 ```
 
+With Bun:
 ```bash
-bun add @qwantumstone/salt
+bun add --development fluid-oas
 ```
 
 ```ts
-import * "@qwantumstone/salt"
+import * "fluid-oas"
 ```
 
 1. [Overview](#overview)
@@ -23,22 +25,12 @@ import * "@qwantumstone/salt"
 
 ## Overview
 
-S.A.L.T is an embedded, functional _domain specific language_ for expressing type-safe HTTP APIs written in TypeScript through the OpenAPI specification.
+_Fluid-OAS_ is an embedded, completely functional _domain specific language_ for expressing type-safe HTTP APIs written in TypeScript through the OpenAPI specification.
 
 - No dependencies, use as is.
 - Write the most complex OpenAPI specification you want, use whatever framework you want.
 - Focus on core business logic, design systems in an _API-first manner_.
 - Leverage TypeScript's advanced type-system to get autocomplete and compile-time checks for building your OpenAPI specification.
-
-## Goals
-
-Normal OAS _DSLs_ either make the developers write decorators or objects that end up being very similar to writing JSON. This library takes it one step further by introducing _compile-time_ protections when writing specifications and also additionally abstracts over the entire specification through Objects.
-
-## Features
-
-- _Extensible_, the core architecture revolves around chaining methods on OAS specifications to better easily write, maintain, and modularize specifications. Under the hood, SALT leverges the TypeScript compiler to code-gen _Mixins_ to extend onto base class specifications. If there is a field missing or something that you want to utilize, it can be done with the _FunctionBuilder_ API.
-
-- _Great Development Experience_, write the least amount of code to express any OAS your team would like, all with help from the TypeScript Compiler.
 
 ## Schemas
 
