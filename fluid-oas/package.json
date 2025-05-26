@@ -1,11 +1,13 @@
 {
   "name": "fluid-oas",
-  "version": "0.0.4",
+  "version": "0.0.11",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
+  "license": "MIT",
   "files": [
     "README.md",
+    "LICENSE.md",
     "dist"
   ],
   "devDependencies": {
@@ -17,9 +19,9 @@
     "typescript": "^5"
   },
   "scripts": {
-    "build": "rm -rf ./dist && mkdir ./dist && tsc",
+    "build": "rm -rf ./dist && mkdir ./dist && tsc && cp ../README.md ../LICENSE.md .",
+    "clean": "rm -rf ./dist LICENSE.md README.md",
     "format": "prettier --log-level silent --write .",
-    "generate": "rm -rf ./src/common/*.ts && bun run ./src/templates/index.ts && bun run format",
-    "publish": "bun run build && bun publish --access public"
+    "generate": "rm -rf ./src/common/*.ts && bun run ./src/templates/index.ts && bun run format"
   }
 }
