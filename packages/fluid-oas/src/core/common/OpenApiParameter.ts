@@ -37,7 +37,7 @@ interface ParameterBase extends BaseInterface {
   deprecated(): this;
 }
 
-interface SchemaParameter extends ParameterBase {
+export interface SchemaParameter extends ParameterBase {
   addStyle(style: "form" | "simple"): this;
   explode(): this;
   allowReserved(): this;
@@ -46,7 +46,7 @@ interface SchemaParameter extends ParameterBase {
   addExample(name: string, example: OpenApiExample): this;
 }
 
-interface ContentParameter extends ParameterBase {
+export interface ContentParameter extends ParameterBase {
   addContent(
     contentType: OpenApiMediaContentType,
     mediaType: OpenApiMediaType

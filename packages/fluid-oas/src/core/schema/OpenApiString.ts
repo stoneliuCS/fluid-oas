@@ -30,6 +30,9 @@ class _OpenApiString extends StringBase implements OpenApiString {
   }
 }
 
+/**
+ * Creates a OpenAPI String with methods build from.
+ */
 export function String(): OpenApiString {
   return new _OpenApiString();
 }

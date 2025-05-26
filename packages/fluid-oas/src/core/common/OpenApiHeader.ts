@@ -30,7 +30,7 @@ const SchemaHeaderBase = withExamples(
   withExample(withSchema(withExplode(withStyle(HeaderBase)<"simple">())))
 );
 
-interface SchemaHeader extends HeaderBase {
+export interface SchemaHeader extends HeaderBase {
   addStyle(simple: "simple"): this;
   explode(): this;
   addSchema(schema: OpenApiSchema): this;
@@ -38,7 +38,7 @@ interface SchemaHeader extends HeaderBase {
   addExample(name: string, example: OpenApiExample): this;
 }
 
-interface ContentHeader extends HeaderBase {
+export interface ContentHeader extends HeaderBase {
   addContent(name: OpenApiMediaContentType, val: OpenApiMediaType): this;
 }
 

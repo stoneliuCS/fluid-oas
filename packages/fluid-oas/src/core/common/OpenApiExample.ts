@@ -19,6 +19,6 @@ export interface OpenApiExample extends BaseInterface {
 
 class _OpenApiExample extends ExampleBase implements OpenApiExample {}
 
-export function Example() {
+export function Example(): OpenApiExample {
   return new _OpenApiExample();
 }

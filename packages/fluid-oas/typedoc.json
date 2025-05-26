@@ -1,5 +1,5 @@
 {
   "projectDocuments": ["documents/*.md"],
   "readme": "documents/fluid-oas.md",
-  "entryPoints": ["src/index.ts"]
+  "entryPoints": ["src/index.ts", "src/common/types.ts"]
 }
