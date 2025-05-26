@@ -13,12 +13,6 @@ With Bun:
 ```bash
 bun add --development fluid-oas
 ```
-
-Import the API:
-```ts
-import "fluid-oas"
-```
-
 1. [Overview](#overview)
    - [Example Usage](#example-usage)
 2. [Schema Design](#schemas)
@@ -37,7 +31,6 @@ _Fluid-OAS_ is an embedded, completely functional _domain specific language_ for
 
 ### Example Usage
 ```ts
-import "fluid-oas";
 import {
   Info,
   String,
