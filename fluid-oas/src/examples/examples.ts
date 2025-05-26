@@ -9,10 +9,10 @@ import {
   PathItem,
   Response,
   Responses,
+  MediaType,
   String,
+  OpenApiV311
 } from "../core";
-import { MediaType } from "../core/common/OpenApiMedia";
-import { OpenApiV311 } from "../core/openapiv3";
 
 const info = Info("My API", "v1.0.0")
   .addDescription("Add an example description")
@@ -88,4 +88,4 @@ const path = Path()
 const oas = OpenApiV311(info).addPaths(path);
 
 // Write OAS Spec
-// oas.writeOAS();
+oas.writeOAS();
