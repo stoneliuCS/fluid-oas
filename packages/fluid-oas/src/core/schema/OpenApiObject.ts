@@ -31,6 +31,9 @@ class _OpenApiObject extends ObjectBase implements OpenApiObject {
   }
 }
 
+/**
+ * Creates an OpenAPIObject representation with fluid methods to build schemas.
+ */
 export function Object(): OpenApiObject {
   return new _OpenApiObject();
 }
