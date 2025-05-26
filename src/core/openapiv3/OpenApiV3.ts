@@ -48,10 +48,6 @@ export interface OpenApi extends BaseInterface {
 
 class _OpenApi extends OpenApiBase implements OpenApi {}
 
-export function OpenApi(openapiVersion: string) {
-  return {
-    withInfo: (info: OpenApiInfo): OpenApi => {
-      return new _OpenApi().addOpenApiVersion(openapiVersion).addInfo(info);
-    },
-  };
+export function OpenApi(info: OpenApiInfo): OpenApi {
+  return new _OpenApi().addOpenApiVersion("3.1.0").addInfo(info);
 }

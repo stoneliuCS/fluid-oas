@@ -30,10 +30,6 @@ export interface OpenApiInfo extends BaseInterface {
 
 class _OpenApiInfo extends InfoBase implements OpenApiInfo {}
 
-export function Info(title: string) {
-  return {
-    withVersion: (version: string): OpenApiInfo => {
-      return new _OpenApiInfo().addTitle(title).addVersion(version);
-    },
-  };
+export function Info(title: string, version: string) {
+  return new _OpenApiInfo().addTitle(title).addVersion(version);
 }

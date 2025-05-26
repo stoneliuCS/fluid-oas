@@ -1,3 +1,3 @@
 export * from "./common";
 export * from "./schema";
-export * from "./openapiv3";
+export * as openapiv3 from "./openapiv3"
