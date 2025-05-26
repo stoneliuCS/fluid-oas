@@ -21,11 +21,6 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
-      
-      - name: Publish to GitHub Packages
-        run: cd packages/fluid-oas && npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to NPM
         run: cd packages/fluid-oas && ./publish.sh
