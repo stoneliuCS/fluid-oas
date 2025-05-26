@@ -25,3 +25,4 @@ export * from "./OpenApiCallback";
 export * from "./OpenApiContact";
 export * from "./OpenApiLicense";
 export * from "./OpenApiInfo";
+export * from "./OpenApiMedia";
