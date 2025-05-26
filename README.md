@@ -4,4 +4,4 @@ A Collection of packages which make API development easier.
 
 ## Getting Started
 
-Follow the documentation [here]("https://stoneliucs.github.io/fluid-oas/")
+Follow the documentation [here](https://stoneliucs.github.io/fluid-oas/)
