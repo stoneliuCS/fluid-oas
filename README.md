@@ -16,7 +16,7 @@ bun add --development fluid-oas
 
 Import the API:
 ```ts
-import * "fluid-oas"
+import "fluid-oas"
 ```
 
 1. [Overview](#overview)
@@ -37,20 +37,20 @@ _Fluid-OAS_ is an embedded, completely functional _domain specific language_ for
 
 ### Example Usage
 ```ts
+import "fluid-oas";
 import {
-  Example,
   Info,
-  Object,
-  Operation,
-  Parameter,
-  Path,
-  PathItem,
-  Response,
-  Responses,
   String,
-} from "../core";
-import { MediaType } from "../core/common/OpenApiMedia";
-import { OpenApiV311 } from "../core/openapiv3";
+  Example,
+  Responses,
+  Response,
+  MediaType,
+  Path,
+  Parameter,
+  Operation,
+  PathItem,
+} from "fluid-oas";
+import { OpenApiV311 } from "fluid-oas/dist/core/openapiv3";
 
 const info = Info("My API", "v1.0.0")
   .addDescription("Add an example description")
@@ -69,7 +69,7 @@ const uuidSchema = String()
   .addExample(
     Example()
       .addValue("5e91507e-5630-4efd-9fd4-799178870b10")
-      .addDescription("Unique Identifier.")
+      .addDescription("Unique Identifier."),
   );
 
 const userSchema = Object()
@@ -84,15 +84,15 @@ const getUserResponses = Responses()
     "200",
     Response("Successfully Retrieved User!").addContent(
       "application/json",
-      MediaType().addSchema(userSchema)
-    )
+      MediaType().addSchema(userSchema),
+    ),
   )
   .addResponse(
     "401",
     Response("Unauthorized").addContent(
       "application/json",
-      MediaType().addSchema(errorSchema)
-    )
+      MediaType().addSchema(errorSchema),
+    ),
   );
 
 // Declare Path Items
@@ -106,7 +106,7 @@ const getUser = PathItem().addMethod(
         .required()
         .addSchema(uuidSchema),
     ])
-    .addResponses(getUserResponses)
+    .addResponses(getUserResponses),
 );
 
 // Register Paths
