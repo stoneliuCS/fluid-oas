@@ -2,5 +2,8 @@
   "dependencies": {},
   "devDependencies": {
     "typedoc": "^0.28.5"
+  },
+  "scripts": {
+    "build-docs" : "bunx typedoc --tsconfig ./tsconfig.json"
   }
 }
