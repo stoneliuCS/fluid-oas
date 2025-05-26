@@ -11,8 +11,8 @@ import {
   Responses,
   MediaType,
   String,
-  OpenApiV311
-} from "../core";
+  OpenApiV311,
+} from "../src/";
 
 const info = Info("My API", "v1.0.0")
   .addDescription("Add an example description")
