@@ -21,6 +21,7 @@ bun add --development fluid-oas
 2. [Schema Design](#schemas)
    - [Primitives](#primitive-data-types)
    - [Objects](#objects)
+   - [Arrays](#arrays)
 
 ## Overview
 
@@ -363,5 +364,28 @@ const userSchema = Object()
     }
   },
   "type": "object"
+}
+```
+
+### Arrays
+
+Arrays can be typed with other schema types, see below for an example of a string array.
+
+```ts
+Array(String())
+  .addMinItems(1)
+  .addMaxItems(10)
+  .addDescription("Example of a string array.")
+  .toJSON();
+```
+
+```json
+{
+  "description": "Example of a string array.",
+  "minItems": 1,
+  "maxItems": 10,
+  "items": {
+    "type": "string"
+  }
 }
 ```

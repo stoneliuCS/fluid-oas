@@ -1,4 +1,5 @@
 import {
+  Array,
   Example,
   Info,
   Object,
@@ -32,6 +33,14 @@ const uuidSchema = String()
       .addValue("5e91507e-5630-4efd-9fd4-799178870b10")
       .addDescription("Unique Identifier.")
   );
+
+console.log(
+  Array(String())
+    .addMinItems(1)
+    .addMaxItems(10)
+    .addDescription("Example of a string array.")
+    .toJSON()
+);
 
 const userSchema = Object()
   .addProperty("firstName", nameSchema)
@@ -79,4 +88,4 @@ const path = Path()
 const oas = OpenApiV311(info).addPaths(path);
 
 // Write OAS Spec
-oas.writeOAS();
+// oas.writeOAS();
