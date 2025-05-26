@@ -7,18 +7,19 @@ import {
 
 export class TemplateBuilder {
   private readonly project: Project;
-  private readonly workingDir = "./src/common/";
+  private readonly workingDir: string;
   private readonly typeDeclarationFilePath = "types.ts";
   private readonly outputFile: string;
-  public constructor(project: Project, outputFile: string) {
+  public constructor(project: Project, outputFile: string, workingDir: string) {
     this.project = project;
     this.outputFile = outputFile;
+    this.workingDir = workingDir;
     this.createTypeConstructor();
   }
 
   private createTypeConstructor() {
     const sourceFile = this.project.createSourceFile(
-      this.workingDir + this.typeDeclarationFilePath,
+      this.workingDir + "/" + this.typeDeclarationFilePath,
       "",
       { overwrite: true }
     );
@@ -78,7 +79,7 @@ export class TemplateBuilder {
   }
 
   public write() {
-    let augmentPath = this.workingDir + this.outputFile;
+    let augmentPath = this.workingDir + "/" + this.outputFile;
     const maybeSourceFile = this.project.getSourceFile(augmentPath);
     let sourceFile: SourceFile;
     if (!maybeSourceFile) {
@@ -122,5 +123,6 @@ export const MainProject = new TemplateBuilder(
       tsConfigFilePath: "./tsconfig.json",
     },
   }),
-  "common.ts"
+  "common.ts",
+  "./src/common"
 );
