@@ -1,26 +1,28 @@
-import type { OpenApiCallback } from "../core/openapiv3/common/OpenApiCallback.js";
-import type { OpenApiContact } from "../core/openapiv3/common/OpenApiContact.js";
-import type { OpenApiDocumentation } from "../core/openapiv3/common/OpenApiDocumentation.js";
-import type { OpenApiEncoding } from "../core/openapiv3/common/OpenApiEncoding.js";
-import type { OpenApiExample } from "../core/openapiv3/common/OpenApiExample.js";
-import type { OpenApiHeader } from "../core/openapiv3/common/OpenApiHeader.js";
-import type { OpenApiInfo } from "../core/openapiv3/common/OpenApiInfo.js";
-import type { OpenApiLicense } from "../core/openapiv3/common/OpenApiLicense.js";
-import type { OpenApiLink } from "../core/openapiv3/common/OpenApiLink.js";
-import type { OpenApiMediaType } from "../core/openapiv3/common/OpenApiMedia.js";
-import type { OpenApiOAuthFlow } from "../core/openapiv3/common/OpenApiOAuthFlow.js";
-import type { OpenApiOAuthFlows } from "../core/openapiv3/common/OpenApiOAuthFlows.js";
-import type { OpenApiOperation } from "../core/openapiv3/common/OpenApiOperation.js";
-import type { OpenApiParameter } from "../core/openapiv3/common/OpenApiParameter.js";
-import type { OpenApiPath } from "../core/openapiv3/common/OpenApiPath.js";
-import type { OpenApiPathItem } from "../core/openapiv3/common/OpenApiPathItem.js";
-import type { OpenApiRequestBody } from "../core/openapiv3/common/OpenApiRequestBody.js";
-import type { OpenApiResponse } from "../core/openapiv3/common/OpenApiResponse.js";
-import type { OpenApiResponses } from "../core/openapiv3/common/OpenApiResponses.js";
-import type { OpenApiSecurityRequirement } from "../core/openapiv3/common/OpenApiSecurityRequirement.js";
-import type { OpenApiServer } from "../core/openapiv3/common/OpenApiServer.js";
-import type { OpenApiServerVariable } from "../core/openapiv3/common/OpenApiServerVariable.js";
-import type { OpenApiSchema } from "../core/openapiv3/schema/OpenApiSchema.js";
+import type {
+  OpenApiExample,
+  OpenApiSchema,
+  OpenApiDocumentation,
+  OpenApiOAuthFlow,
+  OpenApiOAuthFlows,
+  OpenApiHeader,
+  OpenApiMediaType,
+  OpenApiEncoding,
+  OpenApiPathItem,
+  OpenApiServerVariable,
+  OpenApiLink,
+  OpenApiServer,
+  OpenApiCallback,
+  OpenApiRequestBody,
+  OpenApiResponse,
+  OpenApiOperation,
+  OpenApiParameter,
+  OpenApiSecurityRequirement,
+  OpenApiInfo,
+  OpenApiPath,
+  OpenApiContact,
+  OpenApiResponses,
+  OpenApiLicense,
+} from "../external.js";
 import type {
   GConstructor,
   OpenApiExtensionString,
@@ -603,16 +605,16 @@ export function withMinimum<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType boolean
+ * @fieldType number
  * @serializedName exclusiveMinimum
  * @methodName exclusiveMin
  */
 export function withExclusiveMinimum<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _exclusiveMinimum?: boolean;
-    exclusiveMin() {
+    _exclusiveMinimum?: number;
+    exclusiveMin(val: number) {
       const copy: this = Object.create(this);
-      copy._exclusiveMinimum = true;
+      copy._exclusiveMinimum = val;
       return copy;
     }
     toJSON() {
@@ -629,16 +631,16 @@ export function withExclusiveMinimum<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType boolean
+ * @fieldType number
  * @serializedName exclusiveMaximum
  * @methodName exclusiveMax
  */
 export function withExclusiveMaximum<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _exclusiveMaximum?: boolean;
-    exclusiveMax() {
+    _exclusiveMaximum?: number;
+    exclusiveMax(val: number) {
       const copy: this = Object.create(this);
-      copy._exclusiveMaximum = true;
+      copy._exclusiveMaximum = val;
       return copy;
     }
     toJSON() {

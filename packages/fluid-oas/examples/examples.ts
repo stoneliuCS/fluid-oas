@@ -11,7 +11,7 @@ import {
   Responses,
   MediaType,
   String,
-  OpenApiV311,
+  OpenApiV3_1_1,
 } from "../src/";
 
 const info = Info("My API", "v1.0.0")
@@ -85,7 +85,7 @@ const path = Path()
   .addEndpoint("/user/{id}", getUser)
   .endGroup();
 
-const oas = OpenApiV311(info).addPaths(path);
+const oas = OpenApiV3_1_1(info).addPaths(path);
 
 // Write OAS Spec
 oas.writeOAS();

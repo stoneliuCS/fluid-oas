@@ -289,13 +289,13 @@ async function main() {
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withExclusiveMinimum",
-      fieldType: "boolean",
+      fieldType: "number",
       serializedName: "exclusiveMinimum",
       methodName: "exclusiveMin",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withExclusiveMaximum",
-      fieldType: "boolean",
+      fieldType: "number",
       serializedName: "exclusiveMaximum",
       methodName: "exclusiveMax",
     }),
