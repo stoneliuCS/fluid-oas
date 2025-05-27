@@ -1,12 +1,12 @@
 import {
-  withDefault,
   withEnum,
-  withFormat,
+  withDefault,
+  withPattern,
   withMaxLength,
   withMinLength,
-  withPattern,
-} from "../../../common/common";
-import { SchemaBase, type SchemaInterface } from "../common/base";
+  withFormat,
+} from "../common";
+import { SchemaBase, type SchemaInterface } from "../lib/base";
 
 const StringBase = withEnum(
   withDefault(

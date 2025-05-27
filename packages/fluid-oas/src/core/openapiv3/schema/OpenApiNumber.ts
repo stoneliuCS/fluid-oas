@@ -1,14 +1,14 @@
 import {
-  withDefault,
   withEnum,
-  withExclusiveMaximum,
+  withDefault,
+  withMultipleOf,
   withExclusiveMinimum,
-  withFormat,
+  withExclusiveMaximum,
   withMaximum,
   withMinimum,
-  withMultipleOf,
-} from "../../../common/common";
-import { SchemaBase, type SchemaInterface } from "../common/base";
+  withFormat,
+} from "../common";
+import { SchemaBase, type SchemaInterface } from "../lib/base";
 
 const NumberBase = withEnum(
   withDefault(
@@ -23,8 +23,8 @@ const NumberBase = withEnum(
 interface OpenApiBaseNumber extends SchemaInterface {
   addMinimum(min: number): this;
   addMaximum(max: number): this;
-  exclusiveMax(): this;
-  exclusiveMin(): this;
+  exclusiveMax(max: number): this;
+  exclusiveMin(min: number): this;
   addMultiple(val: number): this;
   addDefault(val: number): this;
   addEnums(val: number[]): this;

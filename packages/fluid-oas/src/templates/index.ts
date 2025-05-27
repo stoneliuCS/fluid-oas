@@ -1,7 +1,7 @@
 import { CodeBlockWriter } from "ts-morph";
 import { FunctionTemplateBuilder } from "./FunctionTemplate";
 import { PrimitiveTemplateBuilder } from "./PrimitiveTemplate";
-import { MainProject } from "./TemplateBuilder";
+import { OpenAPIV3Project } from "./TemplateBuilder";
 import { MapTemplateBuilder } from "./MapTemplate";
 import { ArrayTemplateBuilder } from "./ArrayTemplate";
 import { FunctionBuilder } from "./FunctionBuilder";
@@ -695,9 +695,9 @@ async function main() {
       serializedName: "webhooks",
       methodName: "addWebhook",
     }),
-  ].forEach(fn => fn.write(MainProject));
+  ].forEach(fn => fn.write(OpenAPIV3Project));
 
-  await MainProject.save();
+  await OpenAPIV3Project.save();
 }
 
 main();

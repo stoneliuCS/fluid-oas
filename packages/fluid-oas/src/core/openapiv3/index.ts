@@ -1,3 +1,4 @@
-export * from "./OpenApiV311";
+export * from "./OpenApiV31";
 export * from "./schema/";
-export * from "./common/";
+export * from "./lib";
+export * from "./types"

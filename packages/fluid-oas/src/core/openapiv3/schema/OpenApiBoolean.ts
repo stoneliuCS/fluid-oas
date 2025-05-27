@@ -1,5 +1,5 @@
-import { withDefault } from "../../../common/common";
-import { SchemaBase, type SchemaInterface } from "../common/base";
+import { withDefault } from "../common";
+import { SchemaBase, type SchemaInterface } from "../lib/base";
 
 const BooleanBase = withDefault(SchemaBase)<boolean>();
 

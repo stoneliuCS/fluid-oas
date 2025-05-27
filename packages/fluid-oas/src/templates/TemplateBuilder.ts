@@ -116,7 +116,7 @@ export class TemplateBuilder {
   }
 }
 
-export const MainProject = new TemplateBuilder(
+export const OpenAPIV3Project = new TemplateBuilder(
   new Project({
     tsConfigFilePath: "./tsconfig.json",
     compilerOptions: {
@@ -124,5 +124,5 @@ export const MainProject = new TemplateBuilder(
     },
   }),
   "common.ts",
-  "./src/common"
+  "./src/core/openapiv3"
 );

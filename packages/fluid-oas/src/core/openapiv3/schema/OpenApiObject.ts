@@ -1,10 +1,5 @@
-import {
-  withAdditionalProperties,
-  withDefault,
-  withProperty,
-  withRequiredEnumerable,
-} from "../../../common/common";
-import { SchemaBase, type SchemaInterface } from "../common/base";
+import { withAdditionalProperties, withRequiredEnumerable, withProperty, withDefault } from "../common";
+import { SchemaBase, type SchemaInterface } from "../lib/base";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
 const ObjectBase = withAdditionalProperties(

@@ -1,5 +1,5 @@
-import { withItems, withMaxItems, withMinItems } from "../../../common/common";
-import { SchemaBase, type SchemaInterface } from "../common/base";
+import { withItems, withMaxItems, withMinItems } from "../common";
+import { SchemaBase, type SchemaInterface } from "../lib/base";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
 const ArrayBase = withItems(withMaxItems(withMinItems(SchemaBase)));
