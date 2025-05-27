@@ -38,7 +38,7 @@ const OpenApiBase = withExternalDocs(
  * Root OpenAPI Object. Allows for method chaining to build a single
  * API Specification.
  */
-export interface OpenApi extends BaseInterface {
+export interface OpenApiV3_1 extends BaseInterface {
   /**
    * Adds the current version of the OpenAPI Specification.
    *
@@ -111,7 +111,7 @@ export interface OpenApi extends BaseInterface {
   writeOAS(filePath?: string): void;
 }
 
-class _OpenApi extends OpenApiBase implements OpenApi {
+class _OpenApi extends OpenApiBase implements OpenApiV3_1 {
   writeOAS(filePath?: string): void {
     const json = JSON.stringify(this, undefined, 2);
     if (!filePath) {
@@ -120,6 +120,10 @@ class _OpenApi extends OpenApiBase implements OpenApi {
   }
 }
 
-export function OpenApiV311(info: OpenApiInfo): OpenApi {
+export function OpenApiV3_1_0(info: OpenApiInfo): OpenApiV3_1 {
+  return new _OpenApi().addOpenApiVersion("3.1.0").addInfo(info);
+}
+
+export function OpenApiV3_1_1(info: OpenApiInfo): OpenApiV3_1 {
   return new _OpenApi().addOpenApiVersion("3.1.1").addInfo(info);
 }
