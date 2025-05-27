@@ -1,0 +1,24 @@
+import {
+  withAuthorizationURL,
+  withRefreshURL,
+  withScopes,
+  withTokenURL,
+} from "../../../common/common";
+import { Base, type BaseInterface } from "./base";
+
+const OAuthFlowBase = withScopes(
+  withRefreshURL(withTokenURL(withAuthorizationURL(Base)))
+);
+
+export interface OpenApiOAuthFlow extends BaseInterface {
+  addAuthorizationUrl(url: string): this;
+  addTokenUrl(url: string): this;
+  addRefreshUrl(url: string): this;
+  addScope(name: string, scope: string): this;
+}
+
+class _OpenApiOAuthFlow extends OAuthFlowBase implements OpenApiOAuthFlow {}
+
+export function OAuthFlow(): OpenApiOAuthFlow {
+  return new _OpenApiOAuthFlow();
+}

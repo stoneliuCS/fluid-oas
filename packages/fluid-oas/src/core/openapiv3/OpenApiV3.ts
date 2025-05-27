@@ -17,8 +17,8 @@ import type {
   OpenApiSecurityRequirement,
   OpenApiServer,
   OpenApiTag,
-} from "../common";
-import { Base, type BaseInterface } from "../common/base";
+} from "./common";
+import { Base, type BaseInterface } from "./common/base";
 
 const OpenApiBase = withExternalDocs(
   withTags(

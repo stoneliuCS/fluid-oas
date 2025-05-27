@@ -15,6 +15,7 @@ bun add --development fluid-oas
 ```
 
 Build maintainable OpenAPI specifications easily:
+
 ```ts
 const info = Info("My API", "v1.0.0")
   .addDescription("Add an example description")
@@ -174,5 +175,3 @@ Which will automatically generate:
   }
 }
 ```
-
-
