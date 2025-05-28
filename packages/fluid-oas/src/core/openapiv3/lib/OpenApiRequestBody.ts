@@ -21,6 +21,6 @@ class _OpenApiRequestBody
 
 export function RequestBody(mappings: {
   [K in OpenApiMediaContentType]: OpenApiMediaType;
-}) : OpenApiRequestBody {
+}): OpenApiRequestBody {
   return new _OpenApiRequestBody().addContents(mappings);
 }

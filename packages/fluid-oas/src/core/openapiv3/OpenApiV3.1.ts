@@ -19,6 +19,7 @@ import type {
   OpenApiDocumentation,
 } from "./lib";
 import { Base, type BaseInterface } from "./lib/base";
+import * as fs from "fs";
 
 const OpenApiBase = withExternalDocs(
   withTags(
@@ -102,18 +103,39 @@ export interface OpenApiV3_1 extends BaseInterface {
   addExternalDocs(docs: OpenApiDocumentation): this;
 
   /**
-   * Writes the OpenAPI specification to a file or outputs it.
+   * Writes the OpenAPI specification synchronously to a file or outputs it.
    *
    * @param filePath - Optional file path where the specification should be written
    */
-  writeOAS(filePath?: string): void;
+  writeOASSync(filePath?: string): void;
+
+  /**
+   * Writes the OpenAPI specification asynchronously to a file or outputs it.
+   *
+   * @param filePath - Optional file path where the specification should be written
+   */
+  writeOASASync(filePath?: string): void;
 }
 
 class _OpenApi extends OpenApiBase implements OpenApiV3_1 {
-  writeOAS(filePath?: string): void {
+  writeOASASync(filePath?: string): void {
     const json = JSON.stringify(this, undefined, 2);
     if (!filePath) {
       console.log(json);
+    } else {
+      fs.writeFile(filePath, json, {}, err => {
+        if (err) {
+          console.error("Error writing file.", err.message);
+        }
+      });
+    }
+  }
+  writeOASSync(filePath?: string): void {
+    const json = JSON.stringify(this, undefined, 2);
+    if (!filePath) {
+      console.log(json);
+    } else {
+      fs.writeFileSync(filePath, json);
     }
   }
 }
@@ -128,7 +150,7 @@ export function OpenApiV3_1_0(info: OpenApiInfo): OpenApiV3_1 {
 }
 
 /**
- * Build a OpenAPI 3.1.3 compliant doc
+ * Build a OpenAPI 3.1.1 compliant doc
  * @param info - Info Object, is required to build an OpenAPI Specification
  * @returns OpenAPIV3_1
  */

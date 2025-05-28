@@ -4,19 +4,6 @@ import { PrimitiveTemplateBuilder } from "./PrimitiveTemplate";
 import { OpenAPIV3Project } from "./TemplateBuilder";
 import { MapTemplateBuilder } from "./MapTemplate";
 import { ArrayTemplateBuilder } from "./ArrayTemplate";
-import { FunctionBuilder } from "./FunctionBuilder";
-
-const Enumerable = class extends ArrayTemplateBuilder {
-  protected buildBuilderMethod(writer: CodeBlockWriter): void {
-    writer
-      .write(`${this.methodName}(val : ${FunctionBuilder.genericName}[])`)
-      .block(() => {
-        writer.writeLine("const copy: this = Object.create(this);");
-        writer.writeLine(`copy._${this.serializedName} = val`);
-        writer.writeLine("return copy;");
-      });
-  }
-};
 
 const KeyNameClass = class extends MapTemplateBuilder {
   protected buildJSONMethod(writer: CodeBlockWriter): void {
@@ -355,7 +342,7 @@ async function main() {
       serializedName: "properties",
       methodName: "addProperties",
     }),
-    new Enumerable({
+    new ArrayTemplateBuilder({
       fnName: "withEnum",
       fieldType: "T",
       serializedName: "enum",
@@ -493,13 +480,13 @@ async function main() {
       serializedName: "servers",
       methodName: "addServers",
     }),
-    new Enumerable({
+    new ArrayTemplateBuilder({
       fnName: "withTags",
       fieldType: "T",
       serializedName: "tags",
       methodName: "addTags",
     }),
-    new Enumerable({
+    new ArrayTemplateBuilder({
       fnName: "withRequiredEnumerable",
       fieldType: "T",
       serializedName: "required",
