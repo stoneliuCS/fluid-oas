@@ -5,7 +5,7 @@ import type { OpenApiPathItem } from "./OpenApiPathItem";
 const CallbackBase = withCallback(Base);
 
 export interface OpenApiCallback extends BaseInterface {
-  addCallback(callbackName: string, pathItem: OpenApiPathItem): this;
+  addCallback(mappings: Partial<{ [K in string]: OpenApiPathItem }>): this;
 }
 
 class _OpenApiCallback extends CallbackBase implements OpenApiCallback {}

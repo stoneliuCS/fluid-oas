@@ -77,10 +77,8 @@ export interface OpenApiV3_1 extends BaseInterface {
   /**
    * Adds a webhook to the API specification.
    *
-   * @param webhook - The webhook name/identifier
-   * @param val - Path item object defining the webhook operations
    */
-  addWebhook(webhook: string, val: OpenApiPathItem): this;
+  addWebhooks(mappings: { [K in string]: OpenApiPathItem }): this;
 
   /**
    * Adds security requirements that apply to the entire API.
@@ -128,7 +126,6 @@ class _OpenApi extends OpenApiBase implements OpenApiV3_1 {
 export function OpenApiV3_1_0(info: OpenApiInfo): OpenApiV3_1 {
   return new _OpenApi().addOpenApiVersion("3.1.0").addInfo(info);
 }
-
 
 /**
  * Build a OpenAPI 3.1.3 compliant doc

@@ -1,6 +1,6 @@
 {
   "name": "fluid-oas",
-  "version": "0.0.16",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
@@ -21,6 +21,6 @@
   "scripts": {
     "build": "rm -rf ./dist && mkdir ./dist && bunx tsc --project ./tsconfig.json",
     "format": "prettier --log-level silent --write .",
-    "generate": "rm -rf ./src/common/*.ts && bun run ./src/templates/index.ts && bun run format"
+    "generate": "rm -rf ./src/core/openapiv3/common.ts && bun run ./src/templates/index.ts && bun run format"
   }
 }

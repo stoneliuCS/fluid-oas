@@ -7,9 +7,10 @@ const ResponsesBase = withResponses(withDefault(Base)<OpenApiResponse>());
 
 export interface OpenApiResponses extends BaseInterface {
   addDefault(response: OpenApiResponse): this;
-  addResponse(
-    statusCode: OpenApiHTTPStatusCode,
-    response: OpenApiResponse
+  addResponses(
+    mappings: Partial<{
+      [K in OpenApiHTTPStatusCode]: OpenApiResponse;
+    }>
   ): this;
 }
 

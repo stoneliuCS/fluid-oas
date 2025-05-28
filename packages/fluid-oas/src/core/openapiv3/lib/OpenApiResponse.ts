@@ -14,9 +14,13 @@ const ResponseBase = withLinks(withContent(withHeaders(withDescription(Base))));
 
 export interface OpenApiResponse extends BaseInterface {
   addDescription(description: string): this;
-  addHeader(name: string, val: OpenApiHeader): this;
-  addContent(name: OpenApiMediaContentType, val: OpenApiMediaType): this;
-  addLink(name: string, val: OpenApiLink): this;
+  addHeaders(mappings: Partial<{ [K in string]: OpenApiHeader }>): this;
+  addContents(
+    mappings: Partial<{
+      [K in OpenApiMediaContentType]: OpenApiMediaType;
+    }>
+  ): this;
+  addLinks(mappings: Partial<{ [K in string]: OpenApiLink }>): this;
 }
 
 class _OpenApiResponse extends ResponseBase implements OpenApiResponse {}

@@ -5,7 +5,7 @@ const DiscriminatorBase = withMapping(withPropertyName(Base));
 
 export interface OpenApiDiscriminator extends BaseInterface {
   addPropertyName(propertyName: string): this;
-  addMap(name: string, val: string): this;
+  addMappings(mappings: Partial<{ [K in string]: string }>): this;
 }
 
 class _OpenApiDiscriminator

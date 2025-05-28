@@ -1,8 +1,4 @@
-import {
-  withDescription,
-  withExternalDocs,
-  withName,
-} from "../common";
+import { withDescription, withExternalDocs, withName } from "../common";
 import { Base, type BaseInterface } from "./base";
 import type { OpenApiDocumentation } from "./OpenApiDocumentation";
 

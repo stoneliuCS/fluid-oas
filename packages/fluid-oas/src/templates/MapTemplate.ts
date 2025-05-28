@@ -36,14 +36,21 @@ export class MapTemplateBuilder extends FunctionBuilder {
   protected buildBuilderMethod(writer: CodeBlockWriter): void {
     writer
       .write(
-        `${this.methodName}(name : ${this.parseField().key}, val : ${this.parseField().val})`
+        `${this.methodName}(mappings : Partial<{ [K in ${this.parseField().key}] : ${this.parseField().val} }>)`
       )
       .block(() => {
         writer.writeLine("const copy : this = Object.create(this);");
         writer.writeLine(
           `copy._${this.serializedName} = new Map(this._${this.serializedName});`
         );
-        writer.writeLine(`copy._${this.serializedName}.set(name, val);`);
+        writer.write(`for (const key in mappings)`).block(() => {
+          writer.writeLine(
+            `const k : ${this.parseField().key} = key as ${this.parseField().key}`
+          );
+          writer.writeLine(
+            `copy._${this.serializedName}.set(k, mappings[k]!);`
+          );
+        });
         writer.writeLine("return copy;");
       });
   }

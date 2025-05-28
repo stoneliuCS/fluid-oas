@@ -1,5 +1,5 @@
 import {
-  withCallbacks,
+  withCallback,
   withDeprecated,
   withDescription,
   withExternalDocs,
@@ -13,15 +13,15 @@ import {
   withTags,
 } from "../common";
 import { Base, type BaseInterface } from "./base";
-import type { OpenApiCallback } from "./OpenApiCallback";
 import type { OpenApiDocumentation } from "./OpenApiDocumentation";
 import type { OpenApiParameter } from "./OpenApiParameter";
+import type { OpenApiPathItem } from "./OpenApiPathItem";
 import type { OpenApiRequestBody } from "./OpenApiRequestBody";
 import type { OpenApiResponses } from "./OpenApiResponses";
 import type { OpenApiSecurityRequirement } from "./OpenApiSecurityRequirement";
 import type { OpenApiServer } from "./OpenApiServer";
 
-const OperationBase = withCallbacks(
+const OperationBase = withCallback(
   withServersArray(
     withSecurityArray(
       withDeprecated(
@@ -53,7 +53,7 @@ export interface OpenApiOperation extends BaseInterface {
   deprecated(): this;
   addSecurity(security: OpenApiSecurityRequirement[]): this;
   addServers(servers: OpenApiServer[]): this;
-  addCallback(name: string, callback: OpenApiCallback): this;
+  addCallback(mappings: Partial<{ [K in string]: OpenApiPathItem }>): this;
 }
 
 class _OpenApiOperation extends OperationBase implements OpenApiOperation {}

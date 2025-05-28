@@ -18,7 +18,9 @@ const PathItemBase = withParametersArray(
 export interface OpenApiPathItem extends BaseInterface {
   addSummary(summary: string): this;
   addDescription(description: string): this;
-  addMethod(method: OpenApiHTTPMethod, operation: OpenApiOperation): this;
+  addMethod(
+    mappings: Partial<{ [K in OpenApiHTTPMethod]: OpenApiOperation }>
+  ): this;
   addServers(servers: OpenApiServer[]): this;
   addParameters(parameters: OpenApiParameter[]): this;
 }

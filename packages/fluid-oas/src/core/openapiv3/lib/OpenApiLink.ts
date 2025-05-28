@@ -21,7 +21,7 @@ export interface OpenApiLink extends BaseInterface {
   addServer(server: OpenApiServer): this;
   addDescription(description: string): this;
   addRequestBodyLiteral(literalRequestBody: string): this;
-  addParameterLiteral(name: string, parameter: string): this;
+  addParametersLiteral(mappings: Partial<{ [K in string]: string }>): this;
   addOperationId(id: string): this;
   addOperationRef(ref: string): this;
 }

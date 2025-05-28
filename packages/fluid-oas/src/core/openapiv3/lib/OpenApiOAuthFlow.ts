@@ -14,7 +14,7 @@ export interface OpenApiOAuthFlow extends BaseInterface {
   addAuthorizationUrl(url: string): this;
   addTokenUrl(url: string): this;
   addRefreshUrl(url: string): this;
-  addScope(name: string, scope: string): this;
+  addScopes(mappings: Partial<{ [K in string]: string }>): this;
 }
 
 class _OpenApiOAuthFlow extends OAuthFlowBase implements OpenApiOAuthFlow {}

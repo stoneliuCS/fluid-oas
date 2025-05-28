@@ -12,10 +12,7 @@ import {
   withSchema,
   withStyle,
 } from "../common";
-import type {
-  OpenApiMediaContentType,
-  OpenApiSchemaOrContent,
-} from "../types";
+import type { OpenApiMediaContentType, OpenApiSchemaOrContent } from "../types";
 import { Base, type BaseInterface } from "./base";
 import type { OpenApiSchema } from "../schema/OpenApiSchema";
 import type { OpenApiExample } from "./OpenApiExample";
@@ -43,13 +40,14 @@ export interface SchemaParameter extends ParameterBase {
   allowReserved(): this;
   addSchema(schema: OpenApiSchema): this;
   addExample(example: OpenApiExample): this;
-  addExample(name: string, example: OpenApiExample): this;
+  addExamples(mappings: { [K in string]: OpenApiExample }): this;
 }
 
 export interface ContentParameter extends ParameterBase {
-  addContent(
-    contentType: OpenApiMediaContentType,
-    mediaType: OpenApiMediaType
+  addContents(
+    mappings: Partial<{
+      [K in OpenApiMediaContentType]: OpenApiMediaType;
+    }>
   ): this;
 }
 

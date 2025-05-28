@@ -4,7 +4,9 @@ import { Root, type RootInterface } from "./base";
 const SecurityRequirementBase = withSecurityRequirement(Root);
 
 export interface OpenApiSecurityRequirement extends RootInterface {
-  addSecurityRequirement(name: string, val: Array<string>): this;
+  addSecurityRequirement(
+    mappings: Partial<{ [K in string]: Array<string> }>
+  ): this;
 }
 
 class _OpenApiSecurityRequirementBase extends SecurityRequirementBase {}

@@ -1,16 +1,21 @@
-import { withAdditionalProperties, withRequiredEnumerable, withProperty, withDefault } from "../common";
+import {
+  withAdditionalProperties,
+  withRequiredEnumerable,
+  withProperties,
+  withDefault,
+} from "../common";
 import { SchemaBase, type SchemaInterface } from "../lib/base";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
 const ObjectBase = withAdditionalProperties(
   withRequiredEnumerable(
-    withProperty(withDefault(SchemaBase)<OpenApiObject>())
+    withProperties(withDefault(SchemaBase)<OpenApiObject>())
   )<string>()
 );
 
 export interface OpenApiObject extends SchemaInterface {
   addDefault(val: OpenApiObject): this;
-  addProperty(propertyName: string, val: OpenApiSchema): this;
+  addProperties(mappings: Partial<{ [K in string]: OpenApiSchema }>): this;
   addRequired(val: string[]): this;
   additionalProperties(): this;
 }

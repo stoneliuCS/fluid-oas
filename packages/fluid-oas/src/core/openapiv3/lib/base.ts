@@ -21,7 +21,9 @@ export interface RootInterface {
 }
 
 export interface BaseInterface extends RootInterface {
-  addExtension(name: OpenApiExtensionString, val: OpenApiSchema): this;
+  addExtensions(mappings: {
+    [K in OpenApiExtensionString]: OpenApiSchema;
+  }): this;
 }
 
 export interface SchemaInterface extends BaseInterface {

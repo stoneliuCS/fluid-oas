@@ -42,33 +42,21 @@ console.log(
     .toJSON()
 );
 
-const userSchema = Object()
-  .addProperty("firstName", nameSchema)
-  .addProperty("lastName", nameSchema)
-  .addProperty("id", uuidSchema);
+const userSchema = Object().addProperties({
+  firstName: nameSchema,
+  lastName: nameSchema,
+  id: uuidSchema,
+});
 
-const errorSchema = Object().addProperty("message", String());
-
-const getUserResponses = Responses()
-  .addResponse(
-    "200",
-    Response("Successfully Retrieved User!").addContent(
-      "application/json",
-      MediaType().addSchema(userSchema)
-    )
-  )
-  .addResponse(
-    "401",
-    Response("Unauthorized").addContent(
-      "application/json",
-      MediaType().addSchema(errorSchema)
-    )
-  );
+const getUserResponses = Responses().addResponses({
+  "200": Response("Successfully Retrieved User!").addContents({
+    "application/json": MediaType().addSchema(userSchema),
+  }),
+});
 
 // Declare Path Items
-const getUser = PathItem().addMethod(
-  "get",
-  Operation()
+const getUser = PathItem().addMethod({
+  get: Operation()
     .addParameters([
       Parameter("schema")
         .addName("id")
@@ -76,13 +64,13 @@ const getUser = PathItem().addMethod(
         .required()
         .addSchema(uuidSchema),
     ])
-    .addResponses(getUserResponses)
-);
+    .addResponses(getUserResponses),
+});
 
 // Register Paths
 const path = Path()
   .beginGroup("/api/v1")
-  .addEndpoint("/user/{id}", getUser)
+  .addEndpoints({ "/user/{id}": getUser })
   .endGroup();
 
 const oas = OpenApiV3_1_1(info).addPaths(path);

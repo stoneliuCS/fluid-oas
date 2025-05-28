@@ -9,10 +9,7 @@ import {
   withSchema,
   withStyle,
 } from "../common";
-import type {
-  OpenApiMediaContentType,
-  OpenApiSchemaOrContent,
-} from "../types";
+import type { OpenApiMediaContentType, OpenApiSchemaOrContent } from "../types";
 import type { OpenApiSchema } from "../schema/OpenApiSchema";
 import { Base, type BaseInterface } from "./base";
 import type { OpenApiExample } from "./OpenApiExample";
@@ -35,11 +32,15 @@ export interface SchemaHeader extends HeaderBase {
   explode(): this;
   addSchema(schema: OpenApiSchema): this;
   addExample(example: OpenApiExample): this;
-  addExample(name: string, example: OpenApiExample): this;
+  addExamples(mappings: Partial<{ [K in string]: OpenApiExample }>): this;
 }
 
 export interface ContentHeader extends HeaderBase {
-  addContent(name: OpenApiMediaContentType, val: OpenApiMediaType): this;
+  addContents(
+    mappings: Partial<{
+      [K in OpenApiMediaContentType]: OpenApiMediaType;
+    }>
+  ): this;
 }
 
 const ContentHeaderBase = withContent(HeaderBase);

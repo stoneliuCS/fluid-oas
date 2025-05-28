@@ -6,38 +6,6 @@ import { MapTemplateBuilder } from "./MapTemplate";
 import { ArrayTemplateBuilder } from "./ArrayTemplate";
 import { FunctionBuilder } from "./FunctionBuilder";
 
-const SecurityRequirementClass = class extends MapTemplateBuilder {
-  protected buildBuilderMethod(writer: CodeBlockWriter): void {
-    writer
-      .write(
-        `${this.methodName}(name : ${this.parseField().key}, val : ${this.parseField().val})`
-      )
-      .block(() => {
-        writer.writeLine("const copy : this = Object.create(this);");
-        writer.writeLine(
-          `copy._${this.serializedName} = new Map(this._${this.serializedName});`
-        );
-        writer.writeLine(`copy._${this.serializedName}.set(name, val);`);
-        writer.writeLine("return copy;");
-      });
-  }
-  protected buildJSONMethod(writer: CodeBlockWriter): void {
-    writer.write("toJSON()").block(() => {
-      writer.writeLine("const json = super.toJSON();");
-      writer
-        .write(`if (this._${this.serializedName} !== undefined)`)
-        .block(() => {
-          writer.writeLine(
-            `this._${this.serializedName}.forEach((val, key) => {
-              Object.defineProperty(json, key, { value : val, enumerable : true })
-            }) `
-          );
-        });
-      writer.writeLine("return json;");
-    });
-  }
-};
-
 const Enumerable = class extends ArrayTemplateBuilder {
   protected buildBuilderMethod(writer: CodeBlockWriter): void {
     writer
@@ -56,39 +24,7 @@ const KeyNameClass = class extends MapTemplateBuilder {
       writer.writeLine("const json = super.toJSON();");
       writer.write(`if (this._${this.serializedName})`).block(() => {
         writer.writeLine(
-          `this._${this.serializedName}.forEach((val, key) => { Object.defineProperty(json, key, { value : val.toJSON(), enumerable : true }) })`
-        );
-      });
-      writer.writeLine("return json;");
-    });
-  }
-};
-
-const ObjectProperty = class extends MapTemplateBuilder {
-  protected buildJSONMethod(writer: CodeBlockWriter): void {
-    writer.write("toJSON()").block(() => {
-      writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this._${this.serializedName})`).block(() => {
-        writer.writeLine("const mappings : any = {};");
-        writer.writeLine(
-          `this._${this.serializedName}.forEach((val, key) => { mappings[key] = val.toJSON() })`
-        );
-        writer.writeLine(
-          `Object.defineProperty(json, "properties", { value : mappings, enumerable : true })`
-        );
-      });
-      writer.writeLine("return json;");
-    });
-  }
-};
-
-const OpenApiClass = class extends PrimitiveTemplateBuilder {
-  protected buildJSONMethod(writer: CodeBlockWriter): void {
-    writer.write("toJSON()").block(() => {
-      writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this._${this.serializedName})`).block(() => {
-        writer.writeLine(
-          `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}.toJSON(), enumerable : true })`
+          `this._${this.serializedName}.forEach((val, key) => { Object.defineProperty(json, key, { value : val, enumerable : true }) })`
         );
       });
       writer.writeLine("return json;");
@@ -105,54 +41,6 @@ const RegExpClass = class extends PrimitiveTemplateBuilder {
           `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}.source, enumerable : true })`
         );
       });
-      writer.writeLine("return json;");
-    });
-  }
-};
-
-const OpenApiMapClass = class extends MapTemplateBuilder {
-  protected buildBuilderMethod(writer: CodeBlockWriter): void {
-    writer
-      .write(
-        `${this.methodName}(name : ${this.parseField().key}, val : ${this.parseField().val})`
-      )
-      .block(() => {
-        writer.writeLine("const copy : this = Object.create(this);");
-        writer.writeLine(
-          `copy._${this.serializedName} = new Map(this._${this.serializedName});`
-        );
-        writer.writeLine(`copy._${this.serializedName}.set(name, val);`);
-        writer.writeLine("return copy;");
-      });
-  }
-  protected buildJSONMethod(writer: CodeBlockWriter): void {
-    writer.write("toJSON()").block(() => {
-      writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this._${this.serializedName})`).block(() => {
-        writer.writeLine("const mappings : any = {};");
-        writer.writeLine(
-          `this._${this.serializedName}.forEach((val, key) => { mappings[key] = val.toJSON() })`
-        );
-        writer.writeLine(
-          `Object.defineProperty(json, "${this.serializedName}", { value : mappings, enumerable : true })`
-        );
-      });
-      writer.writeLine("return json;");
-    });
-  }
-};
-
-const OpenApiArrayClass = class extends ArrayTemplateBuilder {
-  protected buildJSONMethod(writer: CodeBlockWriter): void {
-    writer.write("toJSON()").block(() => {
-      writer.writeLine("const json = super.toJSON();");
-      writer
-        .write(`if (this._${this.serializedName} !== undefined)`)
-        .block(() => {
-          writer.writeLine(
-            `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}.map(val => val.toJSON()), enumerable : true })`
-          );
-        });
       writer.writeLine("return json;");
     });
   }
@@ -261,19 +149,19 @@ async function main() {
       fnName: "withMapping",
       fieldType: "Map<string,string>",
       serializedName: "mapping",
-      methodName: "addMap",
+      methodName: "addMappings",
     }),
-    new OpenApiMapClass({
+    new MapTemplateBuilder({
       fnName: "withExamples",
       fieldType: "Map<string, OpenApiExample>",
       serializedName: "examples",
-      methodName: "addExample",
+      methodName: "addExamples",
     }),
-    new OpenApiMapClass({
+    new MapTemplateBuilder({
       fnName: "withExtensions",
       fieldType: "Map<OpenApiExtensionString, OpenApiSchema>",
       serializedName: "extensions",
-      methodName: "addExtension",
+      methodName: "addExtensions",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withMaximum",
@@ -369,57 +257,57 @@ async function main() {
       fnName: "withScopes",
       fieldType: "Map<string,string>",
       serializedName: "scopes",
-      methodName: "addScope",
+      methodName: "addScopes",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withExternalDocs",
       fieldType: "OpenApiDocumentation",
       serializedName: "externalDocs",
       methodName: "addExternalDocs",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withImplicit",
       fieldType: "OpenApiOAuthFlow",
       serializedName: "implicit",
       methodName: "addImplicit",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withPassword",
       fieldType: "OpenApiOAuthFlow",
       serializedName: "password",
       methodName: "addPassword",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withClientCredentials",
       fieldType: "OpenApiOAuthFlow",
       serializedName: "clientCredentials",
       methodName: "addClientCredentials",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withAuthorizationCode",
       fieldType: "OpenApiOAuthFlow",
       serializedName: "authorizationCode",
       methodName: "addAuthorizationCode",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withSchema",
       fieldType: "OpenApiSchema",
       serializedName: "schema",
       methodName: "addSchema",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withFlows",
       fieldType: "OpenApiOAuthFlows",
       serializedName: "flows",
       methodName: "addFlows",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withExample",
       fieldType: "OpenApiExample",
       serializedName: "example",
       methodName: "addExample",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withItems",
       fieldType: "OpenApiSchema",
       serializedName: "items",
@@ -461,11 +349,11 @@ async function main() {
       serializedName: "maxItems",
       methodName: "addMaxItems",
     }),
-    new ObjectProperty({
-      fnName: "withProperty",
+    new MapTemplateBuilder({
+      fnName: "withProperties",
       fieldType: "Map<string, OpenApiSchema>",
-      serializedName: "property",
-      methodName: "addProperty",
+      serializedName: "properties",
+      methodName: "addProperties",
     }),
     new Enumerable({
       fnName: "withEnum",
@@ -503,59 +391,59 @@ async function main() {
       serializedName: "operationId",
       methodName: "addOperationId",
     }),
-    new OpenApiMapClass({
+    new MapTemplateBuilder({
       fnName: "withHeaders",
       fieldType: "Map<string, OpenApiHeader>",
       serializedName: "headers",
-      methodName: "addHeader",
+      methodName: "addHeaders",
     }),
-    new OpenApiMapClass({
+    new MapTemplateBuilder({
       fnName: "withContent",
       fieldType: "Map<OpenApiMediaContentType, OpenApiMediaType>",
       serializedName: "content",
-      methodName: "addContent",
+      methodName: "addContents",
     }),
-    new OpenApiMapClass({
+    new MapTemplateBuilder({
       fnName: "withEncoding",
       fieldType: "Map<string, OpenApiEncoding>",
       serializedName: "encoding",
-      methodName: "addEncoding",
+      methodName: "addEncodings",
     }),
-    new OpenApiMapClass({
+    new MapTemplateBuilder({
       fnName: "withCallback",
       fieldType: "Map<string, OpenApiPathItem>",
       serializedName: "callback",
       methodName: "addCallback",
     }),
-    new OpenApiMapClass({
+    new MapTemplateBuilder({
       fnName: "withVariables",
       fieldType: "Map<string, OpenApiServerVariable>",
       serializedName: "variables",
-      methodName: "addVariable",
+      methodName: "addVariables",
     }),
-    new OpenApiMapClass({
+    new MapTemplateBuilder({
       fnName: "withLinks",
       fieldType: "Map<string, OpenApiLink>",
       serializedName: "links",
-      methodName: "addLink",
+      methodName: "addLinks",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withServer",
       fieldType: "OpenApiServer",
       serializedName: "server",
       methodName: "addServer",
     }),
-    new OpenApiMapClass({
+    new MapTemplateBuilder({
       fnName: "withCallbacks",
       fieldType: "Map<string, OpenApiCallback>",
       serializedName: "callbacks",
-      methodName: "addCallback",
+      methodName: "addCallbacks",
     }),
     new MapTemplateBuilder({
       fnName: "withParametersPrimitive",
       fieldType: "Map<string, string>",
       serializedName: "parameters",
-      methodName: "addParameterLiteral",
+      methodName: "addParametersLiteral",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withRequestBodyPrimitive",
@@ -563,7 +451,7 @@ async function main() {
       serializedName: "requestBody",
       methodName: "addRequestBodyLiteral",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withRequestBody",
       fieldType: "OpenApiRequestBody",
       serializedName: "requestBody",
@@ -573,7 +461,7 @@ async function main() {
       fnName: "withResponses",
       fieldType: "Map<OpenApiHTTPStatusCode, OpenApiResponse>",
       serializedName: "response",
-      methodName: "addResponse",
+      methodName: "addResponses",
     }),
     new KeyNameClass({
       fnName: "withMethods",
@@ -585,21 +473,21 @@ async function main() {
       fnName: "withPath",
       fieldType: "Map<string, OpenApiPathItem>",
       serializedName: "endpoint",
-      methodName: "addEndpoint",
+      methodName: "addEndpoints",
     }),
-    new OpenApiArrayClass({
+    new ArrayTemplateBuilder({
       fnName: "withParametersArray",
       fieldType: "OpenApiParameter",
       serializedName: "parameters",
       methodName: "addParameters",
     }),
-    new OpenApiArrayClass({
+    new ArrayTemplateBuilder({
       fnName: "withSecurityArray",
       fieldType: "OpenApiSecurityRequirement",
       serializedName: "security",
       methodName: "addSecurity",
     }),
-    new OpenApiArrayClass({
+    new ArrayTemplateBuilder({
       fnName: "withServersArray",
       fieldType: "OpenApiServer",
       serializedName: "servers",
@@ -623,7 +511,7 @@ async function main() {
       serializedName: "additionalProperties",
       methodName: "additionalProperties",
     }),
-    new SecurityRequirementClass({
+    new KeyNameClass({
       fnName: "withSecurityRequirement",
       fieldType: "Map<string, string[]>",
       serializedName: "field",
@@ -659,41 +547,41 @@ async function main() {
       serializedName: "identifier",
       methodName: "addIdentifier",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withInfo",
       fieldType: "OpenApiInfo",
       serializedName: "info",
       methodName: "addInfo",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withPaths",
       fieldType: "OpenApiPath",
       serializedName: "paths",
       methodName: "addPaths",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withContact",
       fieldType: "OpenApiContact",
       serializedName: "contact",
       methodName: "addContact",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withResponsesObject",
       fieldType: "OpenApiResponses",
       serializedName: "responses",
       methodName: "addResponses",
     }),
-    new OpenApiClass({
+    new PrimitiveTemplateBuilder({
       fnName: "withLicense",
       fieldType: "OpenApiLicense",
       serializedName: "license",
       methodName: "addLicense",
     }),
-    new OpenApiMapClass({
+    new MapTemplateBuilder({
       fnName: "withWebhooks",
       fieldType: "Map<string, OpenApiPathItem>",
       serializedName: "webhooks",
-      methodName: "addWebhook",
+      methodName: "addWebhooks",
     }),
   ].forEach(fn => fn.write(OpenAPIV3Project));
 

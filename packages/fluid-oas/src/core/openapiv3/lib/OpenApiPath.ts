@@ -5,7 +5,7 @@ import type { OpenApiPathItem } from "./OpenApiPathItem";
 const PathBase = withPath(Base);
 
 export interface OpenApiPath extends BaseInterface {
-  addEndpoint(endpoint: string, pathItem: OpenApiPathItem): this;
+  addEndpoints(mappings: Partial<{ [K in string]: OpenApiPathItem }>): this;
   beginGroup(prefix: string): this;
   endGroup(): this;
 }
@@ -25,9 +25,13 @@ class _OpenApiPath extends PathBase implements OpenApiPath {
     return copy;
   }
 
-  addEndpoint(endpoint: string, pathItem: OpenApiPathItem) {
-    const combinedEndpoint = this._prefix + endpoint;
-    return super.addEndpoint(combinedEndpoint, pathItem);
+  addEndpoints(mappings: { [K in string]: OpenApiPathItem }) {
+    const mappingsImpl: { [K in string]: OpenApiPathItem } = {};
+    for (const key in mappings) {
+      const newKey = this._prefix + key;
+      mappingsImpl[newKey] = mappings[key]!;
+    }
+    return super.addEndpoints(mappingsImpl);
   }
 }
 

@@ -1,36 +1,39 @@
-import type {
-  OpenApiExample,
-  OpenApiDocumentation,
-  OpenApiOAuthFlow,
-  OpenApiOAuthFlows,
-  OpenApiHeader,
-  OpenApiMediaType,
-  OpenApiEncoding,
-  OpenApiPathItem,
-  OpenApiServerVariable,
-  OpenApiLink,
-  OpenApiServer,
-  OpenApiCallback,
-  OpenApiRequestBody,
-  OpenApiResponse,
-  OpenApiOperation,
-  OpenApiParameter,
-  OpenApiSecurityRequirement,
-  OpenApiInfo,
-  OpenApiPath,
-  OpenApiContact,
-  OpenApiResponses,
-  OpenApiLicense,
-} from "./lib";
-import type { OpenApiSchema } from "./schema";
+import type { OpenApiCallback } from "./lib/OpenApiCallback.js";
+import type { OpenApiContact } from "./lib/OpenApiContact.js";
+import type { OpenApiDocumentation } from "./lib/OpenApiDocumentation.js";
+import type { OpenApiEncoding } from "./lib/OpenApiEncoding.js";
+import type { OpenApiExample } from "./lib/OpenApiExample.js";
+import type { OpenApiHeader } from "./lib/OpenApiHeader.js";
+import type { OpenApiInfo } from "./lib/OpenApiInfo.js";
+import type { OpenApiLicense } from "./lib/OpenApiLicense.js";
+import type { OpenApiLink } from "./lib/OpenApiLink.js";
+import type { OpenApiMediaType } from "./lib/OpenApiMedia.js";
+import type { OpenApiOAuthFlow } from "./lib/OpenApiOAuthFlow.js";
+import type { OpenApiOAuthFlows } from "./lib/OpenApiOAuthFlows.js";
+import type { OpenApiOperation } from "./lib/OpenApiOperation.js";
+import type { OpenApiParameter } from "./lib/OpenApiParameter.js";
+import type { OpenApiPath } from "./lib/OpenApiPath.js";
+import type { OpenApiPathItem } from "./lib/OpenApiPathItem.js";
+import type { OpenApiRequestBody } from "./lib/OpenApiRequestBody.js";
+import type { OpenApiResponse } from "./lib/OpenApiResponse.js";
+import type { OpenApiResponses } from "./lib/OpenApiResponses.js";
+import type { OpenApiSecurityRequirement } from "./lib/OpenApiSecurityRequirement.js";
+import type { OpenApiServer } from "./lib/OpenApiServer.js";
+import type { OpenApiServerVariable } from "./lib/OpenApiServerVariable.js";
+import type { OpenApiSchema } from "./schema/OpenApiSchema.js";
 import type {
   GConstructor,
   OpenApiExtensionString,
-  OpenApiMediaContentType,
-  OpenApiHTTPStatusCode,
   OpenApiHTTPMethod,
-} from "./types";
+  OpenApiHTTPStatusCode,
+  OpenApiMediaContentType,
+} from "./types.ts";
 
+/**
+ * @fieldType string
+ * @serializedName description
+ * @methodName addDescription
+ */
 export function withDescription<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _description?: string;
@@ -457,15 +460,18 @@ export function withIn<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<string,string>
  * @serializedName mapping
- * @methodName addMap
+ * @methodName addMappings
  */
 export function withMapping<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _mapping?: Map<string, string>;
-    addMap(name: string, val: string) {
+    addMappings(mappings: Partial<{ [K in string]: string }>) {
       const copy: this = Object.create(this);
       copy._mapping = new Map(this._mapping);
-      copy._mapping.set(name, val);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._mapping.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
@@ -488,15 +494,18 @@ export function withMapping<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<string,OpenApiExample>
  * @serializedName examples
- * @methodName addExample
+ * @methodName addExamples
  */
 export function withExamples<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _examples?: Map<string, OpenApiExample>;
-    addExample(name: string, val: OpenApiExample) {
+    addExamples(mappings: Partial<{ [K in string]: OpenApiExample }>) {
       const copy: this = Object.create(this);
       copy._examples = new Map(this._examples);
-      copy._examples.set(name, val);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._examples.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
@@ -504,7 +513,7 @@ export function withExamples<TBase extends GConstructor>(Base: TBase) {
       if (this._examples) {
         const mappings: any = {};
         this._examples.forEach((val, key) => {
-          mappings[key] = val.toJSON();
+          mappings[key] = val;
         });
         Object.defineProperty(json, "examples", {
           value: mappings,
@@ -519,15 +528,20 @@ export function withExamples<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<OpenApiExtensionString,OpenApiSchema>
  * @serializedName extensions
- * @methodName addExtension
+ * @methodName addExtensions
  */
 export function withExtensions<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _extensions?: Map<OpenApiExtensionString, OpenApiSchema>;
-    addExtension(name: OpenApiExtensionString, val: OpenApiSchema) {
+    addExtensions(
+      mappings: Partial<{ [K in OpenApiExtensionString]: OpenApiSchema }>
+    ) {
       const copy: this = Object.create(this);
       copy._extensions = new Map(this._extensions);
-      copy._extensions.set(name, val);
+      for (const key in mappings) {
+        const k: OpenApiExtensionString = key as OpenApiExtensionString;
+        copy._extensions.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
@@ -535,7 +549,7 @@ export function withExtensions<TBase extends GConstructor>(Base: TBase) {
       if (this._extensions) {
         const mappings: any = {};
         this._extensions.forEach((val, key) => {
-          mappings[key] = val.toJSON();
+          mappings[key] = val;
         });
         Object.defineProperty(json, "extensions", {
           value: mappings,
@@ -940,15 +954,18 @@ export function withRefreshURL<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<string,string>
  * @serializedName scopes
- * @methodName addScope
+ * @methodName addScopes
  */
 export function withScopes<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _scopes?: Map<string, string>;
-    addScope(name: string, val: string) {
+    addScopes(mappings: Partial<{ [K in string]: string }>) {
       const copy: this = Object.create(this);
       copy._scopes = new Map(this._scopes);
-      copy._scopes.set(name, val);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._scopes.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
@@ -983,9 +1000,9 @@ export function withExternalDocs<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._externalDocs) {
+      if (this._externalDocs !== undefined) {
         Object.defineProperty(json, "externalDocs", {
-          value: this._externalDocs.toJSON(),
+          value: this._externalDocs,
           enumerable: true,
         });
       }
@@ -1009,9 +1026,9 @@ export function withImplicit<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._implicit) {
+      if (this._implicit !== undefined) {
         Object.defineProperty(json, "implicit", {
-          value: this._implicit.toJSON(),
+          value: this._implicit,
           enumerable: true,
         });
       }
@@ -1035,9 +1052,9 @@ export function withPassword<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._password) {
+      if (this._password !== undefined) {
         Object.defineProperty(json, "password", {
-          value: this._password.toJSON(),
+          value: this._password,
           enumerable: true,
         });
       }
@@ -1061,9 +1078,9 @@ export function withClientCredentials<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._clientCredentials) {
+      if (this._clientCredentials !== undefined) {
         Object.defineProperty(json, "clientCredentials", {
-          value: this._clientCredentials.toJSON(),
+          value: this._clientCredentials,
           enumerable: true,
         });
       }
@@ -1087,9 +1104,9 @@ export function withAuthorizationCode<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._authorizationCode) {
+      if (this._authorizationCode !== undefined) {
         Object.defineProperty(json, "authorizationCode", {
-          value: this._authorizationCode.toJSON(),
+          value: this._authorizationCode,
           enumerable: true,
         });
       }
@@ -1113,9 +1130,9 @@ export function withSchema<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._schema) {
+      if (this._schema !== undefined) {
         Object.defineProperty(json, "schema", {
-          value: this._schema.toJSON(),
+          value: this._schema,
           enumerable: true,
         });
       }
@@ -1139,9 +1156,9 @@ export function withFlows<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._flows) {
+      if (this._flows !== undefined) {
         Object.defineProperty(json, "flows", {
-          value: this._flows.toJSON(),
+          value: this._flows,
           enumerable: true,
         });
       }
@@ -1165,9 +1182,9 @@ export function withExample<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._example) {
+      if (this._example !== undefined) {
         Object.defineProperty(json, "example", {
-          value: this._example.toJSON(),
+          value: this._example,
           enumerable: true,
         });
       }
@@ -1191,9 +1208,9 @@ export function withItems<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._items) {
+      if (this._items !== undefined) {
         Object.defineProperty(json, "items", {
-          value: this._items.toJSON(),
+          value: this._items,
           enumerable: true,
         });
       }
@@ -1360,24 +1377,27 @@ export function withMaxItems<TBase extends GConstructor>(Base: TBase) {
 
 /**
  * @fieldType Map<string,OpenApiSchema>
- * @serializedName property
- * @methodName addProperty
+ * @serializedName properties
+ * @methodName addProperties
  */
-export function withProperty<TBase extends GConstructor>(Base: TBase) {
+export function withProperties<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _property?: Map<string, OpenApiSchema>;
-    addProperty(name: string, val: OpenApiSchema) {
+    _properties?: Map<string, OpenApiSchema>;
+    addProperties(mappings: Partial<{ [K in string]: OpenApiSchema }>) {
       const copy: this = Object.create(this);
-      copy._property = new Map(this._property);
-      copy._property.set(name, val);
+      copy._properties = new Map(this._properties);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._properties.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._property) {
+      if (this._properties) {
         const mappings: any = {};
-        this._property.forEach((val, key) => {
-          mappings[key] = val.toJSON();
+        this._properties.forEach((val, key) => {
+          mappings[key] = val;
         });
         Object.defineProperty(json, "properties", {
           value: mappings,
@@ -1552,15 +1572,18 @@ export function withOperationId<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<string,OpenApiHeader>
  * @serializedName headers
- * @methodName addHeader
+ * @methodName addHeaders
  */
 export function withHeaders<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _headers?: Map<string, OpenApiHeader>;
-    addHeader(name: string, val: OpenApiHeader) {
+    addHeaders(mappings: Partial<{ [K in string]: OpenApiHeader }>) {
       const copy: this = Object.create(this);
       copy._headers = new Map(this._headers);
-      copy._headers.set(name, val);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._headers.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
@@ -1568,7 +1591,7 @@ export function withHeaders<TBase extends GConstructor>(Base: TBase) {
       if (this._headers) {
         const mappings: any = {};
         this._headers.forEach((val, key) => {
-          mappings[key] = val.toJSON();
+          mappings[key] = val;
         });
         Object.defineProperty(json, "headers", {
           value: mappings,
@@ -1583,15 +1606,20 @@ export function withHeaders<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<OpenApiMediaContentType,OpenApiMediaType>
  * @serializedName content
- * @methodName addContent
+ * @methodName addContents
  */
 export function withContent<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _content?: Map<OpenApiMediaContentType, OpenApiMediaType>;
-    addContent(name: OpenApiMediaContentType, val: OpenApiMediaType) {
+    addContents(
+      mappings: Partial<{ [K in OpenApiMediaContentType]: OpenApiMediaType }>
+    ) {
       const copy: this = Object.create(this);
       copy._content = new Map(this._content);
-      copy._content.set(name, val);
+      for (const key in mappings) {
+        const k: OpenApiMediaContentType = key as OpenApiMediaContentType;
+        copy._content.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
@@ -1599,7 +1627,7 @@ export function withContent<TBase extends GConstructor>(Base: TBase) {
       if (this._content) {
         const mappings: any = {};
         this._content.forEach((val, key) => {
-          mappings[key] = val.toJSON();
+          mappings[key] = val;
         });
         Object.defineProperty(json, "content", {
           value: mappings,
@@ -1614,15 +1642,18 @@ export function withContent<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<string,OpenApiEncoding>
  * @serializedName encoding
- * @methodName addEncoding
+ * @methodName addEncodings
  */
 export function withEncoding<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _encoding?: Map<string, OpenApiEncoding>;
-    addEncoding(name: string, val: OpenApiEncoding) {
+    addEncodings(mappings: Partial<{ [K in string]: OpenApiEncoding }>) {
       const copy: this = Object.create(this);
       copy._encoding = new Map(this._encoding);
-      copy._encoding.set(name, val);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._encoding.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
@@ -1630,7 +1661,7 @@ export function withEncoding<TBase extends GConstructor>(Base: TBase) {
       if (this._encoding) {
         const mappings: any = {};
         this._encoding.forEach((val, key) => {
-          mappings[key] = val.toJSON();
+          mappings[key] = val;
         });
         Object.defineProperty(json, "encoding", {
           value: mappings,
@@ -1650,10 +1681,13 @@ export function withEncoding<TBase extends GConstructor>(Base: TBase) {
 export function withCallback<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _callback?: Map<string, OpenApiPathItem>;
-    addCallback(name: string, val: OpenApiPathItem) {
+    addCallback(mappings: Partial<{ [K in string]: OpenApiPathItem }>) {
       const copy: this = Object.create(this);
       copy._callback = new Map(this._callback);
-      copy._callback.set(name, val);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._callback.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
@@ -1661,7 +1695,7 @@ export function withCallback<TBase extends GConstructor>(Base: TBase) {
       if (this._callback) {
         const mappings: any = {};
         this._callback.forEach((val, key) => {
-          mappings[key] = val.toJSON();
+          mappings[key] = val;
         });
         Object.defineProperty(json, "callback", {
           value: mappings,
@@ -1676,15 +1710,18 @@ export function withCallback<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<string,OpenApiServerVariable>
  * @serializedName variables
- * @methodName addVariable
+ * @methodName addVariables
  */
 export function withVariables<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _variables?: Map<string, OpenApiServerVariable>;
-    addVariable(name: string, val: OpenApiServerVariable) {
+    addVariables(mappings: Partial<{ [K in string]: OpenApiServerVariable }>) {
       const copy: this = Object.create(this);
       copy._variables = new Map(this._variables);
-      copy._variables.set(name, val);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._variables.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
@@ -1692,7 +1729,7 @@ export function withVariables<TBase extends GConstructor>(Base: TBase) {
       if (this._variables) {
         const mappings: any = {};
         this._variables.forEach((val, key) => {
-          mappings[key] = val.toJSON();
+          mappings[key] = val;
         });
         Object.defineProperty(json, "variables", {
           value: mappings,
@@ -1707,15 +1744,18 @@ export function withVariables<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<string,OpenApiLink>
  * @serializedName links
- * @methodName addLink
+ * @methodName addLinks
  */
 export function withLinks<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _links?: Map<string, OpenApiLink>;
-    addLink(name: string, val: OpenApiLink) {
+    addLinks(mappings: Partial<{ [K in string]: OpenApiLink }>) {
       const copy: this = Object.create(this);
       copy._links = new Map(this._links);
-      copy._links.set(name, val);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._links.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
@@ -1723,7 +1763,7 @@ export function withLinks<TBase extends GConstructor>(Base: TBase) {
       if (this._links) {
         const mappings: any = {};
         this._links.forEach((val, key) => {
-          mappings[key] = val.toJSON();
+          mappings[key] = val;
         });
         Object.defineProperty(json, "links", {
           value: mappings,
@@ -1750,9 +1790,9 @@ export function withServer<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._server) {
+      if (this._server !== undefined) {
         Object.defineProperty(json, "server", {
-          value: this._server.toJSON(),
+          value: this._server,
           enumerable: true,
         });
       }
@@ -1764,15 +1804,18 @@ export function withServer<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<string,OpenApiCallback>
  * @serializedName callbacks
- * @methodName addCallback
+ * @methodName addCallbacks
  */
 export function withCallbacks<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _callbacks?: Map<string, OpenApiCallback>;
-    addCallback(name: string, val: OpenApiCallback) {
+    addCallbacks(mappings: Partial<{ [K in string]: OpenApiCallback }>) {
       const copy: this = Object.create(this);
       copy._callbacks = new Map(this._callbacks);
-      copy._callbacks.set(name, val);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._callbacks.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
@@ -1780,7 +1823,7 @@ export function withCallbacks<TBase extends GConstructor>(Base: TBase) {
       if (this._callbacks) {
         const mappings: any = {};
         this._callbacks.forEach((val, key) => {
-          mappings[key] = val.toJSON();
+          mappings[key] = val;
         });
         Object.defineProperty(json, "callbacks", {
           value: mappings,
@@ -1795,17 +1838,20 @@ export function withCallbacks<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<string,string>
  * @serializedName parameters
- * @methodName addParameterLiteral
+ * @methodName addParametersLiteral
  */
 export function withParametersPrimitive<TBase extends GConstructor>(
   Base: TBase
 ) {
   return class extends Base {
     _parameters?: Map<string, string>;
-    addParameterLiteral(name: string, val: string) {
+    addParametersLiteral(mappings: Partial<{ [K in string]: string }>) {
       const copy: this = Object.create(this);
       copy._parameters = new Map(this._parameters);
-      copy._parameters.set(name, val);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._parameters.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
@@ -1868,9 +1914,9 @@ export function withRequestBody<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._requestBody) {
+      if (this._requestBody !== undefined) {
         Object.defineProperty(json, "requestBody", {
-          value: this._requestBody.toJSON(),
+          value: this._requestBody,
           enumerable: true,
         });
       }
@@ -1882,25 +1928,27 @@ export function withRequestBody<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<OpenApiHTTPStatusCode,OpenApiResponse>
  * @serializedName response
- * @methodName addResponse
+ * @methodName addResponses
  */
 export function withResponses<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _response?: Map<OpenApiHTTPStatusCode, OpenApiResponse>;
-    addResponse(name: OpenApiHTTPStatusCode, val: OpenApiResponse) {
+    addResponses(
+      mappings: Partial<{ [K in OpenApiHTTPStatusCode]: OpenApiResponse }>
+    ) {
       const copy: this = Object.create(this);
       copy._response = new Map(this._response);
-      copy._response.set(name, val);
+      for (const key in mappings) {
+        const k: OpenApiHTTPStatusCode = key as OpenApiHTTPStatusCode;
+        copy._response.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
       const json = super.toJSON();
       if (this._response) {
         this._response.forEach((val, key) => {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
+          Object.defineProperty(json, key, { value: val, enumerable: true });
         });
       }
       return json;
@@ -1916,20 +1964,22 @@ export function withResponses<TBase extends GConstructor>(Base: TBase) {
 export function withMethods<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _method?: Map<OpenApiHTTPMethod, OpenApiOperation>;
-    addMethod(name: OpenApiHTTPMethod, val: OpenApiOperation) {
+    addMethod(
+      mappings: Partial<{ [K in OpenApiHTTPMethod]: OpenApiOperation }>
+    ) {
       const copy: this = Object.create(this);
       copy._method = new Map(this._method);
-      copy._method.set(name, val);
+      for (const key in mappings) {
+        const k: OpenApiHTTPMethod = key as OpenApiHTTPMethod;
+        copy._method.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
       const json = super.toJSON();
       if (this._method) {
         this._method.forEach((val, key) => {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
+          Object.defineProperty(json, key, { value: val, enumerable: true });
         });
       }
       return json;
@@ -1940,25 +1990,25 @@ export function withMethods<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<string,OpenApiPathItem>
  * @serializedName endpoint
- * @methodName addEndpoint
+ * @methodName addEndpoints
  */
 export function withPath<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _endpoint?: Map<string, OpenApiPathItem>;
-    addEndpoint(name: string, val: OpenApiPathItem) {
+    addEndpoints(mappings: Partial<{ [K in string]: OpenApiPathItem }>) {
       const copy: this = Object.create(this);
       copy._endpoint = new Map(this._endpoint);
-      copy._endpoint.set(name, val);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._endpoint.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
       const json = super.toJSON();
       if (this._endpoint) {
         this._endpoint.forEach((val, key) => {
-          Object.defineProperty(json, key, {
-            value: val.toJSON(),
-            enumerable: true,
-          });
+          Object.defineProperty(json, key, { value: val, enumerable: true });
         });
       }
       return json;
@@ -1984,7 +2034,7 @@ export function withParametersArray<TBase extends GConstructor>(Base: TBase) {
         const json = super.toJSON();
         if (this._parameters !== undefined) {
           Object.defineProperty(json, "parameters", {
-            value: this._parameters.map(val => val.toJSON()),
+            value: this._parameters,
             enumerable: true,
           });
         }
@@ -2012,7 +2062,7 @@ export function withSecurityArray<TBase extends GConstructor>(Base: TBase) {
         const json = super.toJSON();
         if (this._security !== undefined) {
           Object.defineProperty(json, "security", {
-            value: this._security.map(val => val.toJSON()),
+            value: this._security,
             enumerable: true,
           });
         }
@@ -2040,7 +2090,7 @@ export function withServersArray<TBase extends GConstructor>(Base: TBase) {
         const json = super.toJSON();
         if (this._servers !== undefined) {
           Object.defineProperty(json, "servers", {
-            value: this._servers.map(val => val.toJSON()),
+            value: this._servers,
             enumerable: true,
           });
         }
@@ -2146,15 +2196,20 @@ export function withSecurityRequirement<TBase extends GConstructor>(
 ) {
   return class extends Base {
     _field?: Map<string, string[]>;
-    addSecurityRequirement(name: string, val: Array<string>) {
+    addSecurityRequirement(
+      mappings: Partial<{ [K in string]: Array<string> }>
+    ) {
       const copy: this = Object.create(this);
       copy._field = new Map(this._field);
-      copy._field.set(name, val);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._field.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._field !== undefined) {
+      if (this._field) {
         this._field.forEach((val, key) => {
           Object.defineProperty(json, key, { value: val, enumerable: true });
         });
@@ -2309,9 +2364,9 @@ export function withInfo<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._info) {
+      if (this._info !== undefined) {
         Object.defineProperty(json, "info", {
-          value: this._info.toJSON(),
+          value: this._info,
           enumerable: true,
         });
       }
@@ -2335,9 +2390,9 @@ export function withPaths<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._paths) {
+      if (this._paths !== undefined) {
         Object.defineProperty(json, "paths", {
-          value: this._paths.toJSON(),
+          value: this._paths,
           enumerable: true,
         });
       }
@@ -2361,9 +2416,9 @@ export function withContact<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._contact) {
+      if (this._contact !== undefined) {
         Object.defineProperty(json, "contact", {
-          value: this._contact.toJSON(),
+          value: this._contact,
           enumerable: true,
         });
       }
@@ -2387,9 +2442,9 @@ export function withResponsesObject<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._responses) {
+      if (this._responses !== undefined) {
         Object.defineProperty(json, "responses", {
-          value: this._responses.toJSON(),
+          value: this._responses,
           enumerable: true,
         });
       }
@@ -2413,9 +2468,9 @@ export function withLicense<TBase extends GConstructor>(Base: TBase) {
     }
     toJSON() {
       const json = super.toJSON();
-      if (this._license) {
+      if (this._license !== undefined) {
         Object.defineProperty(json, "license", {
-          value: this._license.toJSON(),
+          value: this._license,
           enumerable: true,
         });
       }
@@ -2427,15 +2482,18 @@ export function withLicense<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType Map<string,OpenApiPathItem>
  * @serializedName webhooks
- * @methodName addWebhook
+ * @methodName addWebhooks
  */
 export function withWebhooks<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _webhooks?: Map<string, OpenApiPathItem>;
-    addWebhook(name: string, val: OpenApiPathItem) {
+    addWebhooks(mappings: Partial<{ [K in string]: OpenApiPathItem }>) {
       const copy: this = Object.create(this);
       copy._webhooks = new Map(this._webhooks);
-      copy._webhooks.set(name, val);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._webhooks.set(k, mappings[k]!);
+      }
       return copy;
     }
     toJSON() {
@@ -2443,7 +2501,7 @@ export function withWebhooks<TBase extends GConstructor>(Base: TBase) {
       if (this._webhooks) {
         const mappings: any = {};
         this._webhooks.forEach((val, key) => {
-          mappings[key] = val.toJSON();
+          mappings[key] = val;
         });
         Object.defineProperty(json, "webhooks", {
           value: mappings,
