@@ -16,6 +16,10 @@ export interface OpenApiResponses extends BaseInterface {
 
 class _OpenApiResponses extends ResponsesBase implements OpenApiResponses {}
 
-export function Responses(): OpenApiResponses {
-  return new _OpenApiResponses();
+export function Responses(
+  mappings: Partial<{
+    [K in OpenApiHTTPStatusCode]: OpenApiResponse;
+  }>
+): OpenApiResponses {
+  return new _OpenApiResponses().addResponses(mappings);
 }

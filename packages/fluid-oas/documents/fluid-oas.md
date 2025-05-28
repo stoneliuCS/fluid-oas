@@ -56,13 +56,13 @@ const uuidSchema = String()
       .addDescription("Unique Identifier.")
   );
 
-const userSchema = Object().addProperties({
+const userSchema = Object({
   firstName: nameSchema,
   lastName: nameSchema,
   id: uuidSchema,
 });
 
-const getUserResponses = Responses().addResponses({
+const getUserResponses = Responses({
   "200": Response("Successfully Retrieved User!").addContents({
     "application/json": MediaType().addSchema(userSchema),
   }),

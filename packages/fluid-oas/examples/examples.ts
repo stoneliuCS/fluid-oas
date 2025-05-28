@@ -1,5 +1,4 @@
 import {
-  Array,
   Example,
   Info,
   Object,
@@ -34,21 +33,13 @@ const uuidSchema = String()
       .addDescription("Unique Identifier.")
   );
 
-console.log(
-  Array(String())
-    .addMinItems(1)
-    .addMaxItems(10)
-    .addDescription("Example of a string array.")
-    .toJSON()
-);
-
-const userSchema = Object().addProperties({
+const userSchema = Object({
   firstName: nameSchema,
   lastName: nameSchema,
   id: uuidSchema,
 });
 
-const getUserResponses = Responses().addResponses({
+const getUserResponses = Responses({
   "200": Response("Successfully Retrieved User!").addContents({
     "application/json": MediaType().addSchema(userSchema),
   }),
