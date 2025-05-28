@@ -117,7 +117,9 @@ export interface OpenApiV3_1 extends BaseInterface {
   writeOASASync(filePath?: string): void;
 }
 
-class _OpenApi extends OpenApiBase implements OpenApiV3_1 {
+export interface OpenApiV3 extends OpenApiV3_1 {}
+
+class _OpenApiV3 extends OpenApiBase implements OpenApiV3_1 {
   writeOASASync(filePath?: string): void {
     const json = JSON.stringify(this, undefined, 2);
     if (!filePath) {
@@ -141,19 +143,16 @@ class _OpenApi extends OpenApiBase implements OpenApiV3_1 {
 }
 
 /**
- * Build a OpenAPI 3.1.0 compliant doc
- * @param info - Info Object, is required to build an OpenAPI Specification
- * @returns OpenAPIV3_1
+ * Create an OpenAPI v3.*.* compliant specification.
  */
-export function OpenApiV3_1_0(info: OpenApiInfo): OpenApiV3_1 {
-  return new _OpenApi().addOpenApiVersion("3.1.0").addInfo(info);
-}
-
-/**
- * Build a OpenAPI 3.1.1 compliant doc
- * @param info - Info Object, is required to build an OpenAPI Specification
- * @returns OpenAPIV3_1
- */
-export function OpenApiV3_1_1(info: OpenApiInfo): OpenApiV3_1 {
-  return new _OpenApi().addOpenApiVersion("3.1.1").addInfo(info);
+export function OpenApiV3(version: `3.1.${string}`): OpenApiV3_1;
+export function OpenApiV3(version: `3.0.${string}`): OpenApiV3;
+export function OpenApiV3(version: `3.${string}.${string}`): {
+  addInfo(info: OpenApiInfo): OpenApiV3_1;
+} {
+  return {
+    addInfo(info: OpenApiInfo) {
+      return new _OpenApiV3().addOpenApiVersion(version).addInfo(info);
+    },
+  };
 }

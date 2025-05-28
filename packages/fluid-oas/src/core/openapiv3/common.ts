@@ -2101,6 +2101,34 @@ export function withServersArray<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
+ * @fieldType (OpenApiSchema|null)
+ * @serializedName type
+ * @methodName ofTypes
+ */
+export function withUnionTypes<TBase extends GConstructor>(Base: TBase) {
+  return <T extends OpenApiSchema | null>() => {
+    return class extends Base {
+      _type?: T[];
+      ofTypes(val: T[]) {
+        const copy: this = Object.create(this);
+        copy._type = val;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._type !== undefined) {
+          Object.defineProperty(json, "type", {
+            value: this._type,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+
+/**
  * @fieldType T
  * @serializedName tags
  * @methodName addTags

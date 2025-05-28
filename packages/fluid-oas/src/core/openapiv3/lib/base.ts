@@ -30,6 +30,9 @@ export interface SchemaInterface extends BaseInterface {
   addDescription(description: string): this;
   addExternalDocs(docs: OpenApiDocumentation): this;
   addExample(example: OpenApiExample): this;
+  /**
+   * As of v3.1.0 this has been removed. Still available for v3.0.* OAS
+   */
   nullable(): this;
 }
 

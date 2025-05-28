@@ -99,9 +99,7 @@ oas.writeOAS();
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "username"
-                  ],
+                  "required": ["username"],
                   "type": "object"
                 }
               }
@@ -117,9 +115,7 @@ oas.writeOAS();
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "error"
-                  ],
+                  "required": ["error"],
                   "type": "object"
                 }
               }
@@ -135,9 +131,7 @@ oas.writeOAS();
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "error"
-                  ],
+                  "required": ["error"],
                   "type": "object"
                 }
               }
@@ -153,9 +147,7 @@ oas.writeOAS();
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "error"
-                  ],
+                  "required": ["error"],
                   "type": "object"
                 }
               }
@@ -171,9 +163,7 @@ oas.writeOAS();
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "error"
-                  ],
+                  "required": ["error"],
                   "type": "object"
                 }
               }

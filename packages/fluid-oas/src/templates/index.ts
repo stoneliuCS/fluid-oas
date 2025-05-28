@@ -481,6 +481,12 @@ async function main() {
       methodName: "addServers",
     }),
     new ArrayTemplateBuilder({
+      fnName: "withUnionTypes",
+      fieldType: "(OpenApiSchema | null)",
+      serializedName: "type",
+      methodName: "ofTypes",
+    }),
+    new ArrayTemplateBuilder({
       fnName: "withTags",
       fieldType: "T",
       serializedName: "tags",

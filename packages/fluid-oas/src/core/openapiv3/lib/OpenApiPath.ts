@@ -5,8 +5,24 @@ import type { OpenApiPathItem } from "./OpenApiPathItem";
 const PathBase = withPath(Base);
 
 export interface OpenApiPath extends BaseInterface {
+  /**
+   * Adds endpoints to the OpenAPI specification.
+   * @param mappings - a mapping between API routes and PathItems
+   * @returns this
+   */
   addEndpoints(mappings: Partial<{ [K in string]: OpenApiPathItem }>): this;
+
+  /**
+   * Add a prefix to all API endpoints defined after this.
+   * @param prefix - The prefix to add to group related API endpoints.
+   * @returns this
+   */
   beginGroup(prefix: string): this;
+
+  /**
+   * Ends the current group of API endpoints.
+   * @returns this
+   */
   endGroup(): this;
 }
 
