@@ -666,6 +666,62 @@ export function withExclusiveMaximum<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
+ * @fieldType boolean
+ * @serializedName exclusiveMinimum
+ * @methodName exclusiveMin
+ */
+export function withExclusiveMinimumBoolean<TBase extends GConstructor>(
+  Base: TBase
+) {
+  return class extends Base {
+    _exclusiveMinimum?: boolean;
+    exclusiveMin() {
+      const copy: this = Object.create(this);
+      copy._exclusiveMinimum = true;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._exclusiveMinimum !== undefined) {
+        Object.defineProperty(json, "exclusiveMinimum", {
+          value: this._exclusiveMinimum,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType boolean
+ * @serializedName exclusiveMaximum
+ * @methodName exclusiveMax
+ */
+export function withExclusiveMaximumBoolean<TBase extends GConstructor>(
+  Base: TBase
+) {
+  return class extends Base {
+    _exclusiveMaximum?: boolean;
+    exclusiveMax() {
+      const copy: this = Object.create(this);
+      copy._exclusiveMaximum = true;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._exclusiveMaximum !== undefined) {
+        Object.defineProperty(json, "exclusiveMaximum", {
+          value: this._exclusiveMaximum,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
  * @fieldType number
  * @serializedName multipleOf
  * @methodName addMultiple
@@ -2117,6 +2173,25 @@ export function withUnionTypes<TBase extends GConstructor>(Base: TBase) {
       toJSON() {
         const json = super.toJSON();
         if (this._type !== undefined) {
+          if (this._type !== undefined) {
+            const deserializedSchemas = this._type.map(schema =>
+              schema ? schema.toJSON() : schema
+            );
+            const newJSON: { type: string[] } = { type: [] };
+            deserializedSchemas.forEach(jsonVal => {
+              if (typeof jsonVal !== "object") {
+                throw new Error("Unable to deserialize the union.");
+              }
+              if (jsonVal === null) {
+                newJSON.type.push("null");
+              } else if ("type" in jsonVal) {
+                newJSON.type.push(jsonVal["type"] as string);
+                const { type, ...rest } = jsonVal;
+                Object.assign(newJSON, rest);
+              }
+            });
+            return newJSON;
+          }
           Object.defineProperty(json, "type", {
             value: this._type,
             enumerable: true,

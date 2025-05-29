@@ -8,30 +8,10 @@ export interface OpenApiUnion extends SchemaInterface {
   ofTypes(val: (OpenApiSchema | null)[]): this;
 }
 
-class _OpenApiUnion extends TypeArrayBase implements OpenApiUnion {
-  toJSON() {
-    const json = Object.create(super.toJSON() as Object);
-    if (this._type !== undefined) {
-      let types: (string | null)[] = [];
-      this._type.forEach(val => {
-        if (val) {
-          const typeInfo = val.toJSON() as { type: string };
-          types.push(typeInfo.type);
-        } else {
-          types.push(val);
-        }
-      });
-      Object.defineProperty(json, "type", {
-        value: types,
-        enumerable: true,
-      });
-    }
-    return json;
-  }
-}
+class _OpenApiUnion extends TypeArrayBase implements OpenApiUnion {}
 
 /**
- * UNSTABLE API, currently only supports very simple types.
+ * Merges specifications into one..
  * @param val - OpenApiSchema[]
  * @returns OpenApiUnion
  */

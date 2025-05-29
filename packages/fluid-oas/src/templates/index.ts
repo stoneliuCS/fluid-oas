@@ -1,37 +1,9 @@
-import { CodeBlockWriter } from "ts-morph";
 import { FunctionTemplateBuilder } from "./FunctionTemplate";
 import { PrimitiveTemplateBuilder } from "./PrimitiveTemplate";
 import { OpenAPIV3Project } from "./TemplateBuilder";
 import { MapTemplateBuilder } from "./MapTemplate";
 import { ArrayTemplateBuilder } from "./ArrayTemplate";
-
-const KeyNameClass = class extends MapTemplateBuilder {
-  protected buildJSONMethod(writer: CodeBlockWriter): void {
-    writer.write("toJSON()").block(() => {
-      writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this._${this.serializedName})`).block(() => {
-        writer.writeLine(
-          `this._${this.serializedName}.forEach((val, key) => { Object.defineProperty(json, key, { value : val, enumerable : true }) })`
-        );
-      });
-      writer.writeLine("return json;");
-    });
-  }
-};
-
-const RegExpClass = class extends PrimitiveTemplateBuilder {
-  protected buildJSONMethod(writer: CodeBlockWriter): void {
-    writer.write("toJSON()").block(() => {
-      writer.writeLine("const json = super.toJSON();");
-      writer.write(`if (this._${this.serializedName})`).block(() => {
-        writer.writeLine(
-          `Object.defineProperty(json, "${this.serializedName}", { value : this._${this.serializedName}.source, enumerable : true })`
-        );
-      });
-      writer.writeLine("return json;");
-    });
-  }
-};
+import { KeyNameClass, RegExpClass, UnionClass } from "./extensions";
 
 async function main() {
   // Generic Function Generators
@@ -171,6 +143,18 @@ async function main() {
     new PrimitiveTemplateBuilder({
       fnName: "withExclusiveMaximum",
       fieldType: "number",
+      serializedName: "exclusiveMaximum",
+      methodName: "exclusiveMax",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withExclusiveMinimumBoolean",
+      fieldType: "boolean",
+      serializedName: "exclusiveMinimum",
+      methodName: "exclusiveMin",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withExclusiveMaximumBoolean",
+      fieldType: "boolean",
       serializedName: "exclusiveMaximum",
       methodName: "exclusiveMax",
     }),
@@ -480,7 +464,7 @@ async function main() {
       serializedName: "servers",
       methodName: "addServers",
     }),
-    new ArrayTemplateBuilder({
+    new UnionClass({
       fnName: "withUnionTypes",
       fieldType: "(OpenApiSchema | null)",
       serializedName: "type",
