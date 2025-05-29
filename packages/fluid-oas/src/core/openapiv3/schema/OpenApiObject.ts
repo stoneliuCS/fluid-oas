@@ -32,10 +32,15 @@ class _OpenApiObject extends ObjectBase implements OpenApiObject {
 }
 
 /**
- * Creates an OpenAPIObject representation with fluid methods to build schemas.
+ * Convienence function to create a OpenApi Object.
+ * @param mappings - Properties of the object.
  */
 export function Object(
-  mappings: Partial<{ [K in string]: OpenApiSchema }>
+  mappings?: Partial<{ [K in string]: OpenApiSchema }>
 ): OpenApiObject {
-  return new _OpenApiObject().addProperties(mappings);
+  if (mappings) {
+    return new _OpenApiObject().addProperties(mappings);
+  } else {
+    return new _OpenApiObject();
+  }
 }

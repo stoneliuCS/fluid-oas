@@ -17,10 +17,35 @@ describe("Union types test", () => {
   });
 
   test("Nullable values", () => {
-    const actual = Union(Object({}), null);
+    let actual = Union(Object({}), null);
     expect(actual.toJSON()).toEqual({
       properties: {},
       type: ["object", "null"],
     });
+    actual = Union(Object(), String(), null);
+    expect(actual.toJSON()).toEqual({
+      type: ["object", "string", "null"],
+    });
+  });
+
+  test("Preserve properties", () => {
+    let actual = Union(Object({}), null);
+    expect(actual.toJSON()).toEqual({
+      properties: {},
+      type: ["object", "null"],
+    });
+    actual = Union(
+      Object({ firstName: String(), lastName: String() }),
+      String(),
+      Number(),
+      null
+    );
+    expect(actual.toJSON()).toEqual({
+      type: ["object", "string", "number", "null"],
+      properties: {
+        firstName: String(),
+        lastName: String(),
+      },
+    }); // This is okay, since JSON.stringify will recursively call toJSON methods
   });
 });
