@@ -1466,6 +1466,40 @@ export function withProperties<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
+ * @fieldType Map<string,OpenApiSchema>
+ * @serializedName patternProperties
+ * @methodName addPatternProperties
+ */
+export function withPatternProperties<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    _patternProperties?: Map<string, OpenApiSchema>;
+    addPatternProperties(mappings: Partial<{ [K in string]: OpenApiSchema }>) {
+      const copy: this = Object.create(this);
+      copy._patternProperties = new Map(this._patternProperties);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._patternProperties.set(k, mappings[k]!);
+      }
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._patternProperties) {
+        const mappings: any = {};
+        this._patternProperties.forEach((val, key) => {
+          mappings[key] = val;
+        });
+        Object.defineProperty(json, "patternProperties", {
+          value: mappings,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
  * @fieldType T
  * @serializedName enum
  * @methodName addEnums
@@ -2262,7 +2296,7 @@ export function withRequiredEnumerable<TBase extends GConstructor>(
 }
 
 /**
- * @fieldType boolean
+ * @fieldType boolean|OpenApiSchema
  * @serializedName additionalProperties
  * @methodName additionalProperties
  */
@@ -2270,10 +2304,10 @@ export function withAdditionalProperties<TBase extends GConstructor>(
   Base: TBase
 ) {
   return class extends Base {
-    _additionalProperties?: boolean;
-    additionalProperties() {
+    _additionalProperties?: boolean | OpenApiSchema;
+    additionalProperties(val: boolean | OpenApiSchema) {
       const copy: this = Object.create(this);
-      copy._additionalProperties = true;
+      copy._additionalProperties = val;
       return copy;
     }
     toJSON() {
@@ -2583,6 +2617,34 @@ export function withLicense<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
+ * @fieldType boolean
+ * @serializedName unevaluatedProperties
+ * @methodName addUnevaluatedProperties
+ */
+export function withUnevaluatedProperties<TBase extends GConstructor>(
+  Base: TBase
+) {
+  return class extends Base {
+    _unevaluatedProperties?: boolean;
+    addUnevaluatedProperties() {
+      const copy: this = Object.create(this);
+      copy._unevaluatedProperties = true;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._unevaluatedProperties !== undefined) {
+        Object.defineProperty(json, "unevaluatedProperties", {
+          value: this._unevaluatedProperties,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
  * @fieldType Map<string,OpenApiPathItem>
  * @serializedName webhooks
  * @methodName addWebhooks
@@ -2608,6 +2670,92 @@ export function withWebhooks<TBase extends GConstructor>(Base: TBase) {
         });
         Object.defineProperty(json, "webhooks", {
           value: mappings,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType Map<string,string>
+ * @serializedName propertyNames
+ * @methodName addPropertyNames
+ */
+export function withPropertyNames<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    _propertyNames?: Map<string, string>;
+    addPropertyNames(mappings: Partial<{ [K in string]: string }>) {
+      const copy: this = Object.create(this);
+      copy._propertyNames = new Map(this._propertyNames);
+      for (const key in mappings) {
+        const k: string = key as string;
+        copy._propertyNames.set(k, mappings[k]!);
+      }
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._propertyNames) {
+        const mappings: any = {};
+        this._propertyNames.forEach((val, key) => {
+          mappings[key] = val;
+        });
+        Object.defineProperty(json, "propertyNames", {
+          value: mappings,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType number
+ * @serializedName minProperties
+ * @methodName addMinProperties
+ */
+export function withMinProperties<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    _minProperties?: number;
+    addMinProperties(val: number) {
+      const copy: this = Object.create(this);
+      copy._minProperties = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._minProperties !== undefined) {
+        Object.defineProperty(json, "minProperties", {
+          value: this._minProperties,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType number
+ * @serializedName maxProperties
+ * @methodName addMaxProperties
+ */
+export function withMaxProperties<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    _maxProperties?: number;
+    addMaxProperties(val: number) {
+      const copy: this = Object.create(this);
+      copy._maxProperties = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._maxProperties !== undefined) {
+        Object.defineProperty(json, "maxProperties", {
+          value: this._maxProperties,
           enumerable: true,
         });
       }

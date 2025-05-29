@@ -12,8 +12,8 @@ class _OpenApiUnion extends TypeArrayBase implements OpenApiUnion {}
 
 /**
  * Merges specifications into one.
- * 
- * This preserves the properties from each schema, which could be subject to change since 
+ *
+ * This preserves the properties from each schema, which could be subject to change since
  * the official JSON schema is a little ambigious about this
  * @param val - OpenApiSchema[]
  * @returns OpenApiUnion

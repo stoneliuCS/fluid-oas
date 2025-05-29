@@ -3,21 +3,37 @@ import {
   withRequiredEnumerable,
   withProperties,
   withDefault,
+  withUnevaluatedProperties,
+  withPropertyNames,
+  withMinProperties,
+  withMaxProperties,
 } from "../common";
 import { SchemaBase, type SchemaInterface } from "../lib/base";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
-const ObjectBase = withAdditionalProperties(
-  withRequiredEnumerable(
-    withProperties(withDefault(SchemaBase)<OpenApiObject>())
-  )<string>()
+const ObjectBase = withMaxProperties(
+  withMinProperties(
+    withPropertyNames(
+      withUnevaluatedProperties(
+        withAdditionalProperties(
+          withRequiredEnumerable(
+            withProperties(withDefault(SchemaBase)<OpenApiObject>())
+          )<string>()
+        )
+      )
+    )
+  )
 );
 
 export interface OpenApiObject extends SchemaInterface {
+  addMaxProperties(val: number): this;
+  addMinProperties(val: number): this;
+  addPropertyNames(mappings: Partial<{ [K in string]: string }>): this;
+  addUnevaluatedProperties(): this;
   addDefault(val: OpenApiObject): this;
   addProperties(mappings: Partial<{ [K in string]: OpenApiSchema }>): this;
   addRequired(val: string[]): this;
-  additionalProperties(): this;
+  additionalProperties(additionalProperties: boolean | OpenApiSchema): this;
 }
 
 class _OpenApiObject extends ObjectBase implements OpenApiObject {

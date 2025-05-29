@@ -326,6 +326,12 @@ async function main() {
       serializedName: "properties",
       methodName: "addProperties",
     }),
+    new MapTemplateBuilder({
+      fnName: "withPatternProperties",
+      fieldType: "Map<string, OpenApiSchema>",
+      serializedName: "patternProperties",
+      methodName: "addPatternProperties",
+    }),
     new ArrayTemplateBuilder({
       fnName: "withEnum",
       fieldType: "T",
@@ -484,7 +490,7 @@ async function main() {
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withAdditionalProperties",
-      fieldType: "boolean",
+      fieldType: "boolean | OpenApiSchema",
       serializedName: "additionalProperties",
       methodName: "additionalProperties",
     }),
@@ -554,11 +560,35 @@ async function main() {
       serializedName: "license",
       methodName: "addLicense",
     }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withUnevaluatedProperties",
+      fieldType: "boolean",
+      serializedName: "unevaluatedProperties",
+      methodName: "addUnevaluatedProperties",
+    }),
     new MapTemplateBuilder({
       fnName: "withWebhooks",
       fieldType: "Map<string, OpenApiPathItem>",
       serializedName: "webhooks",
       methodName: "addWebhooks",
+    }),
+    new MapTemplateBuilder({
+      fnName: "withPropertyNames",
+      fieldType: "Map<string, string>",
+      serializedName: "propertyNames",
+      methodName: "addPropertyNames",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withMinProperties",
+      fieldType: "number",
+      serializedName: "minProperties",
+      methodName: "addMinProperties",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withMaxProperties",
+      fieldType: "number",
+      serializedName: "maxProperties",
+      methodName: "addMaxProperties",
     }),
   ].forEach(fn => fn.write(OpenAPIV3Project));
 
