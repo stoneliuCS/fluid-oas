@@ -35,18 +35,6 @@ export interface OpenApiString extends SchemaInterface<string> {
    * @param pattern - Regular expression to validate against.
    */
   addPattern(pattern: RegExp): this;
-  /**
-   * Adds a default value to this OpenApiString
-   *
-   * @param val - Default value
-   */
-  addDefault(val: string): this;
-  /**
-   * Adds the potential enumerations to validate against this OpenApiString.
-   *
-   * @param val - String enumerations or null
-   */
-  addEnums(val: (string | null)[]): this;
 }
 class _OpenApiString extends StringBase implements OpenApiString {
   toJSON(): unknown {

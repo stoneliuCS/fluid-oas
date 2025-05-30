@@ -48,7 +48,7 @@ export interface SchemaInterface<T> extends BaseInterface {
    */
   addExternalDocs(docs: OpenApiDocumentation): this;
   addExample(example: OpenApiExample): this;
-  addEnums(val: T[]): this;
+  addEnums(val: (T | null)[]): this;
   addConst(val: T): this;
   addDefault(val: T): this;
   /**

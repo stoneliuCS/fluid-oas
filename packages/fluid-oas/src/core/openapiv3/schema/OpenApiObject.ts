@@ -29,7 +29,6 @@ export interface OpenApiObject extends SchemaInterface<OpenApiObject> {
   addMinProperties(val: number): this;
   addPropertyNames(mappings: Partial<{ [K in string]: string }>): this;
   addUnevaluatedProperties(): this;
-  addDefault(val: OpenApiObject): this;
   addProperties(mappings: Partial<{ [K in string]: OpenApiSchema }>): this;
   addRequired(val: string[]): this;
   additionalProperties(additionalProperties: boolean | OpenApiSchema): this;

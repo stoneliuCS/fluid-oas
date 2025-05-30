@@ -28,8 +28,6 @@ interface OpenApiBaseNumber extends SchemaInterface<Number> {
   exclusiveMax(): this;
   exclusiveMin(): this;
   addMultiple(val: number): this;
-  addDefault(val: number): this;
-  addEnums(val: number[]): this;
 }
 
 export interface OpenApiNumber extends OpenApiBaseNumber {
