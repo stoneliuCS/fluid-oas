@@ -55,13 +55,6 @@ export interface OpenApiV3 extends BaseInterface {
   addInfo(info: OpenApiInfo): this;
 
   /**
-   * Adds the JSON Schema dialect used for the API specification.
-   *
-   * @param jsonDialect - URI of the JSON Schema dialect (e.g., "https://json-schema.org/draft/2020-12/schema")
-   */
-  addJsonSchemaDialect(jsonDialect: string): this;
-
-  /**
    * Adds an array of server objects which provide connectivity information to target servers.
    *
    * @param servers - Array of server objects containing URL and optional description/variables
@@ -74,12 +67,6 @@ export interface OpenApiV3 extends BaseInterface {
    * @param path - Object containing path definitions with their operations (GET, POST, etc.)
    */
   addPaths(path: OpenApiPath): this;
-
-  /**
-   * Adds a webhook to the API specification.
-   *
-   */
-  addWebhooks(mappings: { [K in string]: OpenApiPathItem }): this;
 
   /**
    * Adds security requirements that apply to the entire API.
@@ -117,6 +104,21 @@ export interface OpenApiV3 extends BaseInterface {
   writeOASASync(filePath?: string): void;
 }
 
+export interface OpenApiV3_1 extends OpenApiV3 {
+  /**
+   * Adds the JSON Schema dialect used for the API specification.
+   *
+   * @param jsonDialect - URI of the JSON Schema dialect (e.g., "https://json-schema.org/draft/2020-12/schema")
+   */
+  addJsonSchemaDialect(jsonDialect: string): this;
+
+  /**
+   * Adds a webhook to this OpenAPI specification.
+   *
+   */
+  addWebhooks(mappings: { [K in string]: OpenApiPathItem }): this;
+}
+
 class _OpenApiV3 extends OpenApiBase implements OpenApiV3 {
   writeOASASync(filePath?: string): void {
     const json = JSON.stringify(this, undefined, 2);
@@ -142,13 +144,19 @@ class _OpenApiV3 extends OpenApiBase implements OpenApiV3 {
 
 /**
  * Create an OpenAPI v3.*.* compliant specification.
+ * @param version - Must a v3 specification
  */
-export function OpenApiV3(version: `3.1.${string}`): OpenApiV3;
+export function OpenApiV3(version: `3.1.${string}`): OpenApiV3_1;
 export function OpenApiV3(version: `3.0.${string}`): OpenApiV3;
 export function OpenApiV3(version: `3.${string}.${string}`): {
   addInfo(info: OpenApiInfo): OpenApiV3;
 } {
   return {
+    /**
+     * Adds a required info object to the root schema object.
+     * @param info - OpenApiInfo Object
+     * @returns OpenApiV3
+     */
     addInfo(info: OpenApiInfo) {
       return new _OpenApiV3().addOpenApiVersion(version).addInfo(info);
     },

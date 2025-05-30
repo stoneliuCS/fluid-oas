@@ -11,10 +11,13 @@ export interface OpenApiUnion extends SchemaInterface {
 class _OpenApiUnion extends TypeArrayBase implements OpenApiUnion {}
 
 /**
- * Merges specifications into one.
+ * Creates a multiple type OpenApiSchema.
  *
  * This preserves the properties from each schema, which could be subject to change since
  * the official JSON schema is a little ambigious about this
+ *
+ * Only viable on 3.1.* schema.
+ *
  * @param val - OpenApiSchema[]
  * @returns OpenApiUnion
  */
