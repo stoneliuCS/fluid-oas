@@ -2,7 +2,6 @@ import {
   withAdditionalProperties,
   withRequiredEnumerable,
   withProperties,
-  withDefault,
   withUnevaluatedProperties,
   withPropertyNames,
   withMinProperties,
@@ -17,7 +16,7 @@ const ObjectBase = withMaxProperties(
       withUnevaluatedProperties(
         withAdditionalProperties(
           withRequiredEnumerable(
-            withProperties(withDefault(SchemaBase)<OpenApiObject>())
+            withProperties(SchemaBase<OpenApiObject>)
           )<string>()
         )
       )
@@ -25,7 +24,7 @@ const ObjectBase = withMaxProperties(
   )
 );
 
-export interface OpenApiObject extends SchemaInterface {
+export interface OpenApiObject extends SchemaInterface<OpenApiObject> {
   addMaxProperties(val: number): this;
   addMinProperties(val: number): this;
   addPropertyNames(mappings: Partial<{ [K in string]: string }>): this;

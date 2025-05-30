@@ -2,10 +2,12 @@ import { withUnionTypes } from "../common";
 import { SchemaBase, type SchemaInterface } from "../lib/base";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
-const TypeArrayBase = withUnionTypes(SchemaBase)<OpenApiSchema | null>();
+const TypeArrayBase = withUnionTypes(
+  SchemaBase<OpenApiSchema>
+)<OpenApiSchema>();
 
-export interface OpenApiUnion extends SchemaInterface {
-  ofTypes(val: (OpenApiSchema | null)[]): this;
+export interface OpenApiUnion extends SchemaInterface<OpenApiSchema> {
+  ofTypes(val: OpenApiSchema[]): this;
 }
 
 class _OpenApiUnion extends TypeArrayBase implements OpenApiUnion {}
@@ -21,6 +23,6 @@ class _OpenApiUnion extends TypeArrayBase implements OpenApiUnion {}
  * @param val - OpenApiSchema[]
  * @returns OpenApiUnion
  */
-export function Union(...val: (OpenApiSchema | null)[]): OpenApiUnion {
+export function Union(...val: OpenApiSchema[]): OpenApiUnion {
   return new _OpenApiUnion().ofTypes(val);
 }

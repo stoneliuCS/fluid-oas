@@ -1,11 +1,8 @@
-import { withDefault } from "../common";
 import { SchemaBase, type SchemaInterface } from "../lib/base";
 
-const BooleanBase = withDefault(SchemaBase)<boolean>();
+const BooleanBase = SchemaBase<boolean>;
 
-export interface OpenApiBoolean extends SchemaInterface {
-  addDefault(val: boolean): this;
-}
+export interface OpenApiBoolean extends SchemaInterface<boolean> {}
 
 class _OpenApiBoolean extends BooleanBase implements OpenApiBoolean {
   toJSON(): unknown {

@@ -185,7 +185,7 @@ oas.writeOAS();
 
 ### Primitive Data types
 
-The OAS 3.0.0 _OpenAPI Specification_ defines the following primitive data types:
+All schemas are reflective of the latest [Json Schema](https://json-schema.org/understanding-json-schema/reference).
 
 - [number](#defining-a-number)
 - [integer](#defining-a-integer)

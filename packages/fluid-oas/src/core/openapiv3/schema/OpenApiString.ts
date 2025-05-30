@@ -1,6 +1,4 @@
 import {
-  withEnum,
-  withDefault,
   withPattern,
   withMaxLength,
   withMinLength,
@@ -8,13 +6,11 @@ import {
 } from "../common";
 import { SchemaBase, type SchemaInterface } from "../lib/base";
 
-const StringBase = withEnum(
-  withDefault(
-    withPattern(withMaxLength(withMinLength(withFormat(SchemaBase)<string>())))
-  )<string>()
-)<string | null>();
+const StringBase = withPattern(
+  withMaxLength(withMinLength(withFormat(SchemaBase<string>)()))
+);
 
-export interface OpenApiString extends SchemaInterface {
+export interface OpenApiString extends SchemaInterface<string> {
   /**
    * Adds a format to this OpenApiString.
    *

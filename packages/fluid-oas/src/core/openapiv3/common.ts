@@ -2191,12 +2191,12 @@ export function withServersArray<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType (OpenApiSchema|null)
+ * @fieldType OpenApiSchema
  * @serializedName type
  * @methodName ofTypes
  */
 export function withUnionTypes<TBase extends GConstructor>(Base: TBase) {
-  return <T extends OpenApiSchema | null>() => {
+  return <T extends OpenApiSchema>() => {
     return class extends Base {
       _type?: T[];
       ofTypes(val: T[]) {
@@ -2213,12 +2213,10 @@ export function withUnionTypes<TBase extends GConstructor>(Base: TBase) {
             );
             const newJSON: { type: string[] } = { type: [] };
             deserializedSchemas.forEach(jsonVal => {
-              if (typeof jsonVal !== "object") {
+              if (typeof jsonVal !== "object" || jsonVal === null) {
                 throw new Error("Unable to deserialize the union.");
               }
-              if (jsonVal === null) {
-                newJSON.type.push("null");
-              } else if ("type" in jsonVal) {
+              if ("type" in jsonVal) {
                 newJSON.type.push(jsonVal["type"] as string);
                 const { type, ...rest } = jsonVal;
                 Object.assign(newJSON, rest);
@@ -2761,5 +2759,89 @@ export function withMaxProperties<TBase extends GConstructor>(Base: TBase) {
       }
       return json;
     }
+  };
+}
+
+/**
+ * @fieldType OpenApiSchema
+ * @serializedName prefixItems
+ * @methodName addPrefixItems
+ */
+export function withPrefixItems<TBase extends GConstructor>(Base: TBase) {
+  return <T extends OpenApiSchema>() => {
+    return class extends Base {
+      _prefixItems?: T[];
+      addPrefixItems(val: T[]) {
+        const copy: this = Object.create(this);
+        copy._prefixItems = val;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._prefixItems !== undefined) {
+          Object.defineProperty(json, "prefixItems", {
+            value: this._prefixItems,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType OpenApiSchema|boolean
+ * @serializedName items
+ * @methodName addAdditionalItems
+ */
+export function withAdditionalItems<TBase extends GConstructor>(Base: TBase) {
+  return <T extends OpenApiSchema | boolean>() => {
+    return class extends Base {
+      _items?: T[];
+      addAdditionalItems(val: T[]) {
+        const copy: this = Object.create(this);
+        copy._items = val;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._items !== undefined) {
+          Object.defineProperty(json, "items", {
+            value: this._items,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType T
+ * @serializedName const
+ * @methodName addConst
+ */
+export function withConst<TBase extends GConstructor>(Base: TBase) {
+  return <T>() => {
+    return class extends Base {
+      _const?: T;
+      addConst(val: T) {
+        const copy: this = Object.create(this);
+        copy._const = val;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._const !== undefined) {
+          Object.defineProperty(json, "const", {
+            value: this._const,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
   };
 }

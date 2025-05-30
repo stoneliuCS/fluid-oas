@@ -50,12 +50,10 @@ export const UnionClass = class extends ArrayTemplateBuilder {
           );
           const newJSON: { type: string[] } = { type: [] };
           deserializedSchemas.forEach(jsonVal => {
-            if (typeof jsonVal !== "object") {
+            if (typeof jsonVal !== "object" || jsonVal === null) {
               throw new Error("Unable to deserialize the union.");
             }
-            if (jsonVal === null) {
-              newJSON.type.push("null");
-            } else if ("type" in jsonVal) {
+            if ("type" in jsonVal) {
               newJSON.type.push(jsonVal["type"] as string);
               const { type, ...rest } = jsonVal;
               Object.assign(newJSON, rest);

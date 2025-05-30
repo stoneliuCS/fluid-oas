@@ -472,7 +472,7 @@ async function main() {
     }),
     new UnionClass({
       fnName: "withUnionTypes",
-      fieldType: "(OpenApiSchema | null)",
+      fieldType: "OpenApiSchema",
       serializedName: "type",
       methodName: "ofTypes",
     }),
@@ -589,6 +589,24 @@ async function main() {
       fieldType: "number",
       serializedName: "maxProperties",
       methodName: "addMaxProperties",
+    }),
+    new ArrayTemplateBuilder({
+      fnName: "withPrefixItems",
+      fieldType: "OpenApiSchema",
+      serializedName: "prefixItems",
+      methodName: "addPrefixItems",
+    }),
+    new ArrayTemplateBuilder({
+      fnName: "withAdditionalItems",
+      fieldType: "OpenApiSchema | boolean",
+      serializedName: "items",
+      methodName: "addAdditionalItems",
+    }),
+    new FunctionTemplateBuilder({
+      fnName: "withConst",
+      fieldType: `T`,
+      serializedName: "const",
+      methodName: "addConst",
     }),
   ].forEach(fn => fn.write(OpenAPIV3Project));
 

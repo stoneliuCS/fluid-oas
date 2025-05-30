@@ -5,6 +5,7 @@ import {
   String,
   Number,
   Object,
+  Null,
 } from "../../../src/core/openapiv3/schema";
 
 describe("Union types test", () => {
@@ -17,19 +18,19 @@ describe("Union types test", () => {
   });
 
   test("Nullable values", () => {
-    let actual = Union(Object({}), null);
+    let actual = Union(Object({}), Null());
     expect(actual.toJSON()).toEqual({
       properties: {},
       type: ["object", "null"],
     });
-    actual = Union(Object(), String(), null);
+    actual = Union(Object(), String(), Null());
     expect(actual.toJSON()).toEqual({
       type: ["object", "string", "null"],
     });
   });
 
   test("Preserve properties", () => {
-    let actual = Union(Object({}), null);
+    let actual = Union(Object({}), Null());
     expect(actual.toJSON()).toEqual({
       properties: {},
       type: ["object", "null"],
@@ -38,7 +39,7 @@ describe("Union types test", () => {
       Object({ firstName: String(), lastName: String() }),
       String(),
       Number(),
-      null
+      Null()
     );
     expect(actual.toJSON()).toEqual({
       type: ["object", "string", "number", "null"],

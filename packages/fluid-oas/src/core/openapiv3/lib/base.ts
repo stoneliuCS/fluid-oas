@@ -4,6 +4,9 @@ import {
   withExample,
   withExternalDocs,
   withDescription,
+  withEnum,
+  withConst,
+  withDefault,
 } from "../common";
 import type { OpenApiSchema } from "../schema";
 import type { OpenApiExtensionString } from "../types";
@@ -31,7 +34,7 @@ export interface BaseInterface extends RootInterface {
   }): this;
 }
 
-export interface SchemaInterface extends BaseInterface {
+export interface SchemaInterface<T> extends BaseInterface {
   /**
    * Adds a description to this OpenApiSchema
    *
@@ -41,10 +44,13 @@ export interface SchemaInterface extends BaseInterface {
   /**
    * Adds an external documentation to this OpenApiSchema
    *
-   * @param docs - Documentation to add to this schema. 
+   * @param docs - Documentation to add to this schema.
    */
   addExternalDocs(docs: OpenApiDocumentation): this;
   addExample(example: OpenApiExample): this;
+  addEnums(val: T[]): this;
+  addConst(val: T): this;
+  addDefault(val: T): this;
   /**
    * As of v3.1.0 this has been removed. Still available for v3.0.* OAS
    */
@@ -54,7 +60,17 @@ export interface SchemaInterface extends BaseInterface {
 // Base Class which all OpenApi Definitions will inherit.
 const _Base = withExtensions(Root);
 export class Base extends _Base implements BaseInterface {}
-export const _SchemaBase = withNullable(
-  withExample(withExternalDocs(withDescription(Base)))
-);
-export class SchemaBase extends _SchemaBase implements SchemaInterface {}
+
+// Some Mixins are HOF generic functions allowing for maximum flexibility.
+// Here I defined some mixin methods like withConst, withEnum, and withDefault
+// and invoke their respective methods, however I do not type parameterize them.
+// I let the interface handle this.
+const _SchemaBase = withDefault(
+  withConst(
+    withEnum(
+      withNullable(withExample(withExternalDocs(withDescription(Base))))
+    )()
+  )()
+)();
+
+export class SchemaBase<T> extends _SchemaBase implements SchemaInterface<T> {}
