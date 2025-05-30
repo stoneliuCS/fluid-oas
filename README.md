@@ -1,6 +1,17 @@
-# A Fluent API for the OpenAPI Specification
+# _Fluent OpenAPI Specification_
 
-Build type-safe OpenAPI specifications from scratch with help from the TypeScript Compiler.
+```
+
+              ███████╗██╗     ██╗   ██╗██╗██████╗        ██████╗  █████╗ ███████╗
+              ██╔════╝██║     ██║   ██║██║██╔══██╗      ██╔═══██╗██╔══██╗██╔════╝
+              █████╗  ██║     ██║   ██║██║██║  ██║█████╗██║   ██║███████║███████╗
+              ██╔══╝  ██║     ██║   ██║██║██║  ██║╚════╝██║   ██║██╔══██║╚════██║
+              ██║     ███████╗╚██████╔╝██║██████╔╝      ╚██████╔╝██║  ██║███████║
+              ╚═╝     ╚══════╝ ╚═════╝ ╚═╝╚═════╝        ╚═════╝ ╚═╝  ╚═╝╚══════╝
+
+```
+
+_Build type-safe OpenAPI specifications from scratch leveraging the TypeScript Compiler._
 
 > [!WARNING]  
 > Initial API Design is volatile and subject to breaking changes until version 1 has been released.
@@ -8,9 +19,10 @@ Build type-safe OpenAPI specifications from scratch with help from the TypeScrip
 ## Packages
 
 - [fluid-oas](https://www.npmjs.com/package/fluid-oas)
-  - Main package for creating type-safe HTTP APIs
+  - Main package for creating type-safe HTTP APIs 
+  - ![NPM Version](https://img.shields.io/npm/v/fluid-oas)
 - [fluid-oas/zod]
-  - TBD
+  - Generate Zod Schema from fluid OpenAPI specifications. (TBD)
 
 ## Getting Started
 

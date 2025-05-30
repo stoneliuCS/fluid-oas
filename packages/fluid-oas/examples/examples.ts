@@ -10,7 +10,9 @@ import {
   Responses,
   MediaType,
   String,
-  OpenApiV3_1_1,
+  OpenApiV3,
+  Union,
+  Null,
 } from "../src/";
 
 const info = Info("My API", "v1.0.0")
@@ -19,19 +21,25 @@ const info = Info("My API", "v1.0.0")
 
 // Example schemas
 
-const nameSchema = String()
-  .addMinLength(1)
-  .addMaxLength(10)
-  .addExample(Example().addValue("John"))
-  .addDescription("Name of the person.");
+const nameSchema = Union(
+  String()
+    .addMinLength(1)
+    .addMaxLength(10)
+    .addExample(Example().addValue("John"))
+    .addDescription("Name of the person."),
+  Null()
+);
 
-const uuidSchema = String()
-  .addFormat("uuid")
-  .addExample(
-    Example()
-      .addValue("5e91507e-5630-4efd-9fd4-799178870b10")
-      .addDescription("Unique Identifier.")
-  );
+const uuidSchema = Union(
+  String()
+    .addFormat("uuid")
+    .addExample(
+      Example()
+        .addValue("5e91507e-5630-4efd-9fd4-799178870b10")
+        .addDescription("Unique Identifier.")
+    ),
+  Null()
+);
 
 const userSchema = Object({
   firstName: nameSchema,
@@ -40,7 +48,7 @@ const userSchema = Object({
 });
 
 const getUserResponses = Responses({
-  "200": Response("Successfully Retrieved User!").addContents({
+  200: Response("Successfully Retrieved User!").addContents({
     "application/json": MediaType().addSchema(userSchema),
   }),
 });
@@ -64,7 +72,7 @@ const path = Path()
   .addEndpoints({ "/user/{id}": getUser })
   .endGroup();
 
-const oas = OpenApiV3_1_1(info).addPaths(path);
+const oas = OpenApiV3("3.1.1").addInfo(info).addPaths(path);
 
 // Write OAS Spec
-oas.writeOAS();
+oas.writeOASSync();
