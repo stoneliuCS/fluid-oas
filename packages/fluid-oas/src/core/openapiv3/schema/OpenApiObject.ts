@@ -28,10 +28,10 @@ export interface OpenApiObject extends SchemaInterface<OpenApiObject> {
   addMaxProperties(val: number): this;
   addMinProperties(val: number): this;
   addPropertyNames(mappings: Partial<{ [K in string]: string }>): this;
-  addUnevaluatedProperties(): this;
+  addUnevaluatedProperties(unevaluatedProperties: boolean): this;
   addProperties(mappings: Partial<{ [K in string]: OpenApiSchema }>): this;
   addRequired(val: string[]): this;
-  additionalProperties(additionalProperties: boolean | OpenApiSchema): this;
+  addAdditionalProperties(additionalProperties: OpenApiSchema | boolean): this;
 }
 
 class _OpenApiObject extends ObjectBase implements OpenApiObject {

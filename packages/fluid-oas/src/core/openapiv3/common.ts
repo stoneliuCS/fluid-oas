@@ -84,14 +84,14 @@ export function withSummary<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType boolean
  * @serializedName allowReserved
- * @methodName allowReserved
+ * @methodName addAllowReserved
  */
 export function withAllowReserved<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _allowReserved?: boolean;
-    allowReserved() {
+    addAllowReserved(val: boolean) {
       const copy: this = Object.create(this);
-      copy._allowReserved = true;
+      copy._allowReserved = val;
       return copy;
     }
     toJSON() {
@@ -110,14 +110,14 @@ export function withAllowReserved<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType boolean
  * @serializedName deprecated
- * @methodName deprecated
+ * @methodName addDeprecated
  */
 export function withDeprecated<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _deprecated?: boolean;
-    deprecated() {
+    addDeprecated(val: boolean) {
       const copy: this = Object.create(this);
-      copy._deprecated = true;
+      copy._deprecated = val;
       return copy;
     }
     toJSON() {
@@ -136,14 +136,14 @@ export function withDeprecated<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType boolean
  * @serializedName required
- * @methodName required
+ * @methodName addRequired
  */
 export function withRequired<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _required?: boolean;
-    required() {
+    addRequired(val: boolean) {
       const copy: this = Object.create(this);
-      copy._required = true;
+      copy._required = val;
       return copy;
     }
     toJSON() {
@@ -162,14 +162,14 @@ export function withRequired<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType boolean
  * @serializedName nullable
- * @methodName nullable
+ * @methodName addNullable
  */
 export function withNullable<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _nullable?: boolean;
-    nullable() {
+    addNullable(val: boolean) {
       const copy: this = Object.create(this);
-      copy._nullable = true;
+      copy._nullable = val;
       return copy;
     }
     toJSON() {
@@ -266,14 +266,14 @@ export function withPrefix<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType boolean
  * @serializedName wrapped
- * @methodName wrapped
+ * @methodName addWrapped
  */
 export function withWrapped<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _wrapped?: boolean;
-    wrapped() {
+    addWrapped(val: boolean) {
       const copy: this = Object.create(this);
-      copy._wrapped = true;
+      copy._wrapped = val;
       return copy;
     }
     toJSON() {
@@ -292,14 +292,14 @@ export function withWrapped<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType boolean
  * @serializedName attribute
- * @methodName attribute
+ * @methodName addAttribute
  */
 export function withAttribute<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _attribute?: boolean;
-    attribute() {
+    addAttribute(val: boolean) {
       const copy: this = Object.create(this);
-      copy._attribute = true;
+      copy._attribute = val;
       return copy;
     }
     toJSON() {
@@ -616,12 +616,12 @@ export function withMinimum<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType number
  * @serializedName exclusiveMinimum
- * @methodName exclusiveMin
+ * @methodName addExclusiveMin
  */
 export function withExclusiveMinimum<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _exclusiveMinimum?: number;
-    exclusiveMin(val: number) {
+    addExclusiveMin(val: number) {
       const copy: this = Object.create(this);
       copy._exclusiveMinimum = val;
       return copy;
@@ -642,12 +642,12 @@ export function withExclusiveMinimum<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType number
  * @serializedName exclusiveMaximum
- * @methodName exclusiveMax
+ * @methodName addExclusiveMax
  */
 export function withExclusiveMaximum<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _exclusiveMaximum?: number;
-    exclusiveMax(val: number) {
+    addExclusiveMax(val: number) {
       const copy: this = Object.create(this);
       copy._exclusiveMaximum = val;
       return copy;
@@ -668,16 +668,16 @@ export function withExclusiveMaximum<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType boolean
  * @serializedName exclusiveMinimum
- * @methodName exclusiveMin
+ * @methodName addExclusiveMin
  */
 export function withExclusiveMinimumBoolean<TBase extends GConstructor>(
   Base: TBase
 ) {
   return class extends Base {
     _exclusiveMinimum?: boolean;
-    exclusiveMin() {
+    addExclusiveMin(val: boolean) {
       const copy: this = Object.create(this);
-      copy._exclusiveMinimum = true;
+      copy._exclusiveMinimum = val;
       return copy;
     }
     toJSON() {
@@ -696,16 +696,16 @@ export function withExclusiveMinimumBoolean<TBase extends GConstructor>(
 /**
  * @fieldType boolean
  * @serializedName exclusiveMaximum
- * @methodName exclusiveMax
+ * @methodName addExclusiveMax
  */
 export function withExclusiveMaximumBoolean<TBase extends GConstructor>(
   Base: TBase
 ) {
   return class extends Base {
     _exclusiveMaximum?: boolean;
-    exclusiveMax() {
+    addExclusiveMax(val: boolean) {
       const copy: this = Object.create(this);
-      copy._exclusiveMaximum = true;
+      copy._exclusiveMaximum = val;
       return copy;
     }
     toJSON() {
@@ -1252,12 +1252,12 @@ export function withExample<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType OpenApiSchema
  * @serializedName items
- * @methodName addItemTypes
+ * @methodName addItems
  */
 export function withItems<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _items?: OpenApiSchema;
-    addItemTypes(val: OpenApiSchema) {
+    addItems(val: OpenApiSchema) {
       const copy: this = Object.create(this);
       copy._items = val;
       return copy;
@@ -1558,14 +1558,14 @@ export function withStyle<TBase extends GConstructor>(Base: TBase) {
 /**
  * @fieldType boolean
  * @serializedName explode
- * @methodName explode
+ * @methodName addExplode
  */
 export function withExplode<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
     _explode?: boolean;
-    explode() {
+    addExplode(val: boolean) {
       const copy: this = Object.create(this);
-      copy._explode = true;
+      copy._explode = val;
       return copy;
     }
     toJSON() {
@@ -2294,16 +2294,16 @@ export function withRequiredEnumerable<TBase extends GConstructor>(
 }
 
 /**
- * @fieldType boolean|OpenApiSchema
+ * @fieldType OpenApiSchema|boolean
  * @serializedName additionalProperties
- * @methodName additionalProperties
+ * @methodName addAdditionalProperties
  */
 export function withAdditionalProperties<TBase extends GConstructor>(
   Base: TBase
 ) {
   return class extends Base {
-    _additionalProperties?: boolean | OpenApiSchema;
-    additionalProperties(val: boolean | OpenApiSchema) {
+    _additionalProperties?: OpenApiSchema | boolean;
+    addAdditionalProperties(val: OpenApiSchema | boolean) {
       const copy: this = Object.create(this);
       copy._additionalProperties = val;
       return copy;
@@ -2624,9 +2624,9 @@ export function withUnevaluatedProperties<TBase extends GConstructor>(
 ) {
   return class extends Base {
     _unevaluatedProperties?: boolean;
-    addUnevaluatedProperties() {
+    addUnevaluatedProperties(val: boolean) {
       const copy: this = Object.create(this);
-      copy._unevaluatedProperties = true;
+      copy._unevaluatedProperties = val;
       return copy;
     }
     toJSON() {
@@ -2792,29 +2792,27 @@ export function withPrefixItems<TBase extends GConstructor>(Base: TBase) {
 
 /**
  * @fieldType OpenApiSchema|boolean
- * @serializedName items
+ * @serializedName additionalItems
  * @methodName addAdditionalItems
  */
 export function withAdditionalItems<TBase extends GConstructor>(Base: TBase) {
-  return <T extends OpenApiSchema | boolean>() => {
-    return class extends Base {
-      _items?: T[];
-      addAdditionalItems(val: T[]) {
-        const copy: this = Object.create(this);
-        copy._items = val;
-        return copy;
+  return class extends Base {
+    _additionalItems?: OpenApiSchema | boolean;
+    addAdditionalItems(val: OpenApiSchema | boolean) {
+      const copy: this = Object.create(this);
+      copy._additionalItems = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._additionalItems !== undefined) {
+        Object.defineProperty(json, "additionalItems", {
+          value: this._additionalItems,
+          enumerable: true,
+        });
       }
-      toJSON() {
-        const json = super.toJSON();
-        if (this._items !== undefined) {
-          Object.defineProperty(json, "items", {
-            value: this._items,
-            enumerable: true,
-          });
-        }
-        return json;
-      }
-    };
+      return json;
+    }
   };
 }
 

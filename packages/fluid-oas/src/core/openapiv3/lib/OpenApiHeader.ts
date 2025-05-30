@@ -18,8 +18,8 @@ import type { OpenApiMediaType } from "./OpenApiMedia";
 const HeaderBase = withRequired(withDeprecated(withDescription(Base)));
 
 interface HeaderBase extends BaseInterface {
-  required(): this;
-  deprecated(): this;
+  addRequired(required : boolean): this;
+  addDeprecated(deprecated : boolean): this;
   addDescription(description: string): this;
 }
 
@@ -29,7 +29,7 @@ const SchemaHeaderBase = withExamples(
 
 export interface SchemaHeader extends HeaderBase {
   addStyle(simple: "simple"): this;
-  explode(): this;
+  addExplode(explode : boolean): this;
   addSchema(schema: OpenApiSchema): this;
   addExample(example: OpenApiExample): this;
   addExamples(mappings: Partial<{ [K in string]: OpenApiExample }>): this;

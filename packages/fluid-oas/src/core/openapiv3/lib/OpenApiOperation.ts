@@ -50,7 +50,7 @@ export interface OpenApiOperation extends BaseInterface {
   addParameters(parameters: OpenApiParameter[]): this;
   addRequestBody(body: OpenApiRequestBody): this;
   addResponses(responses: OpenApiResponses): this;
-  deprecated(): this;
+  addDeprecated(deprecated: boolean): this;
   addSecurity(security: OpenApiSecurityRequirement[]): this;
   addServers(servers: OpenApiServer[]): this;
   addCallback(mappings: Partial<{ [K in string]: OpenApiPathItem }>): this;

@@ -24,25 +24,25 @@ async function main() {
       fnName: "withAllowReserved",
       fieldType: "boolean",
       serializedName: "allowReserved",
-      methodName: "allowReserved",
+      methodName: "addAllowReserved",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withDeprecated",
       fieldType: "boolean",
       serializedName: "deprecated",
-      methodName: "deprecated",
+      methodName: "addDeprecated",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withRequired",
       fieldType: "boolean",
       serializedName: "required",
-      methodName: "required",
+      methodName: "addRequired",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withNullable",
       fieldType: "boolean",
       serializedName: "nullable",
-      methodName: "nullable",
+      methodName: "addNullable",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withName",
@@ -66,13 +66,13 @@ async function main() {
       fnName: "withWrapped",
       fieldType: "boolean",
       serializedName: "wrapped",
-      methodName: "wrapped",
+      methodName: "addWrapped",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withAttribute",
       fieldType: "boolean",
       serializedName: "attribute",
-      methodName: "attribute",
+      methodName: "addAttribute",
     }),
     new FunctionTemplateBuilder({
       fnName: "withValue",
@@ -138,25 +138,25 @@ async function main() {
       fnName: "withExclusiveMinimum",
       fieldType: "number",
       serializedName: "exclusiveMinimum",
-      methodName: "exclusiveMin",
+      methodName: "addExclusiveMin",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withExclusiveMaximum",
       fieldType: "number",
       serializedName: "exclusiveMaximum",
-      methodName: "exclusiveMax",
+      methodName: "addExclusiveMax",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withExclusiveMinimumBoolean",
       fieldType: "boolean",
       serializedName: "exclusiveMinimum",
-      methodName: "exclusiveMin",
+      methodName: "addExclusiveMin",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withExclusiveMaximumBoolean",
       fieldType: "boolean",
       serializedName: "exclusiveMaximum",
-      methodName: "exclusiveMax",
+      methodName: "addExclusiveMax",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withMultipleOf",
@@ -282,7 +282,7 @@ async function main() {
       fnName: "withItems",
       fieldType: "OpenApiSchema",
       serializedName: "items",
-      methodName: "addItemTypes",
+      methodName: "addItems",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withOpenIdConnectURL",
@@ -348,7 +348,7 @@ async function main() {
       fnName: "withExplode",
       fieldType: "boolean",
       serializedName: "explode",
-      methodName: "explode",
+      methodName: "addExplode",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withContentType",
@@ -490,9 +490,9 @@ async function main() {
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withAdditionalProperties",
-      fieldType: "boolean | OpenApiSchema",
+      fieldType: "OpenApiSchema | boolean",
       serializedName: "additionalProperties",
-      methodName: "additionalProperties",
+      methodName: "addAdditionalProperties",
     }),
     new KeyNameClass({
       fnName: "withSecurityRequirement",
@@ -596,10 +596,10 @@ async function main() {
       serializedName: "prefixItems",
       methodName: "addPrefixItems",
     }),
-    new ArrayTemplateBuilder({
+    new PrimitiveTemplateBuilder({
       fnName: "withAdditionalItems",
       fieldType: "OpenApiSchema | boolean",
-      serializedName: "items",
+      serializedName: "additionalItems",
       methodName: "addAdditionalItems",
     }),
     new FunctionTemplateBuilder({

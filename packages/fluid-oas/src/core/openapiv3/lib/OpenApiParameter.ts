@@ -30,14 +30,14 @@ interface ParameterBase extends BaseInterface {
   addName(name: string): this;
   addIn(inParameter: "query" | "header" | "path" | "cookie"): this;
   addDescription(description: string): this;
-  required(): this;
-  deprecated(): this;
+  addRequired(required : boolean): this;
+  addDeprecated(deprecated : boolean): this;
 }
 
 export interface SchemaParameter extends ParameterBase {
   addStyle(style: "form" | "simple"): this;
-  explode(): this;
-  allowReserved(): this;
+  addExplode(explode : boolean): this;
+  addAllowReserved(allowReserved : boolean): this;
   addSchema(schema: OpenApiSchema): this;
   addExample(example: OpenApiExample): this;
   addExamples(mappings: { [K in string]: OpenApiExample }): this;

@@ -11,38 +11,10 @@ export class PrimitiveTemplateBuilder extends FunctionBuilder {
     writer.writeLine(`_${this.serializedName}? : ${this.fieldType};`);
   }
   protected buildBuilderMethod(writer: CodeBlockWriter): void {
-    let method: (cb: () => void) => CodeBlockWriter;
-    const flag = this.fieldType === "boolean";
-    if (flag) {
-      method = this.writeClassMethodBody(writer).writeMethodBody();
-    } else {
-      method = this.writeClassMethodBody(writer).writerMethodBodyWithParam();
-    }
-    method(() => {
+    writer.write(`${this.methodName}(val : ${this.fieldType})`).block(() => {
       writer.writeLine("const copy: this = Object.create(this);");
-      writer.conditionalWriteLine(
-        flag,
-        () => `copy._${this.serializedName} = true;`
-      );
-      writer.conditionalWriteLine(
-        !flag,
-        () => `copy._${this.serializedName} = val;`
-      );
+      writer.writeLine(`copy._${this.serializedName} = val`);
       writer.writeLine("return copy;");
     });
-  }
-  private writeClassMethodBody(writer: CodeBlockWriter) {
-    const methodBlock: (
-      withParam: boolean
-    ) => (cb: () => void) => CodeBlockWriter = param => {
-      return writer
-        .write(`${this.methodName}(${param ? "val : " + this.fieldType : ""})`)
-        .block.bind(writer);
-    };
-
-    return {
-      writeMethodBody: () => methodBlock(false),
-      writerMethodBodyWithParam: () => methodBlock(true),
-    };
   }
 }

@@ -15,8 +15,8 @@ export interface OpenApiXML extends BaseInterface {
   addName(name: string): this;
   addNamespace(val: string): this;
   addPrefix(val: string): this;
-  attribute(): this;
-  wrapped(): this;
+  addAttribute(attribute: boolean): this;
+  addWrapped(wrapped: boolean): this;
 }
 
 class _OpenApiXML extends XMLBase implements OpenApiXML {}

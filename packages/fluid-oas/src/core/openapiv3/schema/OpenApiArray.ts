@@ -12,18 +12,25 @@ const ArrayBase = withAdditionalItems(
   withPrefixItems(
     withItems(withMaxItems(withMinItems(SchemaBase<OpenApiArray>)))
   )()
-)();
+);
 
+/**
+ * Arrays are used for ordered elements. In JSON, each element in an array may be of a different type.
+ */
 export interface OpenApiArray extends SchemaInterface<OpenApiArray> {
-  addAdditionalItems(val: (OpenApiSchema | boolean)[]): this;
+  addAdditionalItems(val: OpenApiSchema | boolean): this;
   addPrefixItems(val: OpenApiSchema[]): this;
   addMinItems(minItems: number): this;
   addMaxItems(maxItems: number): this;
-  addItemTypes(itemTypes: OpenApiSchema): this;
+  addItems(itemTypes: OpenApiSchema): this;
 }
 
 class _OpenApiArray extends ArrayBase implements OpenApiArray {}
 
-export function Array(itemtypes: OpenApiSchema): OpenApiArray {
-  return new _OpenApiArray().addItemTypes(itemtypes);
+export function Array(itemtypes?: OpenApiSchema): OpenApiArray {
+  if (itemtypes) {
+    return new _OpenApiArray().addItems(itemtypes);
+  } else {
+    return new _OpenApiArray();
+  }
 }

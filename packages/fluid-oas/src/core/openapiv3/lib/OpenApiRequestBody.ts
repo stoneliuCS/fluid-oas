@@ -12,7 +12,7 @@ export interface OpenApiRequestBody extends BaseInterface {
       [K in OpenApiMediaContentType]: OpenApiMediaType;
     }>
   ): this;
-  required(): this;
+  addRequired(required: boolean): this;
 }
 
 class _OpenApiRequestBody

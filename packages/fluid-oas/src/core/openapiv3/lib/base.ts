@@ -54,7 +54,7 @@ export interface SchemaInterface<T> extends BaseInterface {
   /**
    * As of v3.1.0 this has been removed. Still available for v3.0.* OAS
    */
-  nullable(): this;
+  addNullable(nullable: boolean): this;
 }
 
 // Base Class which all OpenApi Definitions will inherit.
