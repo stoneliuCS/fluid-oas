@@ -15,9 +15,7 @@ const ObjectBase = withMaxProperties(
     withPatternProperties(
       withUnevaluatedProperties(
         withAdditionalProperties(
-          withRequiredEnumerable(
-            withProperties(SchemaBase<object>)
-          )<string>()
+          withRequiredEnumerable(withProperties(SchemaBase<object>))<string>()
         )
       )
     )
@@ -46,7 +44,7 @@ export interface OpenApiObject extends SchemaInterface<object> {
   addUnevaluatedProperties(unevaluatedProperties: boolean): this;
   addProperties(mappings: Partial<{ [K in string]: OpenApiSchema }>): this;
   addRequired(val: string[]): this;
-  addAdditionalProperties(additionalProperties: OpenApiSchema | boolean): this;
+  addAdditionalProperties(additionalProperties: OpenApiSchema): this;
 }
 
 class _OpenApiObject extends ObjectBase implements OpenApiObject {

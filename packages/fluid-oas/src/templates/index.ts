@@ -490,7 +490,7 @@ async function main() {
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withAdditionalProperties",
-      fieldType: "OpenApiSchema | boolean",
+      fieldType: "OpenApiSchema",
       serializedName: "additionalProperties",
       methodName: "addAdditionalProperties",
     }),
@@ -598,7 +598,7 @@ async function main() {
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withAdditionalItems",
-      fieldType: "OpenApiSchema | boolean",
+      fieldType: "OpenApiSchema",
       serializedName: "additionalItems",
       methodName: "addAdditionalItems",
     }),
@@ -614,11 +614,82 @@ async function main() {
       serializedName: "writeOnly",
       methodName: "addWriteOnly",
     }),
-    new FunctionTemplateBuilder({
-      fnName: "withConst",
-      fieldType: `T`,
-      serializedName: "const",
-      methodName: "addConst",
+
+    new MapTemplateBuilder({
+      fnName: "withSchemasComponent",
+      fieldType: "Map<string, OpenApiSchema>",
+      serializedName: "schemas",
+      methodName: "addSchemas",
+    }),
+
+    new MapTemplateBuilder({
+      fnName: "withResponsesComponent",
+      fieldType: "Map<string, OpenApiResponses>",
+      serializedName: "responses",
+      methodName: "addResponses",
+    }),
+
+    new MapTemplateBuilder({
+      fnName: "withParametersComponent",
+      fieldType: "Map<string, OpenApiParameter>",
+      serializedName: "parameters",
+      methodName: "addParameters",
+    }),
+
+    new MapTemplateBuilder({
+      fnName: "withExamplesComponent",
+      fieldType: "Map<string, OpenApiExample>",
+      serializedName: "examples",
+      methodName: "addExamples",
+    }),
+
+    new MapTemplateBuilder({
+      fnName: "withRequestBodiesComponent",
+      fieldType: "Map<string, OpenApiRequestBody>",
+      serializedName: "requestBodies",
+      methodName: "addRequestBodies",
+    }),
+
+    new MapTemplateBuilder({
+      fnName: "withHeadersComponent",
+      fieldType: "Map<string, OpenApiHeader>",
+      serializedName: "headers",
+      methodName: "addHeaders",
+    }),
+
+    new MapTemplateBuilder({
+      fnName: "withSecuritySchemesComponent",
+      fieldType: "Map<string, OpenApiSecurityScheme>",
+      serializedName: "securitySchemes",
+      methodName: "addSecuritySchemes",
+    }),
+
+    new MapTemplateBuilder({
+      fnName: "withLinksComponent",
+      fieldType: "Map<string, OpenApiLink>",
+      serializedName: "links",
+      methodName: "addLinks",
+    }),
+
+    new MapTemplateBuilder({
+      fnName: "withCallbacksComponent",
+      fieldType: "Map<string, OpenApiCallback>",
+      serializedName: "callbacks",
+      methodName: "addCallbacks",
+    }),
+
+    new MapTemplateBuilder({
+      fnName: "withPathItemsComponent",
+      fieldType: "Map<string, OpenApiPathItem>",
+      serializedName: "pathItems",
+      methodName: "addPathItems",
+    }),
+
+    new PrimitiveTemplateBuilder({
+      fnName: "withComponents",
+      fieldType: "OpenApiComponent",
+      serializedName: "components",
+      methodName: "addComponents",
     }),
   ].forEach(fn => fn.write(OpenAPIV3Project));
 

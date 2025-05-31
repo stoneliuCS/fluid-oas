@@ -1,9 +1,8 @@
-import { withConst } from "../common";
 import { SchemaBase, type SchemaInterface } from "../lib/base";
 
 export type ConstTypes = string | number | boolean | object | null;
 
-const ConstBase = withConst(SchemaBase<ConstTypes>)<ConstTypes>();
+const ConstBase = SchemaBase<ConstTypes>;
 
 export interface OpenApiConst
   extends Omit<SchemaInterface<ConstTypes>, "addEnums"> {}

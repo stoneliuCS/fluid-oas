@@ -8,6 +8,7 @@ import {
   withJSONSchemaDialect,
   withInfo,
   withOpenApi,
+  withComponents,
 } from "./common";
 import type {
   OpenApiServer,
@@ -20,19 +21,22 @@ import type {
 } from "./lib";
 import { Base, type BaseInterface } from "./lib/base";
 import * as fs from "fs";
+import type { OpenApiComponent } from "./lib/OpenApiComponent";
 
-const OpenApiBase = withExternalDocs(
-  withTags(
-    withSecurityArray(
-      withWebhooks(
-        withPaths(
-          withServersArray(
-            withJSONSchemaDialect(withInfo(withOpenApi(Base)))
-          )<OpenApiServer>()
+const OpenApiBase = withComponents(
+  withExternalDocs(
+    withTags(
+      withSecurityArray(
+        withWebhooks(
+          withPaths(
+            withServersArray(
+              withJSONSchemaDialect(withInfo(withOpenApi(Base)))
+            )<OpenApiServer>()
+          )
         )
-      )
-    )<OpenApiSecurityRequirement>()
-  )<OpenApiTag>()
+      )<OpenApiSecurityRequirement>()
+    )<OpenApiTag>()
+  )
 );
 
 /**
@@ -88,6 +92,16 @@ export interface OpenApiV3 extends BaseInterface {
    * @param docs - External documentation object with URL and optional description
    */
   addExternalDocs(docs: OpenApiDocumentation): this;
+
+  /**
+   * Adds reusable components to this OpenApi Specification.
+   *
+   * NOTE: This method is not needed for normal use of this DSL, it's only purpose is 
+   * to maintain parity with the origin OpenAPIV3 Specification.
+   *
+   * @param components - Component object.
+   */
+  addComponents(components: OpenApiComponent): this;
 
   /**
    * Writes the OpenAPI specification synchronously to a file or outputs it.

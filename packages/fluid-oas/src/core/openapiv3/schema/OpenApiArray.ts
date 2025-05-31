@@ -16,7 +16,7 @@ const ArrayBase = withAdditionalItems(
  * Arrays are used for ordered elements. In JSON, each element in an array may be of a different type.
  */
 export interface OpenApiArray extends SchemaInterface<any[]> {
-  addAdditionalItems(val: OpenApiSchema | boolean): this;
+  addAdditionalItems(val: OpenApiSchema): this;
   addPrefixItems(val: OpenApiSchema[]): this;
   addMinItems(minItems: number): this;
   addMaxItems(maxItems: number): this;
@@ -35,4 +35,3 @@ class _OpenApiArray extends ArrayBase implements OpenApiArray {
 }
 
 export const Array: OpenApiArray = new _OpenApiArray();
-
