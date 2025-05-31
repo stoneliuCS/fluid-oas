@@ -274,7 +274,7 @@ async function main() {
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withExample",
-      fieldType: "OpenApiExample",
+      fieldType: "any",
       serializedName: "example",
       methodName: "addExample",
     }),
@@ -601,6 +601,18 @@ async function main() {
       fieldType: "OpenApiSchema | boolean",
       serializedName: "additionalItems",
       methodName: "addAdditionalItems",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withReadOnly",
+      fieldType: "boolean",
+      serializedName: "readOnly",
+      methodName: "addReadOnly",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withWriteOnly",
+      fieldType: "boolean",
+      serializedName: "writeOnly",
+      methodName: "addWriteOnly",
     }),
     new FunctionTemplateBuilder({
       fnName: "withConst",

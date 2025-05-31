@@ -18,8 +18,8 @@ import type { OpenApiMediaType } from "./OpenApiMedia";
 const HeaderBase = withRequired(withDeprecated(withDescription(Base)));
 
 interface HeaderBase extends BaseInterface {
-  addRequired(required : boolean): this;
-  addDeprecated(deprecated : boolean): this;
+  addRequired(required: boolean): this;
+  addDeprecated(deprecated: boolean): this;
   addDescription(description: string): this;
 }
 
@@ -29,9 +29,9 @@ const SchemaHeaderBase = withExamples(
 
 export interface SchemaHeader extends HeaderBase {
   addStyle(simple: "simple"): this;
-  addExplode(explode : boolean): this;
+  addExplode(explode: boolean): this;
   addSchema(schema: OpenApiSchema): this;
-  addExample(example: OpenApiExample): this;
+  addExample(example: any): this;
   addExamples(mappings: Partial<{ [K in string]: OpenApiExample }>): this;
 }
 
@@ -53,10 +53,10 @@ class _OpenApiHeaderContent
 
 export type OpenApiHeader = SchemaHeader | ContentHeader;
 
-export function Header(type: "schema"): SchemaHeader;
-export function Header(type: "content"): ContentHeader;
-export function Header(type: OpenApiSchemaOrContent) {
-  return type === "schema"
-    ? new _OpenApiHeaderSchema()
-    : new _OpenApiHeaderContent();
-}
+export const Header: {
+  schema: SchemaHeader;
+  content: ContentHeader;
+} = {
+  schema: new _OpenApiHeaderSchema() as SchemaHeader,
+  content: new _OpenApiHeaderContent() as ContentHeader,
+};

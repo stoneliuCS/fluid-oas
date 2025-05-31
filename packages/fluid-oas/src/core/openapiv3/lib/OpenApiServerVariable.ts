@@ -15,6 +15,10 @@ class _OpenApiServerVariable
   extends ServerVariableBase
   implements OpenApiServerVariable {}
 
-export function ServerVariable(): OpenApiServerVariable {
-  return new _OpenApiServerVariable();
-}
+export const ServerVariable: {
+  addDefault(val: string): OpenApiServerVariable;
+} = {
+  addDefault(val: string) {
+    return new _OpenApiServerVariable().addDefault(val);
+  },
+};

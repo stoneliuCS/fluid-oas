@@ -88,12 +88,6 @@ class _OpenApiInteger extends _IntegerBaseImpl implements OpenApiInteger {
   }
 }
 
-/**
- * Create an OpenAPINumber builder.
- */
-export function Number(): OpenApiNumber {
-  return new _OpenApiNumber();
-}
-export function Integer(): OpenApiInteger {
-  return new _OpenApiInteger();
-}
+export const Number: OpenApiNumber = new _OpenApiNumber();
+
+export const Integer: OpenApiInteger = new _OpenApiInteger();

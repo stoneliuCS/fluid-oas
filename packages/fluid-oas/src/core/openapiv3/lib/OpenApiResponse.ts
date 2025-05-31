@@ -25,6 +25,10 @@ export interface OpenApiResponse extends BaseInterface {
 
 class _OpenApiResponse extends ResponseBase implements OpenApiResponse {}
 
-export function Response(description: string): OpenApiResponse {
-  return new _OpenApiResponse().addDescription(description);
-}
+export const Response: {
+  addDescription(description: string): OpenApiResponse;
+} = {
+  addDescription(description: string) {
+    return new _OpenApiResponse().addDescription(description);
+  },
+};

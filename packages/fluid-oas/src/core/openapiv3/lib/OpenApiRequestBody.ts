@@ -19,8 +19,16 @@ class _OpenApiRequestBody
   extends RequestBodyBase
   implements OpenApiRequestBody {}
 
-export function RequestBody(mappings: {
-  [K in OpenApiMediaContentType]: OpenApiMediaType;
-}): OpenApiRequestBody {
-  return new _OpenApiRequestBody().addContents(mappings);
-}
+export const RequestBody: {
+  addContents(
+    mappings: Partial<{ [K in OpenApiMediaContentType]: OpenApiMediaType }>
+  ): OpenApiRequestBody;
+} = {
+  addContents(
+    mappings: Partial<{
+      [K in OpenApiMediaContentType]: OpenApiMediaType;
+    }>
+  ) {
+    return new _OpenApiRequestBody().addContents(mappings);
+  },
+};

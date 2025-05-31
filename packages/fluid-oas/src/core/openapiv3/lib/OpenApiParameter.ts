@@ -30,16 +30,16 @@ interface ParameterBase extends BaseInterface {
   addName(name: string): this;
   addIn(inParameter: "query" | "header" | "path" | "cookie"): this;
   addDescription(description: string): this;
-  addRequired(required : boolean): this;
-  addDeprecated(deprecated : boolean): this;
+  addRequired(required: boolean): this;
+  addDeprecated(deprecated: boolean): this;
 }
 
 export interface SchemaParameter extends ParameterBase {
   addStyle(style: "form" | "simple"): this;
-  addExplode(explode : boolean): this;
-  addAllowReserved(allowReserved : boolean): this;
+  addExplode(explode: boolean): this;
+  addAllowReserved(allowReserved: boolean): this;
   addSchema(schema: OpenApiSchema): this;
-  addExample(example: OpenApiExample): this;
+  addExample(example: any): this;
   addExamples(mappings: { [K in string]: OpenApiExample }): this;
 }
 
@@ -70,12 +70,12 @@ class _OpenApiParameterContent
   extends ParameterContentBase
   implements ContentParameter {}
 
-export function Parameter(type: "content"): ContentParameter;
-export function Parameter(type: "schema"): SchemaParameter;
-export function Parameter(type: OpenApiSchemaOrContent): OpenApiParameter {
-  return type === "schema"
-    ? new _OpenApiParameterSchema()
-    : new _OpenApiParameterContent();
-}
+export const Parameter: {
+  schema: SchemaParameter;
+  header: ContentParameter;
+} = {
+  schema: new _OpenApiParameterSchema() as SchemaParameter,
+  header: new _OpenApiParameterContent() as ContentParameter,
+};
 
 export type OpenApiParameter = SchemaParameter | ContentParameter;

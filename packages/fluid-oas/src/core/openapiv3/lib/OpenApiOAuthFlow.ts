@@ -19,6 +19,25 @@ export interface OpenApiOAuthFlow extends BaseInterface {
 
 class _OpenApiOAuthFlow extends OAuthFlowBase implements OpenApiOAuthFlow {}
 
-export function OAuthFlow(): OpenApiOAuthFlow {
-  return new _OpenApiOAuthFlow();
-}
+export const OAuthFlow: {
+  addAuthorizationUrl(authorizationUrl: string): {
+    addTokenUrl(tokenUrl: string): {
+      addScopes(mappings: Partial<{ [x: string]: string }>): OpenApiOAuthFlow;
+    };
+  };
+} = {
+  addAuthorizationUrl(authorizationUrl: string) {
+    return {
+      addTokenUrl(tokenUrl: string) {
+        return {
+          addScopes(mappings: Partial<{ [K in string]: string }>) {
+            return new _OpenApiOAuthFlow()
+              .addAuthorizationUrl(authorizationUrl)
+              .addTokenUrl(tokenUrl)
+              .addScopes(mappings);
+          },
+        };
+      },
+    };
+  },
+};

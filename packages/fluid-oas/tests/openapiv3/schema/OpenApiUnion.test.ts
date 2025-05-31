@@ -10,7 +10,7 @@ import {
 
 describe("Union types test", () => {
   test("Union types deserialization values", () => {
-    const actual = Union(String().addMinLength(1), Number());
+    const actual = Union.ofTypes(String.addMinLength(1), Number);
     expect(actual.toJSON()).toEqual({
       type: ["string", "number"],
       minLength: 1,
@@ -18,34 +18,34 @@ describe("Union types test", () => {
   });
 
   test("Nullable values", () => {
-    let actual = Union(Object({}), Null());
+    let actual = Union.ofTypes(Object.addProperties({}), Null);
     expect(actual.toJSON()).toEqual({
       properties: {},
       type: ["object", "null"],
     });
-    actual = Union(Object(), String(), Null());
+    actual = Union.ofTypes(Object, String, Null);
     expect(actual.toJSON()).toEqual({
       type: ["object", "string", "null"],
     });
   });
 
   test("Preserve properties", () => {
-    let actual = Union(Object({}), Null());
+    let actual = Union.ofTypes(Object.addProperties({}), Null);
     expect(actual.toJSON()).toEqual({
       properties: {},
       type: ["object", "null"],
     });
-    actual = Union(
-      Object({ firstName: String(), lastName: String() }),
-      String(),
-      Number(),
-      Null()
+    actual = Union.ofTypes(
+      Object.addProperties({ firstName: String, lastName: String }),
+      String,
+      Number,
+      Null
     );
     expect(actual.toJSON()).toEqual({
       type: ["object", "string", "number", "null"],
       properties: {
-        firstName: String(),
-        lastName: String(),
+        firstName: String,
+        lastName: String,
       },
     }); // This is okay, since JSON.stringify will recursively call toJSON methods
   });

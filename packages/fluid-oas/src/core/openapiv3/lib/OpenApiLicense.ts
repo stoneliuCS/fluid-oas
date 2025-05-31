@@ -11,6 +11,10 @@ export interface OpenApiLicense extends BaseInterface {
 
 class _OpenApiLicense extends LicenseBase implements OpenApiLicense {}
 
-export function License(name: string): OpenApiLicense {
-  return new _OpenApiLicense().addName(name);
-}
+export const License: {
+  addName(name: string): OpenApiLicense;
+} = {
+  addName(name: string): OpenApiLicense {
+    return new _OpenApiLicense().addName(name);
+  },
+};

@@ -11,6 +11,4 @@ export interface OpenApiContact extends BaseInterface {
 
 class _OpenApiContact extends ContactBase implements OpenApiContact {}
 
-export function Contact(): OpenApiContact {
-  return new _OpenApiContact();
-}
+export const Contact: OpenApiContact = new _OpenApiContact();

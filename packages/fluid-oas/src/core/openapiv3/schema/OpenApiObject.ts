@@ -3,16 +3,16 @@ import {
   withRequiredEnumerable,
   withProperties,
   withUnevaluatedProperties,
-  withPropertyNames,
   withMinProperties,
   withMaxProperties,
+  withPatternProperties,
 } from "../common";
 import { SchemaBase, type SchemaInterface } from "../lib/base";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
 const ObjectBase = withMaxProperties(
   withMinProperties(
-    withPropertyNames(
+    withPatternProperties(
       withUnevaluatedProperties(
         withAdditionalProperties(
           withRequiredEnumerable(
@@ -25,9 +25,24 @@ const ObjectBase = withMaxProperties(
 );
 
 export interface OpenApiObject extends SchemaInterface<OpenApiObject> {
+  /**
+   * Adds a maximum limit to the number of properties for this OpenApiObject.
+   * @param val - The maximum properties this object can hold.
+   */
   addMaxProperties(val: number): this;
+  /**
+   * Adds a minimum limit to the number of properties for this OpenApiObject.
+   * @param val - The minimum properties this object can hold.
+   */
   addMinProperties(val: number): this;
-  addPropertyNames(mappings: Partial<{ [K in string]: string }>): this;
+  /**
+   * Adds pattern properties to this object, where each key is a regular expression
+   * and each value is a schema.
+   * @param mappings - RegExp as strings to schema mappings.
+   */
+  addPatternProperties(
+    mappings: Partial<{ [K in string]: OpenApiSchema }>
+  ): this;
   addUnevaluatedProperties(unevaluatedProperties: boolean): this;
   addProperties(mappings: Partial<{ [K in string]: OpenApiSchema }>): this;
   addRequired(val: string[]): this;
@@ -45,16 +60,4 @@ class _OpenApiObject extends ObjectBase implements OpenApiObject {
   }
 }
 
-/**
- * Convienence function to create a OpenApi Object.
- * @param mappings - Properties of the object.
- */
-export function Object(
-  mappings?: Partial<{ [K in string]: OpenApiSchema }>
-): OpenApiObject {
-  if (mappings) {
-    return new _OpenApiObject().addProperties(mappings);
-  } else {
-    return new _OpenApiObject();
-  }
-}
+export const Object: OpenApiObject = new _OpenApiObject();

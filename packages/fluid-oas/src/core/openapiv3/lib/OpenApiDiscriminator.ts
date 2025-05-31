@@ -12,6 +12,11 @@ class _OpenApiDiscriminator
   extends DiscriminatorBase
   implements OpenApiDiscriminator {}
 
-export function Discriminator(): OpenApiDiscriminator {
-  return new _OpenApiDiscriminator();
-}
+// Discriminator Object.
+export const Discriminator: {
+  addPropertyName(propertyName: string): OpenApiDiscriminator;
+} = {
+  addPropertyName(propertyName): OpenApiDiscriminator {
+    return new _OpenApiDiscriminator().addPropertyName(propertyName);
+  },
+};

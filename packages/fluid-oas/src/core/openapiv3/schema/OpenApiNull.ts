@@ -12,6 +12,4 @@ class _OpenApiNull extends NullBase implements OpenApiNull {
   }
 }
 
-export function Null(): OpenApiNull {
-  return new _OpenApiNull();
-}
+export const Null: OpenApiNull = new _OpenApiNull();

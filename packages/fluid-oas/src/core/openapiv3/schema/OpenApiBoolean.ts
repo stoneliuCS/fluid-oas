@@ -12,6 +12,4 @@ class _OpenApiBoolean extends BooleanBase implements OpenApiBoolean {
   }
 }
 
-export function Boolean(): OpenApiBoolean {
-  return new _OpenApiBoolean();
-}
+export const Boolean: OpenApiBoolean = new _OpenApiBoolean();

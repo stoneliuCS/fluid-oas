@@ -12,6 +12,9 @@ class _OpenApiDocumentation
   extends DocumentationBase
   implements OpenApiDocumentation {}
 
-export function Documentation(): OpenApiDocumentation {
-  return new _OpenApiDocumentation();
-}
+// External Documentation Object.
+export const Documentation: { addUrl(url: string): OpenApiDocumentation } = {
+  addUrl(url: string): OpenApiDocumentation {
+    return new _OpenApiDocumentation().addUrl(url);
+  },
+};

@@ -1224,14 +1224,14 @@ export function withFlows<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiExample
+ * @fieldType any
  * @serializedName example
  * @methodName addExample
  */
 export function withExample<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _example?: OpenApiExample;
-    addExample(val: OpenApiExample) {
+    _example?: any;
+    addExample(val: any) {
       const copy: this = Object.create(this);
       copy._example = val;
       return copy;
@@ -2199,7 +2199,7 @@ export function withUnionTypes<TBase extends GConstructor>(Base: TBase) {
   return <T extends OpenApiSchema>() => {
     return class extends Base {
       _type?: T[];
-      ofTypes(val: T[]) {
+      ofTypes(...val: T[]) {
         const copy: this = Object.create(this);
         copy._type = val;
         return copy;
@@ -2808,6 +2808,58 @@ export function withAdditionalItems<TBase extends GConstructor>(Base: TBase) {
       if (this._additionalItems !== undefined) {
         Object.defineProperty(json, "additionalItems", {
           value: this._additionalItems,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType boolean
+ * @serializedName readOnly
+ * @methodName addReadOnly
+ */
+export function withReadOnly<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    _readOnly?: boolean;
+    addReadOnly(val: boolean) {
+      const copy: this = Object.create(this);
+      copy._readOnly = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._readOnly !== undefined) {
+        Object.defineProperty(json, "readOnly", {
+          value: this._readOnly,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType boolean
+ * @serializedName writeOnly
+ * @methodName addWriteOnly
+ */
+export function withWriteOnly<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    _writeOnly?: boolean;
+    addWriteOnly(val: boolean) {
+      const copy: this = Object.create(this);
+      copy._writeOnly = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._writeOnly !== undefined) {
+        Object.defineProperty(json, "writeOnly", {
+          value: this._writeOnly,
           enumerable: true,
         });
       }

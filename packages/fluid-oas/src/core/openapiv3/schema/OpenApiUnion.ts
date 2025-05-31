@@ -6,23 +6,20 @@ const TypeArrayBase = withUnionTypes(
   SchemaBase<OpenApiSchema>
 )<OpenApiSchema>();
 
-export interface OpenApiUnion extends SchemaInterface<OpenApiSchema> {
-  ofTypes(val: OpenApiSchema[]): this;
+type omitVals = "addEnums" | "addWriteOnly" | "addReadOnly" | "addConst";
+
+/**
+ * A special type of schema, used for multiple "types" as specified in the latest JSON Schema.
+ */
+export interface OpenApiUnion
+  extends Omit<SchemaInterface<OpenApiSchema>, omitVals> {
+  /**
+   * Compose multiple OpenApi schema types.
+   * @param val - A list of schema types to union over, creating a union schema.
+   */
+  ofTypes(...val: OpenApiSchema[]): this;
 }
 
 class _OpenApiUnion extends TypeArrayBase implements OpenApiUnion {}
 
-/**
- * Creates a multiple type OpenApiSchema.
- *
- * This preserves the properties from each schema, which could be subject to change since
- * the official JSON schema is a little ambigious about this
- *
- * Only viable on 3.1.* schema.
- *
- * @param val - OpenApiSchema[]
- * @returns OpenApiUnion
- */
-export function Union(...val: OpenApiSchema[]): OpenApiUnion {
-  return new _OpenApiUnion().ofTypes(val);
-}
+export const Union: OpenApiUnion = new _OpenApiUnion();

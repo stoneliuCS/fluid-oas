@@ -10,6 +10,9 @@ const StringBase = withPattern(
   withMaxLength(withMinLength(withFormat(SchemaBase<string>)()))
 );
 
+/**
+ * Representing a string from JSON schema.
+ */
 export interface OpenApiString extends SchemaInterface<string> {
   /**
    * Adds a format to this OpenApiString.
@@ -47,6 +50,4 @@ class _OpenApiString extends StringBase implements OpenApiString {
 /**
  * Creates a OpenAPI String Schema.
  */
-export function String(): OpenApiString {
-  return new _OpenApiString();
-}
+export const String: OpenApiString = new _OpenApiString();

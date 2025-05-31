@@ -10,6 +10,4 @@ export interface OpenApiCallback extends BaseInterface {
 
 class _OpenApiCallback extends CallbackBase implements OpenApiCallback {}
 
-export function Callback(): OpenApiCallback {
-  return new _OpenApiCallback();
-}
+export const Callback: OpenApiCallback = new _OpenApiCallback();

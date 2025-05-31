@@ -12,13 +12,11 @@ const EncodingBase = withAllowReserved(
 );
 
 export interface OpenApiEncoding extends BaseInterface {
-  addExplode(explode : boolean): this;
-  addAllowReserved(allowReserved : boolean): this;
+  addExplode(explode: boolean): this;
+  addAllowReserved(allowReserved: boolean): this;
   addStyle(style: string): this;
 }
 
 class _OpenApiEncoding extends EncodingBase implements OpenApiEncoding {}
 
-export function Encoding(): OpenApiEncoding {
-  return new _OpenApiEncoding();
-}
+export const Encoding: OpenApiEncoding = new _OpenApiEncoding();

@@ -7,6 +7,9 @@ import {
   withEnum,
   withConst,
   withDefault,
+  withExamples,
+  withReadOnly,
+  withWriteOnly,
 } from "../common";
 import type { OpenApiSchema } from "../schema";
 import type { OpenApiExtensionString } from "../types";
@@ -47,10 +50,12 @@ export interface SchemaInterface<T> extends BaseInterface {
    * @param docs - Documentation to add to this schema.
    */
   addExternalDocs(docs: OpenApiDocumentation): this;
-  addExample(example: OpenApiExample): this;
+  addExample(example: any): this;
   addEnums(val: (T | null)[]): this;
   addConst(val: T): this;
   addDefault(val: T): this;
+  addReadOnly(readOnly: boolean): this;
+  addWriteOnly(writeOnly: boolean): this;
   /**
    * As of v3.1.0 this has been removed. Still available for v3.0.* OAS
    */
@@ -68,7 +73,13 @@ export class Base extends _Base implements BaseInterface {}
 const _SchemaBase = withDefault(
   withConst(
     withEnum(
-      withNullable(withExample(withExternalDocs(withDescription(Base))))
+      withNullable(
+        withWriteOnly(
+          withReadOnly(
+            withExamples(withExample(withExternalDocs(withDescription(Base))))
+          )
+        )
+      )
     )()
   )()
 )();

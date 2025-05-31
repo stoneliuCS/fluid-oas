@@ -27,10 +27,4 @@ export interface OpenApiArray extends SchemaInterface<OpenApiArray> {
 
 class _OpenApiArray extends ArrayBase implements OpenApiArray {}
 
-export function Array(itemtypes?: OpenApiSchema): OpenApiArray {
-  if (itemtypes) {
-    return new _OpenApiArray().addItems(itemtypes);
-  } else {
-    return new _OpenApiArray();
-  }
-}
+export const Array: OpenApiArray = new _OpenApiArray();

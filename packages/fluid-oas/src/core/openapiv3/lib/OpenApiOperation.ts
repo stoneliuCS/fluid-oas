@@ -58,6 +58,4 @@ export interface OpenApiOperation extends BaseInterface {
 
 class _OpenApiOperation extends OperationBase implements OpenApiOperation {}
 
-export function Operation(): OpenApiOperation {
-  return new _OpenApiOperation();
-}
+export const Operation: OpenApiOperation = new _OpenApiOperation();

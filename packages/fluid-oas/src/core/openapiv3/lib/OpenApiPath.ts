@@ -51,6 +51,4 @@ class _OpenApiPath extends PathBase implements OpenApiPath {
   }
 }
 
-export function Path(): OpenApiPath {
-  return new _OpenApiPath();
-}
+export const Path: OpenApiPath = new _OpenApiPath();

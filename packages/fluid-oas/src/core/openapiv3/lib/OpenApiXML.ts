@@ -21,6 +21,4 @@ export interface OpenApiXML extends BaseInterface {
 
 class _OpenApiXML extends XMLBase implements OpenApiXML {}
 
-export function XML(): OpenApiXML {
-  return new _OpenApiXML();
-}
+export const XML: OpenApiXML = new _OpenApiXML();

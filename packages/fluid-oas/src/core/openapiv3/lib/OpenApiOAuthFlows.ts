@@ -20,6 +20,4 @@ export interface OpenApiOAuthFlows extends BaseInterface {
 
 class _OpenApiOAuthFlows extends OAuthFlowsBase implements OpenApiOAuthFlows {}
 
-export function OAuthFlows(): OpenApiOAuthFlows {
-  return new _OpenApiOAuthFlows();
-}
+export const OAuthFlows: OpenApiOAuthFlows = new _OpenApiOAuthFlows();

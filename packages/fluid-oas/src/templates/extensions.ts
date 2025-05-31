@@ -3,6 +3,7 @@ import { CodeBlockWriter } from "ts-morph";
 import { MapTemplateBuilder } from "./MapTemplate";
 import { PrimitiveTemplateBuilder } from "./PrimitiveTemplate";
 import { ArrayTemplateBuilder } from "./ArrayTemplate";
+import { FunctionBuilder } from "./FunctionBuilder";
 
 // Special case where we want serialization logic to be on the top level object.
 export const KeyNameClass = class extends MapTemplateBuilder {
@@ -36,6 +37,15 @@ export const RegExpClass = class extends PrimitiveTemplateBuilder {
 
 // Really special case to handle serialization of union types introduced by OAS 3.1
 export const UnionClass = class extends ArrayTemplateBuilder {
+  protected buildBuilderMethod(writer: CodeBlockWriter): void {
+    writer
+      .write(`${this.methodName}(...val : ${FunctionBuilder.genericName}[])`)
+      .block(() => {
+        writer.writeLine("const copy: this = Object.create(this);");
+        writer.writeLine(`copy._${this.serializedName} = val`);
+        writer.writeLine("return copy;");
+      });
+  }
   protected buildJSONMethod(writer: CodeBlockWriter): void {
     writer.write("toJSON()").block(() => {
       writer.writeLine("const json = super.toJSON();");

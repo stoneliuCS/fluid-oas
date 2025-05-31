@@ -27,6 +27,4 @@ export interface OpenApiPathItem extends BaseInterface {
 
 class _OpenApiPathItem extends PathItemBase implements OpenApiPathItem {}
 
-export function PathItem(): OpenApiPathItem {
-  return new _OpenApiPathItem();
-}
+export const PathItem: OpenApiPathItem = new _OpenApiPathItem();

@@ -28,6 +28,4 @@ export interface OpenApiLink extends BaseInterface {
 
 class _OpenApiLink extends LinkBase implements OpenApiLink {}
 
-export function Link(): OpenApiLink {
-  return new _OpenApiLink();
-}
+export const Link: OpenApiLink = new _OpenApiLink();

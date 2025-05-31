@@ -3,8 +3,8 @@ import { Number, Integer } from "../../../src/core/openapiv3/schema";
 
 describe("Number and Integer deserialization tests.", () => {
   test("Numbers and integers are immutable and they serialize to the proper types", () => {
-    const number = Number();
-    const integer = Integer();
+    const number = Number;
+    const integer = Integer;
     const number2 = number.addMinimum(1).addMaximum(3);
     const integer2 = integer.addDescription("Hello world!");
     expect(number).not.toEqual(number2);
@@ -23,8 +23,8 @@ describe("Number and Integer deserialization tests.", () => {
   });
 
   test("Numbers and integers are backwards compatible", () => {
-    const number = Number();
-    const integer = Integer();
+    const number = Number;
+    const integer = Integer;
     const number2 = number
       .addNullable(true)
       .addExclusiveMin(true)

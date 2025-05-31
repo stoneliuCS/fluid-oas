@@ -11,6 +11,5 @@ export interface OpenApiSecurityRequirement extends RootInterface {
 
 class _OpenApiSecurityRequirementBase extends SecurityRequirementBase {}
 
-export function SecurityRequirement(): OpenApiSecurityRequirement {
-  return new _OpenApiSecurityRequirementBase();
-}
+export const SecurityRequirement: OpenApiSecurityRequirement =
+  new _OpenApiSecurityRequirementBase();

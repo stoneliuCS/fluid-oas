@@ -11,6 +11,10 @@ export interface OpenApiTag extends BaseInterface {
 }
 class _OpenApiTag extends TagBase implements OpenApiTag {}
 
-export function Tag(): OpenApiTag {
-  return new _OpenApiTag();
-}
+export const Tag: {
+  addName(name: string): OpenApiTag;
+} = {
+  addName(name: string) {
+    return new _OpenApiTag().addName(name);
+  },
+};

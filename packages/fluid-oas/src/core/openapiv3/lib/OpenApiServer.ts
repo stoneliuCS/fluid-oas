@@ -14,6 +14,10 @@ export interface OpenApiServer extends BaseInterface {
 
 class _OpenApiServer extends ServerBase implements OpenApiServer {}
 
-export function Server(): OpenApiServer {
-  return new _OpenApiServer();
-}
+export const Server: {
+  addUrl(url: string): OpenApiServer;
+} = {
+  addUrl(url: string) {
+    return new _OpenApiServer().addUrl(url);
+  },
+};
