@@ -16,7 +16,7 @@ const ObjectBase = withMaxProperties(
       withUnevaluatedProperties(
         withAdditionalProperties(
           withRequiredEnumerable(
-            withProperties(SchemaBase<OpenApiObject>)
+            withProperties(SchemaBase<object>)
           )<string>()
         )
       )
@@ -24,7 +24,7 @@ const ObjectBase = withMaxProperties(
   )
 );
 
-export interface OpenApiObject extends SchemaInterface<OpenApiObject> {
+export interface OpenApiObject extends SchemaInterface<object> {
   /**
    * Adds a maximum limit to the number of properties for this OpenApiObject.
    * @param val - The maximum properties this object can hold.

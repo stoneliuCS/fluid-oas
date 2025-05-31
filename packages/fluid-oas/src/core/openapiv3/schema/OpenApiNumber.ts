@@ -20,7 +20,7 @@ const NumberBase = withMultipleOf(
   )
 );
 
-interface OpenApiBaseNumber extends SchemaInterface<Number> {
+interface OpenApiBaseNumber extends SchemaInterface<number> {
   /**
    * Adds a minimum to this number schema.
    * @param min - Minimum bound for this number.

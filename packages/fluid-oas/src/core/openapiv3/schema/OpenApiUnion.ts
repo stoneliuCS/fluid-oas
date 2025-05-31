@@ -6,13 +6,10 @@ const TypeArrayBase = withUnionTypes(
   SchemaBase<OpenApiSchema>
 )<OpenApiSchema>();
 
-type omitVals = "addEnums" | "addWriteOnly" | "addReadOnly" | "addConst";
-
 /**
  * A special type of schema, used for multiple "types" as specified in the latest JSON Schema.
  */
-export interface OpenApiUnion
-  extends Omit<SchemaInterface<OpenApiSchema>, omitVals> {
+export interface OpenApiUnion extends SchemaInterface<OpenApiSchema> {
   /**
    * Compose multiple OpenApi schema types.
    * @param val - A list of schema types to union over, creating a union schema.
