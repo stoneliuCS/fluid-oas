@@ -66,9 +66,16 @@ const userSchema = Object.addProperties({
   id: uuidSchema,
 }).addRequired(["id"]); // id is required an should match the id key in the Object.
 
+const errorSchema = Object.addProperties({
+  message: String.addReadOnly(true),
+});
+
 const getUserResponses = Responses.addResponses({
   200: Response.addDescription("Successfully Retrieved User!").addContents({
     "application/json": MediaType.addSchema(userSchema),
+  }),
+  401: Response.addDescription("Failed to retrieve user!").addContents({
+    "application/json": MediaType.addSchema(errorSchema),
   }),
 });
 
@@ -98,10 +105,15 @@ oas.writeOASSync();
 {
   "openapi": "3.1.1",
   "info": {
-    "summary": "Get autocomplete and typescript typechecking too!",
-    "description": "Add an example description",
+    "summary": "Example Summary",
+    "description": "Example description.",
     "title": "My API",
-    "version": "v1.0.0"
+    "version": "1.0.0",
+    "contact": {
+      "name": "Your Name.",
+      "url": "https://domain.com",
+      "email": "youremail@blah.com"
+    }
   },
   "paths": {
     "/api/v1/user/{id}": {
@@ -112,10 +124,8 @@ oas.writeOASSync();
             "in": "path",
             "required": true,
             "schema": {
-              "example": {
-                "description": "Unique Identifier.",
-                "value": "5e91507e-5630-4efd-9fd4-799178870b10"
-              },
+              "description": "Unique identifer",
+              "example": "5e91507e-5630-4efd-9fd4-799178870b10",
               "format": "uuid",
               "type": "string"
             }
@@ -129,44 +139,52 @@ oas.writeOASSync();
                 "schema": {
                   "properties": {
                     "firstName": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Name of the person.",
                       "example": {
                         "value": "John"
                       },
                       "minLength": 1,
-                      "maxLength": 10,
-                      "type": "string"
+                      "maxLength": 10
                     },
                     "lastName": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Name of the person.",
                       "example": {
                         "value": "John"
                       },
                       "minLength": 1,
-                      "maxLength": 10,
-                      "type": "string"
+                      "maxLength": 10
                     },
                     "id": {
-                      "example": {
-                        "description": "Unique Identifier.",
-                        "value": "5e91507e-5630-4efd-9fd4-799178870b10"
-                      },
+                      "description": "Unique identifer",
+                      "example": "5e91507e-5630-4efd-9fd4-799178870b10",
                       "format": "uuid",
                       "type": "string"
                     }
                   },
+                  "required": [
+                    "id"
+                  ],
                   "type": "object"
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized",
+            "description": "Failed to retrieve user!",
             "content": {
               "application/json": {
                 "schema": {
                   "properties": {
                     "message": {
+                      "readOnly": true,
                       "type": "string"
                     }
                   },

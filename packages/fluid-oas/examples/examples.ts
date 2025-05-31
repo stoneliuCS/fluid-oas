@@ -46,9 +46,16 @@ const userSchema = Object.addProperties({
   id: uuidSchema,
 }).addRequired(["id"]); // id is required an should match the id key in the Object.
 
+const errorSchema = Object.addProperties({
+  message: String.addReadOnly(true),
+});
+
 const getUserResponses = Responses.addResponses({
   200: Response.addDescription("Successfully Retrieved User!").addContents({
     "application/json": MediaType.addSchema(userSchema),
+  }),
+  401: Response.addDescription("Failed to retrieve user!").addContents({
+    "application/json": MediaType.addSchema(errorSchema),
   }),
 });
 
