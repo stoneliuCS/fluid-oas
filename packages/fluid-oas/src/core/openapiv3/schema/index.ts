@@ -6,3 +6,5 @@ export * from "./OpenApiArray";
 export * from "./OpenApiSchema";
 export * from "./OpenApiUnion";
 export * from "./OpenApiNull";
+export * from "./OpenApiConst";
+export * from "./OpenApiEnum";
