@@ -88,7 +88,7 @@ const path = Path.beginGroup("/api/v1")
   .addEndpoints({ "/user/{id}": getUser })
   .endGroup();
 
-const oas = OpenApiV3("3.1.1").addInfo(info).addPaths(path);
+const oas = OpenApiV3.addOpenApiVersion("3.1.1").addInfo(info).addPaths(path);
 
 // Write OAS Spec
 oas.writeOASSync();

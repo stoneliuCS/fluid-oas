@@ -142,23 +142,21 @@ class _OpenApiV3 extends OpenApiBase implements OpenApiV3 {
   }
 }
 
-/**
- * Create an OpenAPI v3.*.* compliant specification.
- * @param version - Must a v3 specification
- */
-export function OpenApiV3(version: `3.1.${string}`): OpenApiV3_1;
-export function OpenApiV3(version: `3.0.${string}`): OpenApiV3;
-export function OpenApiV3(version: `3.${string}.${string}`): {
-  addInfo(info: OpenApiInfo): OpenApiV3;
-} {
-  return {
-    /**
-     * Adds a required info object to the root schema object.
-     * @param info - OpenApiInfo Object
-     * @returns OpenApiV3
-     */
-    addInfo(info: OpenApiInfo) {
-      return new _OpenApiV3().addOpenApiVersion(version).addInfo(info);
-    },
+export interface OpenApiV3Version {
+  addOpenApiVersion(version: `3.1.${string}`): {
+    addInfo(info: OpenApiInfo): OpenApiV3_1;
+  };
+  addOpenApiVersion(version: `3.0.${string}`): {
+    addInfo(info: OpenApiInfo): OpenApiV3_1;
   };
 }
+
+export const OpenApiV3: OpenApiV3Version = {
+  addOpenApiVersion(version: `3.${string}.${string}`) {
+    return {
+      addInfo(info: OpenApiInfo) {
+        return new _OpenApiV3().addOpenApiVersion(version).addInfo(info);
+      },
+    };
+  },
+};
