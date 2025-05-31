@@ -46,4 +46,43 @@ describe("Number and Integer deserialization tests.", () => {
       nullable: true,
     });
   });
+
+  test("Number and Integer all Methods return valid OpenApiSchema", () => {
+    expect(Number.addDefault(1).toJSON()).toEqual({
+      type: "number",
+      default: 1,
+    });
+    expect(Number.addMultiple(10).toJSON()).toEqual({
+      type: "number",
+      multipleOf: 10,
+    });
+    expect(Number.addMinimum(10).toJSON()).toEqual({
+      type: "number",
+      minimum: 10,
+    });
+    expect(Number.addMaximum(100).toJSON()).toEqual({
+      type: "number",
+      maximum: 100,
+    });
+    expect(Number.addReadOnly(true).toJSON()).toEqual({
+      type: "number",
+      readOnly: true,
+    });
+    expect(Number.addReadOnly(false).toJSON()).toEqual({
+      type: "number",
+      readOnly: false,
+    });
+    expect(Number.addWriteOnly(true).toJSON()).toEqual({
+      type: "number",
+      writeOnly: true,
+    });
+    expect(Number.addWriteOnly(false).toJSON()).toEqual({
+      type: "number",
+      writeOnly: false,
+    });
+    expect(Number.addExample(1).toJSON()).toEqual({
+      type: "number",
+      example: 1,
+    });
+  });
 });

@@ -38,71 +38,84 @@ _Fluid-OAS_ is an embedded, completely functional _domain specific language_ for
 ### Example Usage
 
 ```ts
-const info = Info("My API", "v1.0.0")
-  .addDescription("Add an example description")
-  .addSummary("Get autocomplete and typescript typechecking too!");
-
-// Example schemas
-
-const nameSchema = String()
-  .addMinLength(1)
-  .addMaxLength(10)
-  .addExample(Example().addValue("John"))
-  .addDescription("Name of the person.");
-
-const uuidSchema = String()
-  .addFormat("uuid")
-  .addExample(
-    Example()
-      .addValue("5e91507e-5630-4efd-9fd4-799178870b10")
-      .addDescription("Unique Identifier.")
+const info = Info.addTitle("My API")
+  .addVersion("1.0.0")
+  .addDescription("Example description.")
+  .addSummary("Example Summary")
+  .addContact(
+    // Add contact information if needed.
+    Contact.addEmail("youremail@blah.com")
+      .addName("Your Name.")
+      .addUrl("https://domain.com")
   );
 
-const userSchema = Object({
+// Example schemas
+const nameSchema = Union(
+  String.addMinLength(1)
+    .addMaxLength(10)
+    .addExample(Example.addValue("John"))
+    .addDescription("Name of the person."),
+  Null
+);
+
+const uuidSchema = String.addFormat("uuid")
+  .addExample("5e91507e-5630-4efd-9fd4-799178870b10") // Examples are supported but are deprecated as of 3.0.0
+  .addDescription("Unique identifer");
+
+const userSchema = Object.addProperties({
   firstName: nameSchema,
   lastName: nameSchema,
   id: uuidSchema,
+}).addRequired(["id"]); // id is required an should match the id key in the Object.
+
+const errorSchema = Object.addProperties({
+  message: String.addReadOnly(true),
 });
 
-const getUserResponses = Responses({
-  "200": Response("Successfully Retrieved User!").addContents({
-    "application/json": MediaType().addSchema(userSchema),
+const getUserResponses = Responses.addResponses({
+  200: Response.addDescription("Successfully Retrieved User!").addContents({
+    "application/json": MediaType.addSchema(userSchema),
+  }),
+  401: Response.addDescription("Failed to retrieve user!").addContents({
+    "application/json": MediaType.addSchema(errorSchema),
   }),
 });
 
 // Declare Path Items
-const getUser = PathItem().addMethod({
-  get: Operation()
-    .addParameters([
-      Parameter("schema")
-        .addName("id")
-        .addIn("path")
-        .required()
-        .addSchema(uuidSchema),
-    ])
-    .addResponses(getUserResponses),
+const getUser = PathItem.addMethod({
+  get: Operation.addParameters([
+    Parameter.schema
+      .addName("id")
+      .addIn("path")
+      .addRequired(true)
+      .addSchema(uuidSchema),
+  ]).addResponses(getUserResponses),
 });
 
 // Register Paths
-const path = Path()
-  .beginGroup("/api/v1")
+const path = Path.beginGroup("/api/v1")
   .addEndpoints({ "/user/{id}": getUser })
   .endGroup();
 
-const oas = OpenApiV3_1_1(info).addPaths(path);
+const oas = OpenApiV3.addOpenApiVersion("3.1.1").addInfo(info).addPaths(path);
 
 // Write OAS Spec
-oas.writeOAS();
+oas.writeOASSync();
 ```
 
 ```json
 {
   "openapi": "3.1.1",
   "info": {
-    "summary": "Get autocomplete and typescript typechecking too!",
-    "description": "Add an example description",
+    "summary": "Example Summary",
+    "description": "Example description.",
     "title": "My API",
-    "version": "v1.0.0"
+    "version": "1.0.0",
+    "contact": {
+      "name": "Your Name.",
+      "url": "https://domain.com",
+      "email": "youremail@blah.com"
+    }
   },
   "paths": {
     "/api/v1/user/{id}": {
@@ -113,10 +126,8 @@ oas.writeOAS();
             "in": "path",
             "required": true,
             "schema": {
-              "example": {
-                "description": "Unique Identifier.",
-                "value": "5e91507e-5630-4efd-9fd4-799178870b10"
-              },
+              "description": "Unique identifer",
+              "example": "5e91507e-5630-4efd-9fd4-799178870b10",
               "format": "uuid",
               "type": "string"
             }
@@ -130,44 +141,44 @@ oas.writeOAS();
                 "schema": {
                   "properties": {
                     "firstName": {
+                      "type": ["string", "null"],
                       "description": "Name of the person.",
                       "example": {
                         "value": "John"
                       },
                       "minLength": 1,
-                      "maxLength": 10,
-                      "type": "string"
+                      "maxLength": 10
                     },
                     "lastName": {
+                      "type": ["string", "null"],
                       "description": "Name of the person.",
                       "example": {
                         "value": "John"
                       },
                       "minLength": 1,
-                      "maxLength": 10,
-                      "type": "string"
+                      "maxLength": 10
                     },
                     "id": {
-                      "example": {
-                        "description": "Unique Identifier.",
-                        "value": "5e91507e-5630-4efd-9fd4-799178870b10"
-                      },
+                      "description": "Unique identifer",
+                      "example": "5e91507e-5630-4efd-9fd4-799178870b10",
                       "format": "uuid",
                       "type": "string"
                     }
                   },
+                  "required": ["id"],
                   "type": "object"
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized",
+            "description": "Failed to retrieve user!",
             "content": {
               "application/json": {
                 "schema": {
                   "properties": {
                     "message": {
+                      "readOnly": true,
                       "type": "string"
                     }
                   },
@@ -187,7 +198,7 @@ oas.writeOAS();
 
 ### Primitive Data types
 
-The OAS 3.0.0 _OpenAPI Specification_ defines the following primitive data types:
+All schemas are reflective of the latest [Json Schema](https://json-schema.org/understanding-json-schema/reference).
 
 - [number](#defining-a-number)
 - [integer](#defining-a-integer)
@@ -197,13 +208,12 @@ The OAS 3.0.0 _OpenAPI Specification_ defines the following primitive data types
 #### Number
 
 ```ts
-Number()
-  .description("I am a OpenAPI Number!")
-  .format("double")
-  .default(1)
-  .min(0.5)
-  .max(2.5)
-  .exclusiveMin();
+Number.addDescription("I am a OpenAPI Number!")
+  .addFormat("double")
+  .addDefault(1)
+  .addMinimum(0.5)
+  .addMaximum(2.5)
+  .addExclusiveMin(1);
 ```
 
 ```json
@@ -221,127 +231,42 @@ Number()
 #### Integer
 
 ```ts
-Integer()
-  .description("I am a OpenAPI Integer!")
-  .format("int64")
-  .default(1)
-  .min(0)
-  .max(99)
-  .exclusiveMax();
-```
-
-```json
-{
-  "type": "integer",
-  "description": "I am a OpenAPI Integer!",
-  "default": 2,
-  "minimum": 0,
-  "maximum": 99,
-  "exclusiveMaximum": true,
-  "format": "int64"
-}
+Integer.addDescription("I am a OpenAPI Number!")
+  .addFormat("int32")
+  .addDefault(1)
+  .addMinimum(0.5)
+  .addMaximum(2.5)
+  .addExclusiveMin(1);
 ```
 
 #### Defining a String
 
 ```ts
-String()
-  .description("Unique identifier")
-  .default("1238971891792")
-  .format("uuid")
-  .pattern(
-    /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/
-  )
-  .maxLength(0)
-  .minLength(9)
-  .toJSON();
-```
-
-```json
-{
-  "description": "Unique identifier",
-  "format": "uuid",
-  "minLength": 9,
-  "maxLength": 0,
-  "pattern": "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$",
-  "default": "1238971891792",
-  "type": "string"
-}
+String.addDescription("I am an OpenApi String!")
+  .addDefault("OAS!")
+  .addMinLength(1)
+  .addMaxLength(4)
+  .addPattern(/something/);
 ```
 
 #### Defining a Boolean
 
 ```ts
-Boolean().description("I am a OpenAPI boolean!").default(false).nullable();
-```
-
-```json
-{
-  "type": "boolean",
-  "description": "I am a OpenAPI boolean!",
-  "nullable": true,
-  "default": false
-}
+Boolean.addDescription("I am a OpenAPI boolean!")
+  .addDefault(false)
+  .addExample(true);
 ```
 
 ### Objects
 
-Declare properties and other metadata on OpenAPI `Object` with the `addProperty` method.
+Declare properties and other metadata on OpenAPI `Object` with the `addProperties` method.
 
 ```ts
-const nameSchema = String()
-  .addMinLength(1)
-  .addMaxLength(10)
-  .addExample(Example().addValue("John"))
-  .addDescription("Name of the person.");
-
-const uuidSchema = String()
-  .addFormat("uuid")
-  .addExample(
-    Example()
-      .addValue("5e91507e-5630-4efd-9fd4-799178870b10")
-      .addDescription("Unique Identifier.")
-  );
-
-const userSchema = Object().addProperties({
-  firstName: nameSchema,
-  lastName: nameSchema,
-  id: uuidSchema,
+Object.addProperties({
+  firstName: String,
+  lastName: String,
+  id: String,
 });
-```
-
-```json
-{
-  "properties": {
-    "firstName": {
-      "description": "Name of the person.",
-      "example": {
-        "value": "John"
-      },
-      "minLength": 1,
-      "maxLength": 10,
-      "type": "string"
-    },
-    "lastName": {
-      "description": "Name of the person.",
-      "example": {
-        "value": "John"
-      },
-      "minLength": 1,
-      "maxLength": 10,
-      "type": "string"
-    },
-    "id": {
-      "example": {
-        "description": "Unique Identifier.",
-        "value": "5e91507e-5630-4efd-9fd4-799178870b10"
-      },
-      "format": "uuid",
-      "type": "string"
-    }
-  },
-  "type": "object"
-}
 ```
 
 ### Arrays
@@ -349,20 +274,8 @@ const userSchema = Object().addProperties({
 Arrays can be typed with other schema types, see below for an example of a string array.
 
 ```ts
-Array(String())
+Array.addItems(String)
   .addMinItems(1)
   .addMaxItems(10)
-  .addDescription("Example of a string array.")
-  .toJSON();
-```
-
-```json
-{
-  "description": "Example of a string array.",
-  "minItems": 1,
-  "maxItems": 10,
-  "items": {
-    "type": "string"
-  }
-}
+  .addDefault(["defaultVal"]);
 ```

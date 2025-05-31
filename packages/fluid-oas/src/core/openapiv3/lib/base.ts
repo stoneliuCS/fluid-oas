@@ -5,7 +5,6 @@ import {
   withExternalDocs,
   withDescription,
   withEnum,
-  withConst,
   withDefault,
   withExamples,
   withReadOnly,
@@ -52,7 +51,6 @@ export interface SchemaInterface<T> extends BaseInterface {
   addExternalDocs(docs: OpenApiDocumentation): this;
   addExample(example: any): this;
   addEnums(val: (T | null)[]): this;
-  addConst(val: T): this;
   addDefault(val: T): this;
   addReadOnly(readOnly: boolean): this;
   addWriteOnly(writeOnly: boolean): this;
@@ -67,20 +65,15 @@ const _Base = withExtensions(Root);
 export class Base extends _Base implements BaseInterface {}
 
 // Some Mixins are HOF generic functions allowing for maximum flexibility.
-// Here I defined some mixin methods like withConst, withEnum, and withDefault
-// and invoke their respective methods, however I do not type parameterize them.
-// I let the interface handle this.
 const _SchemaBase = withDefault(
-  withConst(
-    withEnum(
-      withNullable(
-        withWriteOnly(
-          withReadOnly(
-            withExamples(withExample(withExternalDocs(withDescription(Base))))
-          )
+  withEnum(
+    withNullable(
+      withWriteOnly(
+        withReadOnly(
+          withExamples(withExample(withExternalDocs(withDescription(Base))))
         )
       )
-    )()
+    )
   )()
 )();
 

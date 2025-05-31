@@ -48,7 +48,7 @@ const info = Info.addTitle("My API")
   );
 
 // Example schemas
-const nameSchema = Union.ofTypes(
+const nameSchema = Union(
   String.addMinLength(1)
     .addMaxLength(10)
     .addExample(Example.addValue("John"))
@@ -139,10 +139,7 @@ oas.writeOASSync();
                 "schema": {
                   "properties": {
                     "firstName": {
-                      "type": [
-                        "string",
-                        "null"
-                      ],
+                      "type": ["string", "null"],
                       "description": "Name of the person.",
                       "example": {
                         "value": "John"
@@ -151,10 +148,7 @@ oas.writeOASSync();
                       "maxLength": 10
                     },
                     "lastName": {
-                      "type": [
-                        "string",
-                        "null"
-                      ],
+                      "type": ["string", "null"],
                       "description": "Name of the person.",
                       "example": {
                         "value": "John"
@@ -169,9 +163,7 @@ oas.writeOASSync();
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "id"
-                  ],
+                  "required": ["id"],
                   "type": "object"
                 }
               }
@@ -214,13 +206,12 @@ All schemas are reflective of the latest [Json Schema](https://json-schema.org/u
 #### Number
 
 ```ts
-Number()
-  .description("I am a OpenAPI Number!")
-  .format("double")
-  .default(1)
-  .min(0.5)
-  .max(2.5)
-  .exclusiveMin();
+Number.addDescription("I am a OpenAPI Number!")
+  .addFormat("double")
+  .addDefault(1)
+  .addMinimum(0.5)
+  .addMaximum(2.5)
+  .addExclusiveMin(1);
 ```
 
 ```json
@@ -238,127 +229,42 @@ Number()
 #### Integer
 
 ```ts
-Integer()
-  .description("I am a OpenAPI Integer!")
-  .format("int64")
-  .default(1)
-  .min(0)
-  .max(99)
-  .exclusiveMax();
-```
-
-```json
-{
-  "type": "integer",
-  "description": "I am a OpenAPI Integer!",
-  "default": 2,
-  "minimum": 0,
-  "maximum": 99,
-  "exclusiveMaximum": true,
-  "format": "int64"
-}
+Integer.addDescription("I am a OpenAPI Number!")
+  .addFormat("int32")
+  .addDefault(1)
+  .addMinimum(0.5)
+  .addMaximum(2.5)
+  .addExclusiveMin(1);
 ```
 
 #### Defining a String
 
 ```ts
-String()
-  .description("Unique identifier")
-  .default("1238971891792")
-  .format("uuid")
-  .pattern(
-    /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/
-  )
-  .maxLength(0)
-  .minLength(9)
-  .toJSON();
-```
-
-```json
-{
-  "description": "Unique identifier",
-  "format": "uuid",
-  "minLength": 9,
-  "maxLength": 0,
-  "pattern": "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$",
-  "default": "1238971891792",
-  "type": "string"
-}
+String.addDescription("I am an OpenApi String!")
+  .addDefault("OAS!")
+  .addMinLength(1)
+  .addMaxLength(4)
+  .addPattern(/something/);
 ```
 
 #### Defining a Boolean
 
 ```ts
-Boolean().description("I am a OpenAPI boolean!").default(false).nullable();
-```
-
-```json
-{
-  "type": "boolean",
-  "description": "I am a OpenAPI boolean!",
-  "nullable": true,
-  "default": false
-}
+Boolean.addDescription("I am a OpenAPI boolean!")
+  .addDefault(false)
+  .addExample(true);
 ```
 
 ### Objects
 
-Declare properties and other metadata on OpenAPI `Object` with the `addProperty` method.
+Declare properties and other metadata on OpenAPI `Object` with the `addProperties` method.
 
 ```ts
-const nameSchema = String()
-  .addMinLength(1)
-  .addMaxLength(10)
-  .addExample(Example().addValue("John"))
-  .addDescription("Name of the person.");
-
-const uuidSchema = String()
-  .addFormat("uuid")
-  .addExample(
-    Example()
-      .addValue("5e91507e-5630-4efd-9fd4-799178870b10")
-      .addDescription("Unique Identifier.")
-  );
-
-const userSchema = Object().addProperties({
-  firstName: nameSchema,
-  lastName: nameSchema,
-  id: uuidSchema,
+Object.addProperties({
+  firstName: String,
+  lastName: String,
+  id: String,
 });
-```
-
-```json
-{
-  "properties": {
-    "firstName": {
-      "description": "Name of the person.",
-      "example": {
-        "value": "John"
-      },
-      "minLength": 1,
-      "maxLength": 10,
-      "type": "string"
-    },
-    "lastName": {
-      "description": "Name of the person.",
-      "example": {
-        "value": "John"
-      },
-      "minLength": 1,
-      "maxLength": 10,
-      "type": "string"
-    },
-    "id": {
-      "example": {
-        "description": "Unique Identifier.",
-        "value": "5e91507e-5630-4efd-9fd4-799178870b10"
-      },
-      "format": "uuid",
-      "type": "string"
-    }
-  },
-  "type": "object"
-}
 ```
 
 ### Arrays
@@ -366,20 +272,8 @@ const userSchema = Object().addProperties({
 Arrays can be typed with other schema types, see below for an example of a string array.
 
 ```ts
-Array(String())
+Array.addItems(String)
   .addMinItems(1)
   .addMaxItems(10)
-  .addDescription("Example of a string array.")
-  .toJSON();
-```
-
-```json
-{
-  "description": "Example of a string array.",
-  "minItems": 1,
-  "maxItems": 10,
-  "items": {
-    "type": "string"
-  }
-}
+  .addDefault(["defaultVal"]);
 ```

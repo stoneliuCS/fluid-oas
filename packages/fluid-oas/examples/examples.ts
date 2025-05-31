@@ -2,6 +2,9 @@ import {
   Example,
   Info,
   Object,
+  Number,
+  Boolean,
+  Array,
   Operation,
   Parameter,
   Path,
@@ -14,6 +17,7 @@ import {
   Union,
   Null,
   Contact,
+  Integer,
 } from "../src/";
 
 const info = Info.addTitle("My API")
@@ -28,7 +32,7 @@ const info = Info.addTitle("My API")
   );
 
 // Example schemas
-const nameSchema = Union.ofTypes(
+const nameSchema = Union(
   String.addMinLength(1)
     .addMaxLength(10)
     .addExample(Example.addValue("John"))
@@ -79,3 +83,39 @@ const oas = OpenApiV3.addOpenApiVersion("3.1.1").addInfo(info).addPaths(path);
 
 // Write OAS Spec
 oas.writeOASSync();
+
+// PRIMITIVE SCHEMAS
+Number.addDescription("I am a OpenAPI Number!")
+  .addFormat("double")
+  .addDefault(1)
+  .addMinimum(0.5)
+  .addMaximum(2.5)
+  .addExclusiveMin(1);
+
+Integer.addDescription("I am a OpenAPI Number!")
+  .addFormat("int32")
+  .addDefault(1)
+  .addMinimum(0.5)
+  .addMaximum(2.5)
+  .addExclusiveMin(1);
+
+String.addDescription("I am an OpenApi String!")
+  .addDefault("OAS!")
+  .addMinLength(1)
+  .addMaxLength(4)
+  .addPattern(/something/);
+
+Boolean.addDescription("I am a OpenAPI boolean!")
+  .addDefault(false)
+  .addExample(true);
+
+Object.addProperties({
+  firstName: String,
+  lastName: String,
+  id: String,
+});
+
+Array.addItems(String)
+  .addMinItems(1)
+  .addMaxItems(10)
+  .addDefault(["defaultVal"]);
