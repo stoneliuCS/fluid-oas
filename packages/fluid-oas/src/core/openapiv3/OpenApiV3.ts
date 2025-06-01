@@ -96,9 +96,6 @@ export interface OpenApiV3 extends BaseInterface {
   /**
    * Adds reusable components to this OpenApi Specification.
    *
-   * NOTE: This method is not needed for normal use of this DSL, it's only purpose is
-   * to maintain parity with the origin OpenAPIV3 Specification.
-   *
    * @param components - Component object.
    */
   addComponents(components: OpenApiComponent): this;
@@ -106,8 +103,12 @@ export interface OpenApiV3 extends BaseInterface {
   /**
    * If enabled, will run post processing on the final OAS specification and all
    * schemas will be replaced with component URIs if found.
+   *
+   * WARNING: All exact deserialized schemas matched within the "components" object will be replaced by URIs.
+   * Meaning two different schema names might lead to undefined behavior if they both serialized to the same
+   * OpenAPI object.
    */
-  toggleNamedComponents(): this;
+  namedComponents(): this;
 
   /**
    * Writes the OpenAPI specification synchronously to a file or outputs it.
@@ -142,24 +143,100 @@ export interface OpenApiV3_1 extends OpenApiV3 {
 class _OpenApiV3 extends OpenApiBase implements OpenApiV3 {
   private _toggledNamedComponents?: boolean;
 
-  toggleNamedComponents(): this {
+  namedComponents(): this {
     const copy: this = Object.create(this);
     copy._toggledNamedComponents = true;
     return copy;
+  }
+
+  private handleComponents(
+    schemaObject: any,
+    replacer: Map<string, string>,
+    key: string
+  ) {
+    for (const [name, val] of Object.entries(schemaObject)) {
+      if (typeof val !== "object" || val === null) {
+        throw new Error("Unable to process the schema portion of this.");
+      }
+      const matcher = JSON.stringify(val);
+      const uriKey = this.computeURI(key, name);
+      replacer.set(uriKey, matcher);
+    }
+  }
+
+  private computeURI(componentKey: string, name: string) {
+    switch (componentKey) {
+      case "schemas":
+        return `"#/components/schemas/${name}"`;
+      case "responses":
+        return `"#/components/responses/${name}"`;
+      case "parameters":
+        return `"#/components/parameters/${name}"`;
+      case "examples":
+        return `"#/components/examples/${name}"`;
+      case "requestBodies":
+        return `"#/components/requestBodies/${name}"`;
+      case "headers":
+        return `"#/components/headers/${name}"`;
+      case "securitySchemes":
+        return `"#/components/securitySchemes/${name}"`;
+      case "links":
+        return `"#/components/links/${name}"`;
+      case "callbacks":
+        return `"#/components/callbacks/${name}"`;
+      case "pathItems":
+        return `"#/components/pathItems/${name}"`;
+      default:
+        throw new Error(`Unsupported component key: ${componentKey}`);
+    }
+  }
+
+  private handleNamedComponentPreprocessing() {
+    if (this._components === undefined) {
+      throw new Error(
+        "Cannot post process the underlying OpenAPI specification. No component object found."
+      );
+    }
+    const componentsObject = this._components.toJSON();
+    const replacer: Map<string, string> = new Map();
+    if (typeof componentsObject !== "object" || componentsObject === null) {
+      throw new Error(
+        "Something went terribly wrong! This is a bug in fluid-oas."
+      );
+    }
+    for (const key of Object.keys(componentsObject)) {
+      const castedComponentObject: any = componentsObject; // Safe to case here
+      this.handleComponents(castedComponentObject[key], replacer, key);
+    }
+    let newJson = JSON.stringify(this);
+    for (const [uri, replaceVal] of replacer.entries()) {
+      const parsed = JSON.parse(newJson);
+      const { components, ...rest } = parsed;
+      const parsedRest = JSON.stringify(rest);
+      const replacedJSON = parsedRest.replace(replaceVal, uri);
+      const merged = Object.assign(
+        Object.defineProperty({}, "components", {
+          value: components,
+          enumerable: true,
+        }),
+        JSON.parse(replacedJSON)
+      );
+      newJson = JSON.stringify(merged);
+    }
+    return newJson;
   }
 
   private writeOASImpl(
     fileWriteFn: (filepath: string, json: string) => void,
     filePath?: string
   ) {
-    let json = JSON.stringify(this, undefined, 2);
+    let json = JSON.stringify(this);
     if (!filePath) {
       console.log(json);
       return;
     }
     if (this._toggledNamedComponents) {
-      // Preprocess the json
-      json = json;
+      json = this.handleNamedComponentPreprocessing();
     }
     fileWriteFn(filePath, json);
   }
