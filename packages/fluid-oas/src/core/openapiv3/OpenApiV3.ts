@@ -96,12 +96,18 @@ export interface OpenApiV3 extends BaseInterface {
   /**
    * Adds reusable components to this OpenApi Specification.
    *
-   * NOTE: This method is not needed for normal use of this DSL, it's only purpose is 
+   * NOTE: This method is not needed for normal use of this DSL, it's only purpose is
    * to maintain parity with the origin OpenAPIV3 Specification.
    *
    * @param components - Component object.
    */
   addComponents(components: OpenApiComponent): this;
+
+  /**
+   * If enabled, will run post processing on the final OAS specification and all
+   * schemas will be replaced with component URIs if found.
+   */
+  toggleNamedComponents(): this;
 
   /**
    * Writes the OpenAPI specification synchronously to a file or outputs it.
@@ -134,25 +140,43 @@ export interface OpenApiV3_1 extends OpenApiV3 {
 }
 
 class _OpenApiV3 extends OpenApiBase implements OpenApiV3 {
-  writeOASASync(filePath?: string): void {
-    const json = JSON.stringify(this, undefined, 2);
+  private _toggledNamedComponents?: boolean;
+
+  toggleNamedComponents(): this {
+    const copy: this = Object.create(this);
+    copy._toggledNamedComponents = true;
+    return copy;
+  }
+
+  private writeOASImpl(
+    fileWriteFn: (filepath: string, json: string) => void,
+    filePath?: string
+  ) {
+    let json = JSON.stringify(this, undefined, 2);
     if (!filePath) {
       console.log(json);
-    } else {
+      return;
+    }
+    if (this._toggledNamedComponents) {
+      // Preprocess the json
+      json = json;
+    }
+    fileWriteFn(filePath, json);
+  }
+
+  writeOASASync(filePath?: string): void {
+    const fn = (filePath: string, json: string) =>
       fs.writeFile(filePath, json, {}, err => {
         if (err) {
           console.error("Error writing file.", err.message);
         }
       });
-    }
+    this.writeOASImpl(fn, filePath);
   }
   writeOASSync(filePath?: string): void {
-    const json = JSON.stringify(this, undefined, 2);
-    if (!filePath) {
-      console.log(json);
-    } else {
+    const fn = (filePath: string, json: string) =>
       fs.writeFileSync(filePath, json);
-    }
+    this.writeOASImpl(fn, filePath);
   }
 }
 
