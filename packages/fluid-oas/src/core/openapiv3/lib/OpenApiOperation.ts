@@ -16,6 +16,7 @@ import { Base, type BaseInterface } from "./base";
 import type { OpenApiDocumentation } from "./OpenApiDocumentation";
 import type { OpenApiParameter } from "./OpenApiParameter";
 import type { OpenApiPathItem } from "./OpenApiPathItem";
+import type { OpenApiReferenceObject } from "./OpenApiReferenceObject";
 import type { OpenApiRequestBody } from "./OpenApiRequestBody";
 import type { OpenApiResponses } from "./OpenApiResponses";
 import type { OpenApiSecurityRequirement } from "./OpenApiSecurityRequirement";
@@ -47,13 +48,19 @@ export interface OpenApiOperation extends BaseInterface {
   addDescription(description: string): this;
   addExternalDocs(externalDocs: OpenApiDocumentation): this;
   addOperationId(operationId: string): this;
-  addParameters(parameters: OpenApiParameter[]): this;
-  addRequestBody(body: OpenApiRequestBody): this;
+  addParameters(
+    parameters: (OpenApiParameter | OpenApiReferenceObject)[]
+  ): this;
+  addRequestBody(body: OpenApiRequestBody | OpenApiReferenceObject): this;
   addResponses(responses: OpenApiResponses): this;
   addDeprecated(deprecated: boolean): this;
   addSecurity(security: OpenApiSecurityRequirement[]): this;
   addServers(servers: OpenApiServer[]): this;
-  addCallback(mappings: Partial<{ [K in string]: OpenApiPathItem }>): this;
+  addCallback(
+    mappings: Partial<{
+      [K in string]: OpenApiPathItem | OpenApiReferenceObject;
+    }>
+  ): this;
 }
 
 class _OpenApiOperation extends OperationBase implements OpenApiOperation {}

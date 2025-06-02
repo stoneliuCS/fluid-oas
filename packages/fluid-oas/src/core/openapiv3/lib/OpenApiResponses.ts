@@ -1,15 +1,18 @@
 import { withDefault, withResponses } from "../common";
 import type { OpenApiHTTPStatusCode } from "../types";
 import { Base, type BaseInterface } from "./base";
+import type { OpenApiReferenceObject } from "./OpenApiReferenceObject";
 import type { OpenApiResponse } from "./OpenApiResponse";
 
-const ResponsesBase = withResponses(withDefault(Base)<OpenApiResponse>());
+const ResponsesBase = withResponses(
+  withDefault(Base)<OpenApiResponse | OpenApiReferenceObject>()
+);
 
 export interface OpenApiResponses extends BaseInterface {
-  addDefault(response: OpenApiResponse): this;
+  addDefault(response: OpenApiResponse | OpenApiReferenceObject): this;
   addResponses(
     mappings: Partial<{
-      [K in OpenApiHTTPStatusCode]: OpenApiResponse;
+      [K in OpenApiHTTPStatusCode]: OpenApiResponse | OpenApiReferenceObject;
     }>
   ): this;
 }

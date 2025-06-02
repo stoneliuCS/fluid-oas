@@ -12,11 +12,12 @@ import {
   withSchema,
   withStyle,
 } from "../common";
-import type { OpenApiMediaContentType, OpenApiSchemaOrContent } from "../types";
+import type { OpenApiMediaContentType } from "../types";
 import { Base, type BaseInterface } from "./base";
 import type { OpenApiSchema } from "../schema/OpenApiSchema";
 import type { OpenApiExample } from "./OpenApiExample";
 import type { OpenApiMediaType } from "./OpenApiMedia";
+import type { OpenApiReferenceObject } from "./OpenApiReferenceObject";
 
 const ParameterBase = withDeprecated(
   withRequired(
@@ -40,7 +41,9 @@ export interface SchemaParameter extends ParameterBase {
   addAllowReserved(allowReserved: boolean): this;
   addSchema(schema: OpenApiSchema): this;
   addExample(example: any): this;
-  addExamples(mappings: { [K in string]: OpenApiExample }): this;
+  addExamples(mappings: {
+    [K in string]: OpenApiExample | OpenApiReferenceObject;
+  }): this;
 }
 
 export interface ContentParameter extends ParameterBase {

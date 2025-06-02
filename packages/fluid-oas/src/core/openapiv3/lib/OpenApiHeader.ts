@@ -9,11 +9,12 @@ import {
   withSchema,
   withStyle,
 } from "../common";
-import type { OpenApiMediaContentType, OpenApiSchemaOrContent } from "../types";
+import type { OpenApiMediaContentType } from "../types";
 import type { OpenApiSchema } from "../schema/OpenApiSchema";
 import { Base, type BaseInterface } from "./base";
 import type { OpenApiExample } from "./OpenApiExample";
 import type { OpenApiMediaType } from "./OpenApiMedia";
+import type { OpenApiReferenceObject } from "./OpenApiReferenceObject";
 
 const HeaderBase = withRequired(withDeprecated(withDescription(Base)));
 
@@ -30,9 +31,13 @@ const SchemaHeaderBase = withExamples(
 export interface SchemaHeader extends HeaderBase {
   addStyle(simple: "simple"): this;
   addExplode(explode: boolean): this;
-  addSchema(schema: OpenApiSchema): this;
+  addSchema(schema: OpenApiSchema | OpenApiReferenceObject): this;
   addExample(example: any): this;
-  addExamples(mappings: Partial<{ [K in string]: OpenApiExample }>): this;
+  addExamples(
+    mappings: Partial<{
+      [K in string]: OpenApiExample | OpenApiReferenceObject;
+    }>
+  ): this;
 }
 
 export interface ContentHeader extends HeaderBase {

@@ -18,6 +18,7 @@ import type { OpenApiHeader } from "./OpenApiHeader";
 import type { OpenApiLink } from "./OpenApiLink";
 import type { OpenApiParameter } from "./OpenApiParameter";
 import type { OpenApiPathItem } from "./OpenApiPathItem";
+import type { OpenApiReferenceObject } from "./OpenApiReferenceObject";
 import type { OpenApiRequestBody } from "./OpenApiRequestBody";
 import type { OpenApiResponses } from "./OpenApiResponses";
 import type { OpenApiSecurityScheme } from "./OpenApiSecurityScheme";
@@ -41,23 +42,53 @@ const ComponentBase = withPathItemsComponent(
 );
 
 export interface OpenApiComponent extends BaseInterface {
-  addSchemas(mappings: Partial<{ [K in string]: OpenApiSchema }>): this;
-  addResponses(mappings: Partial<{ [K in string]: OpenApiResponses }>): this;
-  addParameters(mappings: Partial<{ [K in string]: OpenApiParameter }>): this;
-  addExamples(mappings: Partial<{ [K in string]: OpenApiExample }>): this;
-  addRequestBodies(
-    mappings: Partial<{ [K in string]: OpenApiRequestBody }>
+  addSchemas(
+    mappings: Partial<{ [K in string]: OpenApiSchema | OpenApiReferenceObject }>
   ): this;
-  addHeaders(mappings: Partial<{ [K in string]: OpenApiHeader }>): this;
+  addResponses(
+    mappings: Partial<{
+      [K in string]: OpenApiResponses | OpenApiReferenceObject;
+    }>
+  ): this;
+  addParameters(
+    mappings: Partial<{
+      [K in string]: OpenApiParameter | OpenApiReferenceObject;
+    }>
+  ): this;
+  addExamples(
+    mappings: Partial<{
+      [K in string]: OpenApiExample | OpenApiReferenceObject;
+    }>
+  ): this;
+  addRequestBodies(
+    mappings: Partial<{
+      [K in string]: OpenApiRequestBody | OpenApiReferenceObject;
+    }>
+  ): this;
+  addHeaders(
+    mappings: Partial<{ [K in string]: OpenApiHeader | OpenApiReferenceObject }>
+  ): this;
 
   addSecuritySchemes(
-    mappings: Partial<{ [K in string]: OpenApiSecurityScheme }>
+    mappings: Partial<{
+      [K in string]: OpenApiSecurityScheme | OpenApiReferenceObject;
+    }>
   ): this;
 
-  addLinks(mappings: Partial<{ [K in string]: OpenApiLink }>): this;
+  addLinks(
+    mappings: Partial<{ [K in string]: OpenApiLink | OpenApiReferenceObject }>
+  ): this;
 
-  addCallbacks(mappings: Partial<{ [K in string]: OpenApiCallback }>): this;
-  addPathItems(mappings: Partial<{ [K in string]: OpenApiPathItem }>): this;
+  addCallbacks(
+    mappings: Partial<{
+      [K in string]: OpenApiCallback | OpenApiReferenceObject;
+    }>
+  ): this;
+  addPathItems(
+    mappings: Partial<{
+      [K in string]: OpenApiPathItem | OpenApiReferenceObject;
+    }>
+  ): this;
 }
 
 class _OpenApiComponent extends ComponentBase implements OpenApiComponent {}

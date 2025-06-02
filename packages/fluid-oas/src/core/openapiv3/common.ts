@@ -15,6 +15,7 @@ import type { OpenApiOperation } from "./lib/OpenApiOperation.js";
 import type { OpenApiParameter } from "./lib/OpenApiParameter.js";
 import type { OpenApiPath } from "./lib/OpenApiPath.js";
 import type { OpenApiPathItem } from "./lib/OpenApiPathItem.js";
+import type { OpenApiReferenceObject } from "./lib/OpenApiReferenceObject.js";
 import type { OpenApiRequestBody } from "./lib/OpenApiRequestBody.js";
 import type { OpenApiResponse } from "./lib/OpenApiResponse.js";
 import type { OpenApiResponses } from "./lib/OpenApiResponses.js";
@@ -494,14 +495,18 @@ export function withMapping<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType Map<string,OpenApiExample>
+ * @fieldType Map<string,OpenApiExample|OpenApiReferenceObject>
  * @serializedName examples
  * @methodName addExamples
  */
 export function withExamples<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _examples?: Map<string, OpenApiExample>;
-    addExamples(mappings: Partial<{ [K in string]: OpenApiExample }>) {
+    _examples?: Map<string, OpenApiExample | OpenApiReferenceObject>;
+    addExamples(
+      mappings: Partial<{
+        [K in string]: OpenApiExample | OpenApiReferenceObject;
+      }>
+    ) {
       const copy: this = Object.create(this);
       copy._examples = new Map(this._examples);
       for (const key in mappings) {
@@ -1174,14 +1179,14 @@ export function withAuthorizationCode<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiSchema
+ * @fieldType OpenApiSchema|OpenApiReferenceObject
  * @serializedName schema
  * @methodName addSchema
  */
 export function withSchema<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _schema?: OpenApiSchema;
-    addSchema(val: OpenApiSchema) {
+    _schema?: OpenApiSchema | OpenApiReferenceObject;
+    addSchema(val: OpenApiSchema | OpenApiReferenceObject) {
       const copy: this = Object.create(this);
       copy._schema = val;
       return copy;
@@ -1662,14 +1667,18 @@ export function withOperationId<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType Map<string,OpenApiHeader>
+ * @fieldType Map<string,OpenApiHeader|OpenApiReferenceObject>
  * @serializedName headers
  * @methodName addHeaders
  */
 export function withHeaders<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _headers?: Map<string, OpenApiHeader>;
-    addHeaders(mappings: Partial<{ [K in string]: OpenApiHeader }>) {
+    _headers?: Map<string, OpenApiHeader | OpenApiReferenceObject>;
+    addHeaders(
+      mappings: Partial<{
+        [K in string]: OpenApiHeader | OpenApiReferenceObject;
+      }>
+    ) {
       const copy: this = Object.create(this);
       copy._headers = new Map(this._headers);
       for (const key in mappings) {
@@ -1894,14 +1903,18 @@ export function withServer<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType Map<string,OpenApiCallback>
+ * @fieldType Map<string,OpenApiCallback|OpenApiReferenceObject>
  * @serializedName callbacks
  * @methodName addCallbacks
  */
 export function withCallbacks<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _callbacks?: Map<string, OpenApiCallback>;
-    addCallbacks(mappings: Partial<{ [K in string]: OpenApiCallback }>) {
+    _callbacks?: Map<string, OpenApiCallback | OpenApiReferenceObject>;
+    addCallbacks(
+      mappings: Partial<{
+        [K in string]: OpenApiCallback | OpenApiReferenceObject;
+      }>
+    ) {
       const copy: this = Object.create(this);
       copy._callbacks = new Map(this._callbacks);
       for (const key in mappings) {
@@ -1992,14 +2005,14 @@ export function withRequestBodyPrimitive<TBase extends GConstructor>(
 }
 
 /**
- * @fieldType OpenApiRequestBody
+ * @fieldType OpenApiRequestBody|OpenApiReferenceObject
  * @serializedName requestBody
  * @methodName addRequestBody
  */
 export function withRequestBody<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _requestBody?: OpenApiRequestBody;
-    addRequestBody(val: OpenApiRequestBody) {
+    _requestBody?: OpenApiRequestBody | OpenApiReferenceObject;
+    addRequestBody(val: OpenApiRequestBody | OpenApiReferenceObject) {
       const copy: this = Object.create(this);
       copy._requestBody = val;
       return copy;
@@ -2018,15 +2031,20 @@ export function withRequestBody<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType Map<OpenApiHTTPStatusCode,OpenApiResponse>
+ * @fieldType Map<OpenApiHTTPStatusCode,OpenApiResponse|OpenApiReferenceObject>
  * @serializedName response
  * @methodName addResponses
  */
 export function withResponses<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _response?: Map<OpenApiHTTPStatusCode, OpenApiResponse>;
+    _response?: Map<
+      OpenApiHTTPStatusCode,
+      OpenApiResponse | OpenApiReferenceObject
+    >;
     addResponses(
-      mappings: Partial<{ [K in OpenApiHTTPStatusCode]: OpenApiResponse }>
+      mappings: Partial<{
+        [K in OpenApiHTTPStatusCode]: OpenApiResponse | OpenApiReferenceObject;
+      }>
     ) {
       const copy: this = Object.create(this);
       copy._response = new Map(this._response);
@@ -2109,12 +2127,12 @@ export function withPath<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiParameter
+ * @fieldType OpenApiParameter|OpenApiReferenceObject
  * @serializedName parameters
  * @methodName addParameters
  */
 export function withParametersArray<TBase extends GConstructor>(Base: TBase) {
-  return <T extends OpenApiParameter>() => {
+  return <T extends OpenApiParameter | OpenApiReferenceObject>() => {
     return class extends Base {
       _parameters?: T[];
       addParameters(val: T[]) {
@@ -2333,9 +2351,7 @@ export function withSecurityRequirement<TBase extends GConstructor>(
 ) {
   return class extends Base {
     _field?: Map<string, string[]>;
-    addSecurityRequirement(
-      mappings: Partial<{ [K in string]: Array<string> }>
-    ) {
+    addSecurityRequirement(mappings: Partial<{ [K in string]: string[] }>) {
       const copy: this = Object.create(this);
       copy._field = new Map(this._field);
       for (const key in mappings) {
@@ -3047,14 +3063,18 @@ export function withRequestBodiesComponent<TBase extends GConstructor>(
 }
 
 /**
- * @fieldType Map<string,OpenApiHeader>
+ * @fieldType Map<string,OpenApiHeader|OpenApiReferenceObject>
  * @serializedName headers
  * @methodName addHeaders
  */
 export function withHeadersComponent<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _headers?: Map<string, OpenApiHeader>;
-    addHeaders(mappings: Partial<{ [K in string]: OpenApiHeader }>) {
+    _headers?: Map<string, OpenApiHeader | OpenApiReferenceObject>;
+    addHeaders(
+      mappings: Partial<{
+        [K in string]: OpenApiHeader | OpenApiReferenceObject;
+      }>
+    ) {
       const copy: this = Object.create(this);
       copy._headers = new Map(this._headers);
       for (const key in mappings) {
@@ -3081,7 +3101,7 @@ export function withHeadersComponent<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType Map<string,OpenApiSecurityScheme>
+ * @fieldType Map<string,OpenApiSecurityScheme|OpenApiReferenceObject>
  * @serializedName securitySchemes
  * @methodName addSecuritySchemes
  */
@@ -3089,9 +3109,14 @@ export function withSecuritySchemesComponent<TBase extends GConstructor>(
   Base: TBase
 ) {
   return class extends Base {
-    _securitySchemes?: Map<string, OpenApiSecurityScheme>;
+    _securitySchemes?: Map<
+      string,
+      OpenApiSecurityScheme | OpenApiReferenceObject
+    >;
     addSecuritySchemes(
-      mappings: Partial<{ [K in string]: OpenApiSecurityScheme }>
+      mappings: Partial<{
+        [K in string]: OpenApiSecurityScheme | OpenApiReferenceObject;
+      }>
     ) {
       const copy: this = Object.create(this);
       copy._securitySchemes = new Map(this._securitySchemes);
@@ -3119,14 +3144,16 @@ export function withSecuritySchemesComponent<TBase extends GConstructor>(
 }
 
 /**
- * @fieldType Map<string,OpenApiLink>
+ * @fieldType Map<string,OpenApiLink|OpenApiReferenceObject>
  * @serializedName links
  * @methodName addLinks
  */
 export function withLinksComponent<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _links?: Map<string, OpenApiLink>;
-    addLinks(mappings: Partial<{ [K in string]: OpenApiLink }>) {
+    _links?: Map<string, OpenApiLink | OpenApiReferenceObject>;
+    addLinks(
+      mappings: Partial<{ [K in string]: OpenApiLink | OpenApiReferenceObject }>
+    ) {
       const copy: this = Object.create(this);
       copy._links = new Map(this._links);
       for (const key in mappings) {
@@ -3153,7 +3180,7 @@ export function withLinksComponent<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType Map<string,OpenApiCallback>
+ * @fieldType Map<string,OpenApiCallback|OpenApiReferenceObject>
  * @serializedName callbacks
  * @methodName addCallbacks
  */
@@ -3161,8 +3188,12 @@ export function withCallbacksComponent<TBase extends GConstructor>(
   Base: TBase
 ) {
   return class extends Base {
-    _callbacks?: Map<string, OpenApiCallback>;
-    addCallbacks(mappings: Partial<{ [K in string]: OpenApiCallback }>) {
+    _callbacks?: Map<string, OpenApiCallback | OpenApiReferenceObject>;
+    addCallbacks(
+      mappings: Partial<{
+        [K in string]: OpenApiCallback | OpenApiReferenceObject;
+      }>
+    ) {
       const copy: this = Object.create(this);
       copy._callbacks = new Map(this._callbacks);
       for (const key in mappings) {
@@ -3189,7 +3220,7 @@ export function withCallbacksComponent<TBase extends GConstructor>(
 }
 
 /**
- * @fieldType Map<string,OpenApiPathItem>
+ * @fieldType Map<string,OpenApiPathItem|OpenApiReferenceObject>
  * @serializedName pathItems
  * @methodName addPathItems
  */
@@ -3197,8 +3228,12 @@ export function withPathItemsComponent<TBase extends GConstructor>(
   Base: TBase
 ) {
   return class extends Base {
-    _pathItems?: Map<string, OpenApiPathItem>;
-    addPathItems(mappings: Partial<{ [K in string]: OpenApiPathItem }>) {
+    _pathItems?: Map<string, OpenApiPathItem | OpenApiReferenceObject>;
+    addPathItems(
+      mappings: Partial<{
+        [K in string]: OpenApiPathItem | OpenApiReferenceObject;
+      }>
+    ) {
       const copy: this = Object.create(this);
       copy._pathItems = new Map(this._pathItems);
       for (const key in mappings) {
@@ -3242,6 +3277,32 @@ export function withComponents<TBase extends GConstructor>(Base: TBase) {
       if (this._components !== undefined) {
         Object.defineProperty(json, "components", {
           value: this._components,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType string
+ * @serializedName $ref
+ * @methodName add$Ref
+ */
+export function withRef<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    _$ref?: string;
+    add$Ref(val: string) {
+      const copy: this = Object.create(this);
+      copy._$ref = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._$ref !== undefined) {
+        Object.defineProperty(json, "$ref", {
+          value: this._$ref,
           enumerable: true,
         });
       }

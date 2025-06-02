@@ -10,18 +10,20 @@ export class MapTemplateBuilder extends FunctionBuilder {
     if (!sourceFile) {
       throw new Error("Source file undefined.");
     }
-    const variable = sourceFile.getVariableDeclaration("tempVar");
+    const variable = sourceFile.getVariableDeclaration("tempVar") as any;
     if (!variable) {
       throw new Error("Variable undefined.");
     }
-    const types = variable.getType().getTypeArguments();
+    const types = variable.getTypeNode().getTypeArguments();
     if (types.length != 2) {
       throw new Error("Map types must only have exactly two args.");
     }
+    const key = types[0].getText();
+    const val = types[1].getText();
     sourceFile.delete();
     return {
-      key: types[0].getText(),
-      val: types[1].getText(),
+      key: key,
+      val: val,
     };
   }
   protected buildAbstractBody(

@@ -27,3 +27,4 @@ export * from "./OpenApiLicense";
 export * from "./OpenApiInfo";
 export * from "./OpenApiMedia";
 export * from "./OpenApiComponent";
+export * from "./OpenApiReferenceObject"
