@@ -697,6 +697,30 @@ async function main() {
       serializedName: "$ref",
       methodName: "add$Ref",
     }),
+    new ArrayTemplateBuilder({
+      fnName: "withOneOf",
+      fieldType: "OpenApiSchema",
+      serializedName: "oneOf",
+      methodName: "addOneOf",
+    }),
+    new ArrayTemplateBuilder({
+      fnName: "withAnyOf",
+      fieldType: "OpenApiSchema",
+      serializedName: "anyOf",
+      methodName: "addAnyOf",
+    }),
+    new ArrayTemplateBuilder({
+      fnName: "withAllOf",
+      fieldType: "OpenApiSchema",
+      serializedName: "allOf",
+      methodName: "addAllOf",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withNot",
+      fieldType: "OpenApiSchema",
+      serializedName: "not",
+      methodName: "addNot",
+    }),
   ].forEach(fn => fn.write(OpenAPIV3Project));
 
   await OpenAPIV3Project.save();

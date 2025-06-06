@@ -1,6 +1,6 @@
 {
   "name": "fluid-oas",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Build declarative OpenApiv3.* specifications.",
   "homepage": "https://stoneliucs.github.io/fluid-oas/",
   "main": "dist/index.js",

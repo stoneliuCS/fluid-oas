@@ -8,3 +8,7 @@ export * from "./OpenApiUnion";
 export * from "./OpenApiNull";
 export * from "./OpenApiConst";
 export * from "./OpenApiEnum";
+export * from "./OpenApiAllOf";
+export * from "./OpenApiAnyOf";
+export * from "./OpenApiOneOf";
+export * from "./OpenApiNot";

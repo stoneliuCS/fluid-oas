@@ -3310,3 +3310,113 @@ export function withRef<TBase extends GConstructor>(Base: TBase) {
     }
   };
 }
+
+/**
+ * @fieldType OpenApiSchema
+ * @serializedName oneOf
+ * @methodName addOneOf
+ */
+export function withOneOf<TBase extends GConstructor>(Base: TBase) {
+  return <T extends OpenApiSchema>() => {
+    return class extends Base {
+      _oneOf?: T[];
+      addOneOf(val: T[]) {
+        const copy: this = Object.create(this);
+        copy._oneOf = val;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._oneOf !== undefined) {
+          Object.defineProperty(json, "oneOf", {
+            value: this._oneOf,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType OpenApiSchema
+ * @serializedName anyOf
+ * @methodName addAnyOf
+ */
+export function withAnyOf<TBase extends GConstructor>(Base: TBase) {
+  return <T extends OpenApiSchema>() => {
+    return class extends Base {
+      _anyOf?: T[];
+      addAnyOf(val: T[]) {
+        const copy: this = Object.create(this);
+        copy._anyOf = val;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._anyOf !== undefined) {
+          Object.defineProperty(json, "anyOf", {
+            value: this._anyOf,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType OpenApiSchema
+ * @serializedName allOf
+ * @methodName addAllOf
+ */
+export function withAllOf<TBase extends GConstructor>(Base: TBase) {
+  return <T extends OpenApiSchema>() => {
+    return class extends Base {
+      _allOf?: T[];
+      addAllOf(val: T[]) {
+        const copy: this = Object.create(this);
+        copy._allOf = val;
+        return copy;
+      }
+      toJSON() {
+        const json = super.toJSON();
+        if (this._allOf !== undefined) {
+          Object.defineProperty(json, "allOf", {
+            value: this._allOf,
+            enumerable: true,
+          });
+        }
+        return json;
+      }
+    };
+  };
+}
+
+/**
+ * @fieldType OpenApiSchema
+ * @serializedName not
+ * @methodName addNot
+ */
+export function withNot<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    _not?: OpenApiSchema;
+    addNot(val: OpenApiSchema) {
+      const copy: this = Object.create(this);
+      copy._not = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._not !== undefined) {
+        Object.defineProperty(json, "not", {
+          value: this._not,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
