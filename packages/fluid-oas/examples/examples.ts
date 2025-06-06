@@ -19,7 +19,6 @@ import {
   Contact,
   Integer,
   Component,
-  createSchemaToReferenceMapping,
 } from "../src/";
 
 const info = Info.addTitle("My API")
@@ -56,12 +55,22 @@ const errorSchema = Object.addProperties({
   message: String.addReadOnly(true),
 });
 
+const components = Component.addSchemas({
+  UserSchema: userSchema,
+  ErrorSchema: errorSchema,
+  uuidSchema: uuidSchema,
+});
+
+const componentMappings = components.createMappings();
+
 const getUserResponses = Responses.addResponses({
   200: Response.addDescription("Successfully Retrieved User!").addContents({
-    "application/json": MediaType.addSchema(userSchema),
+    "application/json": MediaType.addSchema(componentMappings.get(userSchema)!),
   }),
   401: Response.addDescription("Failed to retrieve user!").addContents({
-    "application/json": MediaType.addSchema(errorSchema),
+    "application/json": MediaType.addSchema(
+      componentMappings.get(errorSchema)!
+    ),
   }),
 });
 
@@ -72,7 +81,7 @@ const getUser = PathItem.addMethod({
       .addName("id")
       .addIn("path")
       .addRequired(true)
-      .addSchema(uuidSchema),
+      .addSchema(componentMappings.get(uuidSchema)!),
   ]).addResponses(getUserResponses),
 });
 
@@ -81,7 +90,10 @@ const path = Path.beginGroup("/api/v1")
   .addEndpoints({ "/user/{id}": getUser })
   .endGroup();
 
-const oas = OpenApiV3.addOpenApiVersion("3.1.1").addInfo(info).addPaths(path);
+const oas = OpenApiV3.addOpenApiVersion("3.1.1")
+  .addInfo(info)
+  .addPaths(path)
+  .addComponents(components);
 
 // Write OAS Spec
 oas.writeOASSync();
@@ -121,10 +133,3 @@ Array.addItems(String)
   .addMinItems(1)
   .addMaxItems(10)
   .addDefault(["defaultVal"]);
-
-const components = Component.addSchemas({
-  UserSchema: userSchema,
-  ErrorSchema: errorSchema,
-});
-
-createSchemaToReferenceMapping(components)

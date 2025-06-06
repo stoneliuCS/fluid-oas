@@ -41,45 +41,11 @@ class _OpenApiSecurityScheme
   implements OpenApiSecurityScheme {}
 
 export const SecurityScheme: {
-  addType(type: "apiKey" | "http" | "mutualTLS" | "oauth2" | "openIdConnect"): {
-    addName(name: string): {
-      addIn(inSecurity: "query" | "header" | "cookie"): {
-        addScheme(scheme: string): {
-          addFlows(flows: OpenApiOAuthFlows): {
-            addOpenIdConnectUrl(url: string): OpenApiSecurityScheme;
-          };
-        };
-      };
-    };
-  };
+  addType(
+    type: "apiKey" | "http" | "mutualTLS" | "oauth2" | "openIdConnect"
+  ): OpenApiSecurityScheme;
 } = {
   addType(type: "apiKey" | "http" | "mutualTLS" | "oauth2" | "openIdConnect") {
-    return {
-      addName(name: string) {
-        return {
-          addIn(inSecurity: "query" | "header" | "cookie") {
-            return {
-              addScheme(scheme: string) {
-                return {
-                  addFlows(flows: OpenApiOAuthFlows) {
-                    return {
-                      addOpenIdConnectUrl(url: string) {
-                        return new _OpenApiSecurityScheme()
-                          .addType(type)
-                          .addName(name)
-                          .addIn(inSecurity)
-                          .addScheme(scheme)
-                          .addFlows(flows)
-                          .addOpenIdConnectUrl(url);
-                      },
-                    };
-                  },
-                };
-              },
-            };
-          },
-        };
-      },
-    };
+    return new _OpenApiSecurityScheme().addType(type);
   },
 };

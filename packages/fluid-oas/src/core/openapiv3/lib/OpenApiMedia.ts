@@ -8,7 +8,7 @@ import type { OpenApiReferenceObject } from "./OpenApiReferenceObject";
 const MediaTypeBase = withEncoding(withExamples(withExample(withSchema(Base))));
 
 export interface OpenApiMediaType extends BaseInterface {
-  addSchema(schema: OpenApiSchema): this;
+  addSchema(schema: OpenApiSchema | OpenApiReferenceObject): this;
   addExample(example: any): this;
   addExamples(
     mappings: Partial<{

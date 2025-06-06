@@ -39,7 +39,7 @@ export interface SchemaParameter extends ParameterBase {
   addStyle(style: "form" | "simple"): this;
   addExplode(explode: boolean): this;
   addAllowReserved(allowReserved: boolean): this;
-  addSchema(schema: OpenApiSchema): this;
+  addSchema(schema: OpenApiSchema | OpenApiReferenceObject): this;
   addExample(example: any): this;
   addExamples(mappings: {
     [K in string]: OpenApiExample | OpenApiReferenceObject;

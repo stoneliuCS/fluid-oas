@@ -18,7 +18,10 @@ import type { OpenApiHeader } from "./OpenApiHeader";
 import type { OpenApiLink } from "./OpenApiLink";
 import type { OpenApiParameter } from "./OpenApiParameter";
 import type { OpenApiPathItem } from "./OpenApiPathItem";
-import type { OpenApiReferenceObject } from "./OpenApiReferenceObject";
+import {
+  ReferenceObject,
+  type OpenApiReferenceObject,
+} from "./OpenApiReferenceObject";
 import type { OpenApiRequestBody } from "./OpenApiRequestBody";
 import type { OpenApiResponses } from "./OpenApiResponses";
 import type { OpenApiSecurityScheme } from "./OpenApiSecurityScheme";
@@ -40,6 +43,19 @@ const ComponentBase = withPathItemsComponent(
     )
   )
 );
+
+export type ComponentMappings =
+  | OpenApiSchema
+  | OpenApiResponses
+  | OpenApiParameter
+  | OpenApiExample
+  | OpenApiRequestBody
+  | OpenApiHeader
+  | OpenApiSecurityScheme
+  | OpenApiLink
+  | OpenApiCallback
+  | OpenApiPathItem
+  | OpenApiReferenceObject;
 
 export interface OpenApiComponent extends BaseInterface {
   addSchemas(
@@ -89,9 +105,107 @@ export interface OpenApiComponent extends BaseInterface {
       [K in string]: OpenApiPathItem | OpenApiReferenceObject;
     }>
   ): this;
+
+  /**
+   * A convenient helper method that allows the creating of a dedicating mapping for all
+   * potential reusable reference objects defined with the Component object. Developers may use this
+   * method to obtain the reference object from a specific schema, pathItem, etc.
+   *
+   * @returns a FROZEN Mapping for each possible content mapping and its associated reference object.
+   */
+  createMappings(): Map<ComponentMappings, OpenApiReferenceObject>;
 }
 
-class _OpenApiComponent extends ComponentBase {}
+class _OpenApiComponent extends ComponentBase {
+  createMappings(): Map<ComponentMappings, OpenApiReferenceObject> {
+    const mappings: Map<ComponentMappings, OpenApiReferenceObject> = new Map();
+    if (this._schemas !== undefined) {
+      for (const [key, val] of this._schemas) {
+        const reference = ReferenceObject.add$Ref(
+          `#/components/schemas/${key}`
+        );
+        mappings.set(val, reference);
+      }
+    }
+    if (this._parameters !== undefined) {
+      for (const [key, val] of this._parameters) {
+        const reference = ReferenceObject.add$Ref(
+          `#/components/parameters/${key}`
+        );
+        mappings.set(val, reference);
+      }
+    }
+    if (this._examples !== undefined) {
+      for (const [key, val] of this._examples) {
+        const reference = ReferenceObject.add$Ref(
+          `#/components/examples/${key}`
+        );
+        mappings.set(val, reference);
+      }
+    }
+
+    if (this._examples !== undefined) {
+      for (const [key, val] of this._examples) {
+        const reference = ReferenceObject.add$Ref(
+          `#/components/examples/${key}`
+        );
+        mappings.set(val, reference);
+      }
+    }
+
+    if (this._requestBodies !== undefined) {
+      for (const [key, val] of this._requestBodies) {
+        const reference = ReferenceObject.add$Ref(
+          `#/components/requestBodies/${key}`
+        );
+        mappings.set(val, reference);
+      }
+    }
+
+    if (this._headers !== undefined) {
+      for (const [key, val] of this._headers) {
+        const reference = ReferenceObject.add$Ref(
+          `#/components/headers/${key}`
+        );
+        mappings.set(val, reference);
+      }
+    }
+
+    if (this._securitySchemes !== undefined) {
+      for (const [key, val] of this._securitySchemes) {
+        const reference = ReferenceObject.add$Ref(
+          `#/components/securitySchemes/${key}`
+        );
+        mappings.set(val, reference);
+      }
+    }
+
+    if (this._links !== undefined) {
+      for (const [key, val] of this._links) {
+        const reference = ReferenceObject.add$Ref(`#/components/links/${key}`);
+        mappings.set(val, reference);
+      }
+    }
+
+    if (this._callbacks !== undefined) {
+      for (const [key, val] of this._callbacks) {
+        const reference = ReferenceObject.add$Ref(
+          `#/components/callbacks/${key}`
+        );
+        mappings.set(val, reference);
+      }
+    }
+
+    if (this._pathItems !== undefined) {
+      for (const [key, val] of this._pathItems) {
+        const reference = ReferenceObject.add$Ref(
+          `#/components/pathItems/${key}`
+        );
+        mappings.set(val, reference);
+      }
+    }
+    return Object.freeze(mappings);
+  }
+}
 
 export const Component: OpenApiComponent = new _OpenApiComponent();
-export type __OpenApiComponent__ = _OpenApiComponent;
