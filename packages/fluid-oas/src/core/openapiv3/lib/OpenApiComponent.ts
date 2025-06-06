@@ -91,6 +91,7 @@ export interface OpenApiComponent extends BaseInterface {
   ): this;
 }
 
-class _OpenApiComponent extends ComponentBase implements OpenApiComponent {}
+class _OpenApiComponent extends ComponentBase {}
 
 export const Component: OpenApiComponent = new _OpenApiComponent();
+export type __OpenApiComponent__ = _OpenApiComponent;

@@ -18,6 +18,8 @@ import {
   Null,
   Contact,
   Integer,
+  Component,
+  createSchemaToReferenceMapping,
 } from "../src/";
 
 const info = Info.addTitle("My API")
@@ -119,3 +121,10 @@ Array.addItems(String)
   .addMinItems(1)
   .addMaxItems(10)
   .addDefault(["defaultVal"]);
+
+const components = Component.addSchemas({
+  UserSchema: userSchema,
+  ErrorSchema: errorSchema,
+});
+
+createSchemaToReferenceMapping(components)

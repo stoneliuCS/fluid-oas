@@ -130,7 +130,7 @@ export interface OpenApiV3_1 extends OpenApiV3 {
   addWebhooks(mappings: { [K in string]: OpenApiPathItem }): this;
 }
 
-class _OpenApiV3 extends OpenApiBase implements OpenApiV3 {
+class _OpenApiV3 extends OpenApiBase {
   private writeOASImpl(
     fileWriteFn: (filepath: string, json: string) => void,
     filePath?: string
