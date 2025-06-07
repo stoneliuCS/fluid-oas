@@ -4,6 +4,7 @@ import type { OpenApiArray } from "./OpenApiArray";
 import type { OpenApiBoolean } from "./OpenApiBoolean";
 import type { OpenApiConst } from "./OpenApiConst";
 import type { OpenApiEnum } from "./OpenApiEnum";
+import type { OpenApiIfThenElse } from "./OpenApiIfThenElse";
 import type { OpenApiNot } from "./OpenApiNot";
 import type { OpenApiNull } from "./OpenApiNull";
 import type { OpenApiInteger, OpenApiNumber } from "./OpenApiNumber";
@@ -30,4 +31,5 @@ export type OpenApiSchema =
   // Special Utility Types
   | OpenApiConst
   | OpenApiEnum
-  | OpenApiUnion;
+  | OpenApiUnion
+  | OpenApiIfThenElse;

@@ -721,6 +721,25 @@ async function main() {
       serializedName: "not",
       methodName: "addNot",
     }),
+
+    new PrimitiveTemplateBuilder({
+      fnName: "withIf",
+      fieldType: "OpenApiSchema | OpenApiReferenceObject",
+      serializedName: "if",
+      methodName: "addIf",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withThen",
+      fieldType: "OpenApiSchema | OpenApiReferenceObject",
+      serializedName: "then",
+      methodName: "addThen",
+    }),
+    new PrimitiveTemplateBuilder({
+      fnName: "withElse",
+      fieldType: "OpenApiSchema | OpenApiReferenceObject",
+      serializedName: "else",
+      methodName: "addElse",
+    }),
   ].forEach(fn => fn.write(OpenAPIV3Project));
 
   await OpenAPIV3Project.save();

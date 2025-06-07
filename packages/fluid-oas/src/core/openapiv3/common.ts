@@ -3420,3 +3420,81 @@ export function withNot<TBase extends GConstructor>(Base: TBase) {
     }
   };
 }
+
+/**
+ * @fieldType OpenApiSchema|OpenApiReferenceObject
+ * @serializedName if
+ * @methodName addIf
+ */
+export function withIf<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    _if?: OpenApiSchema | OpenApiReferenceObject;
+    addIf(val: OpenApiSchema | OpenApiReferenceObject) {
+      const copy: this = Object.create(this);
+      copy._if = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._if !== undefined) {
+        Object.defineProperty(json, "if", {
+          value: this._if,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiSchema|OpenApiReferenceObject
+ * @serializedName then
+ * @methodName addThen
+ */
+export function withThen<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    _then?: OpenApiSchema | OpenApiReferenceObject;
+    addThen(val: OpenApiSchema | OpenApiReferenceObject) {
+      const copy: this = Object.create(this);
+      copy._then = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._then !== undefined) {
+        Object.defineProperty(json, "then", {
+          value: this._then,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}
+
+/**
+ * @fieldType OpenApiSchema|OpenApiReferenceObject
+ * @serializedName else
+ * @methodName addElse
+ */
+export function withElse<TBase extends GConstructor>(Base: TBase) {
+  return class extends Base {
+    _else?: OpenApiSchema | OpenApiReferenceObject;
+    addElse(val: OpenApiSchema | OpenApiReferenceObject) {
+      const copy: this = Object.create(this);
+      copy._else = val;
+      return copy;
+    }
+    toJSON() {
+      const json = super.toJSON();
+      if (this._else !== undefined) {
+        Object.defineProperty(json, "else", {
+          value: this._else,
+          enumerable: true,
+        });
+      }
+      return json;
+    }
+  };
+}

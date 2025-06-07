@@ -1,5 +1,7 @@
 # User Guide
 
+All methods prefixed with `add` will be reflected in the final JSON schema, methods not prefixed with `add` are intended to provide extra functionality.
+
 ```ts
 import {
   Array,

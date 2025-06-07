@@ -110,7 +110,7 @@ const cleanerPaths = Path.addEndpoints({
   }),
 });
 
-const openapi = OpenApiV3.addOpenApiVersion("3.1.1")
+OpenApiV3.addOpenApiVersion("3.1.1")
   .addInfo(dearlyInfo)
   .addComponents(dearlyComponents)
   .addPaths(cleanerPaths)

@@ -19,10 +19,26 @@ export class Root {
   toJSON(): unknown {
     return {};
   }
+  override(overrideVal: unknown) {
+    const copy: this = Object.create(this);
+    copy.toJSON = () => JSON.stringify(overrideVal);
+    return copy;
+  }
 }
 
 export interface RootInterface {
+  /**
+   * Serializes the object into its equivalent OpenApi JSON value.
+   */
   toJSON(): unknown;
+  /**
+   * Overrides the toJSON method for a custom serialization.
+   *
+   * WARNING: overrideVal must be serializable and future changes are subject to breaking.
+   *
+   * @param overrideVal - Overrides the serialization of this object into this value.
+   */
+  override(overrideVal: unknown): this;
 }
 
 export interface BaseInterface extends RootInterface {
