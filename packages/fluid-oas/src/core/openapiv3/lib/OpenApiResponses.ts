@@ -19,4 +19,12 @@ export interface OpenApiResponses extends BaseInterface {
 
 class _OpenApiResponses extends ResponsesBase implements OpenApiResponses {}
 
-export const Responses: OpenApiResponses = new _OpenApiResponses();
+export const Responses: (
+  responses: Partial<{
+    [K in OpenApiHTTPStatusCode]: OpenApiResponse | OpenApiReferenceObject;
+  }>
+) => OpenApiResponses = (
+  responses: Partial<{
+    [K in OpenApiHTTPStatusCode]: OpenApiResponse | OpenApiReferenceObject;
+  }>
+) => new _OpenApiResponses().addResponses(responses);
