@@ -118,7 +118,8 @@ async function main() {
     }),
     new MapTemplateBuilder({
       fnName: "withExtensions",
-      fieldType: "Map<OpenApiExtensionString, OpenApiSchema>",
+      fieldType:
+        "Map<OpenApiExtensionString, OpenApiSchema | OpenApiReferenceObject>",
       serializedName: "extensions",
       methodName: "addExtensions",
     }),
@@ -280,7 +281,7 @@ async function main() {
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withItems",
-      fieldType: "OpenApiSchema",
+      fieldType: "OpenApiSchema | OpenApiReferenceObject",
       serializedName: "items",
       methodName: "addItems",
     }),
@@ -322,13 +323,13 @@ async function main() {
     }),
     new MapTemplateBuilder({
       fnName: "withProperties",
-      fieldType: "Map<string, OpenApiSchema>",
+      fieldType: "Map<string, OpenApiSchema | OpenApiReferenceObject>",
       serializedName: "properties",
       methodName: "addProperties",
     }),
     new MapTemplateBuilder({
       fnName: "withPatternProperties",
-      fieldType: "Map<string, OpenApiSchema>",
+      fieldType: "Map<string, OpenApiSchema | OpenApiReferenceObject>",
       serializedName: "patternProperties",
       methodName: "addPatternProperties",
     }),
@@ -473,7 +474,7 @@ async function main() {
     }),
     new UnionClass({
       fnName: "withUnionTypes",
-      fieldType: "OpenApiSchema",
+      fieldType: "OpenApiSchema | OpenApiReferenceObject",
       serializedName: "type",
       methodName: "ofTypes",
     }),
@@ -491,7 +492,7 @@ async function main() {
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withAdditionalProperties",
-      fieldType: "OpenApiSchema",
+      fieldType: "OpenApiSchema | OpenApiReferenceObject",
       serializedName: "additionalProperties",
       methodName: "addAdditionalProperties",
     }),
@@ -593,13 +594,13 @@ async function main() {
     }),
     new ArrayTemplateBuilder({
       fnName: "withPrefixItems",
-      fieldType: "OpenApiSchema",
+      fieldType: "OpenApiSchema | OpenApiReferenceObject",
       serializedName: "prefixItems",
       methodName: "addPrefixItems",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withAdditionalItems",
-      fieldType: "OpenApiSchema",
+      fieldType: "OpenApiSchema | OpenApiReferenceObject",
       serializedName: "additionalItems",
       methodName: "addAdditionalItems",
     }),
@@ -699,25 +700,25 @@ async function main() {
     }),
     new ArrayTemplateBuilder({
       fnName: "withOneOf",
-      fieldType: "OpenApiSchema",
+      fieldType: "OpenApiSchema | OpenApiReferenceObject",
       serializedName: "oneOf",
       methodName: "addOneOf",
     }),
     new ArrayTemplateBuilder({
       fnName: "withAnyOf",
-      fieldType: "OpenApiSchema",
+      fieldType: "OpenApiSchema | OpenApiReferenceObject",
       serializedName: "anyOf",
       methodName: "addAnyOf",
     }),
     new ArrayTemplateBuilder({
       fnName: "withAllOf",
-      fieldType: "OpenApiSchema",
+      fieldType: "OpenApiSchema | OpenApiReferenceObject",
       serializedName: "allOf",
       methodName: "addAllOf",
     }),
     new PrimitiveTemplateBuilder({
       fnName: "withNot",
-      fieldType: "OpenApiSchema",
+      fieldType: "OpenApiSchema | OpenApiReferenceObject",
       serializedName: "not",
       methodName: "addNot",
     }),

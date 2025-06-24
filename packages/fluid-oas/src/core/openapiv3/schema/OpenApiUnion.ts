@@ -1,10 +1,11 @@
 import { withUnionTypes } from "../common";
+import type { OpenApiReferenceObject } from "../lib";
 import { SchemaBase, type SchemaInterface } from "../lib/base";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
 const TypeArrayBase = withUnionTypes(
-  SchemaBase<OpenApiSchema>
-)<OpenApiSchema>();
+  SchemaBase<OpenApiSchema | OpenApiReferenceObject>
+)<OpenApiSchema | OpenApiReferenceObject>();
 
 type omitValues =
   | "addEnums"
@@ -17,12 +18,15 @@ type omitValues =
  * A special type of schema, used for multiple "types" as specified in the latest JSON Schema.
  */
 export interface OpenApiUnion
-  extends Omit<SchemaInterface<OpenApiSchema>, omitValues> {
+  extends Omit<
+    SchemaInterface<OpenApiSchema | OpenApiReferenceObject>,
+    omitValues
+  > {
   /**
    * Compose multiple OpenApi schema types.
    * @param val - A list of schema types to union over, creating a union schema.
    */
-  ofTypes(...val: OpenApiSchema[]): this;
+  ofTypes(...val: (OpenApiSchema | OpenApiReferenceObject)[]): this;
 }
 
 class _OpenApiUnion extends TypeArrayBase implements OpenApiUnion {}
@@ -34,7 +38,9 @@ class _OpenApiUnion extends TypeArrayBase implements OpenApiUnion {}
  * In addition, do not provide multiple of the same schema types, doing so will result
  * in those schema types overwriting each other.
  */
-export const Union = (...val: OpenApiSchema[]): OpenApiUnion => {
+export const Union = (
+  ...val: (OpenApiSchema | OpenApiReferenceObject)[]
+): OpenApiUnion => {
   if (val.length === 0) {
     throw new Error("Schemas cannot be empty.");
   }

@@ -12,4 +12,4 @@ export * from "./OpenApiAllOf";
 export * from "./OpenApiAnyOf";
 export * from "./OpenApiOneOf";
 export * from "./OpenApiNot";
-export * from "./OpenApiIfThenElse"
+export * from "./OpenApiIfThenElse";

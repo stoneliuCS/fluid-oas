@@ -7,6 +7,7 @@ import {
   withMaxProperties,
   withPatternProperties,
 } from "../common";
+import type { OpenApiReferenceObject } from "../lib";
 import { SchemaBase, type SchemaInterface } from "../lib/base";
 import type { OpenApiSchema } from "./OpenApiSchema";
 
@@ -39,12 +40,16 @@ export interface OpenApiObject extends SchemaInterface<object> {
    * @param mappings - RegExp as strings to schema mappings.
    */
   addPatternProperties(
-    mappings: Partial<{ [K in string]: OpenApiSchema }>
+    mappings: Partial<{ [K in string]: OpenApiSchema | OpenApiReferenceObject }>
   ): this;
   addUnevaluatedProperties(unevaluatedProperties: boolean): this;
-  addProperties(mappings: Partial<{ [K in string]: OpenApiSchema }>): this;
+  addProperties(
+    mappings: Partial<{ [K in string]: OpenApiSchema | OpenApiReferenceObject }>
+  ): this;
   addRequired(val: string[]): this;
-  addAdditionalProperties(additionalProperties: OpenApiSchema): this;
+  addAdditionalProperties(
+    additionalProperties: OpenApiSchema | OpenApiReferenceObject
+  ): this;
 }
 
 class _OpenApiObject extends ObjectBase implements OpenApiObject {

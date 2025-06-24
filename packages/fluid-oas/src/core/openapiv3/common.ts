@@ -533,15 +533,20 @@ export function withExamples<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType Map<OpenApiExtensionString,OpenApiSchema>
+ * @fieldType Map<OpenApiExtensionString,OpenApiSchema|OpenApiReferenceObject>
  * @serializedName extensions
  * @methodName addExtensions
  */
 export function withExtensions<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _extensions?: Map<OpenApiExtensionString, OpenApiSchema>;
+    _extensions?: Map<
+      OpenApiExtensionString,
+      OpenApiSchema | OpenApiReferenceObject
+    >;
     addExtensions(
-      mappings: Partial<{ [K in OpenApiExtensionString]: OpenApiSchema }>
+      mappings: Partial<{
+        [K in OpenApiExtensionString]: OpenApiSchema | OpenApiReferenceObject;
+      }>
     ) {
       const copy: this = Object.create(this);
       copy._extensions = new Map(this._extensions);
@@ -1257,14 +1262,14 @@ export function withExample<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiSchema
+ * @fieldType OpenApiSchema|OpenApiReferenceObject
  * @serializedName items
  * @methodName addItems
  */
 export function withItems<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _items?: OpenApiSchema;
-    addItems(val: OpenApiSchema) {
+    _items?: OpenApiSchema | OpenApiReferenceObject;
+    addItems(val: OpenApiSchema | OpenApiReferenceObject) {
       const copy: this = Object.create(this);
       copy._items = val;
       return copy;
@@ -1439,14 +1444,18 @@ export function withMaxItems<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType Map<string,OpenApiSchema>
+ * @fieldType Map<string,OpenApiSchema|OpenApiReferenceObject>
  * @serializedName properties
  * @methodName addProperties
  */
 export function withProperties<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _properties?: Map<string, OpenApiSchema>;
-    addProperties(mappings: Partial<{ [K in string]: OpenApiSchema }>) {
+    _properties?: Map<string, OpenApiSchema | OpenApiReferenceObject>;
+    addProperties(
+      mappings: Partial<{
+        [K in string]: OpenApiSchema | OpenApiReferenceObject;
+      }>
+    ) {
       const copy: this = Object.create(this);
       copy._properties = new Map(this._properties);
       for (const key in mappings) {
@@ -1473,14 +1482,18 @@ export function withProperties<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType Map<string,OpenApiSchema>
+ * @fieldType Map<string,OpenApiSchema|OpenApiReferenceObject>
  * @serializedName patternProperties
  * @methodName addPatternProperties
  */
 export function withPatternProperties<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _patternProperties?: Map<string, OpenApiSchema>;
-    addPatternProperties(mappings: Partial<{ [K in string]: OpenApiSchema }>) {
+    _patternProperties?: Map<string, OpenApiSchema | OpenApiReferenceObject>;
+    addPatternProperties(
+      mappings: Partial<{
+        [K in string]: OpenApiSchema | OpenApiReferenceObject;
+      }>
+    ) {
       const copy: this = Object.create(this);
       copy._patternProperties = new Map(this._patternProperties);
       for (const key in mappings) {
@@ -2211,12 +2224,12 @@ export function withServersArray<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiSchema
+ * @fieldType OpenApiSchema|OpenApiReferenceObject
  * @serializedName type
  * @methodName ofTypes
  */
 export function withUnionTypes<TBase extends GConstructor>(Base: TBase) {
-  return <T extends OpenApiSchema>() => {
+  return <T extends OpenApiSchema | OpenApiReferenceObject>() => {
     return class extends Base {
       _type?: T[];
       ofTypes(...val: T[]) {
@@ -2314,7 +2327,7 @@ export function withRequiredEnumerable<TBase extends GConstructor>(
 }
 
 /**
- * @fieldType OpenApiSchema
+ * @fieldType OpenApiSchema|OpenApiReferenceObject
  * @serializedName additionalProperties
  * @methodName addAdditionalProperties
  */
@@ -2322,8 +2335,8 @@ export function withAdditionalProperties<TBase extends GConstructor>(
   Base: TBase
 ) {
   return class extends Base {
-    _additionalProperties?: OpenApiSchema;
-    addAdditionalProperties(val: OpenApiSchema) {
+    _additionalProperties?: OpenApiSchema | OpenApiReferenceObject;
+    addAdditionalProperties(val: OpenApiSchema | OpenApiReferenceObject) {
       const copy: this = Object.create(this);
       copy._additionalProperties = val;
       return copy;
@@ -2781,12 +2794,12 @@ export function withMaxProperties<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiSchema
+ * @fieldType OpenApiSchema|OpenApiReferenceObject
  * @serializedName prefixItems
  * @methodName addPrefixItems
  */
 export function withPrefixItems<TBase extends GConstructor>(Base: TBase) {
-  return <T extends OpenApiSchema>() => {
+  return <T extends OpenApiSchema | OpenApiReferenceObject>() => {
     return class extends Base {
       _prefixItems?: T[];
       addPrefixItems(val: T[]) {
@@ -2809,14 +2822,14 @@ export function withPrefixItems<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiSchema
+ * @fieldType OpenApiSchema|OpenApiReferenceObject
  * @serializedName additionalItems
  * @methodName addAdditionalItems
  */
 export function withAdditionalItems<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _additionalItems?: OpenApiSchema;
-    addAdditionalItems(val: OpenApiSchema) {
+    _additionalItems?: OpenApiSchema | OpenApiReferenceObject;
+    addAdditionalItems(val: OpenApiSchema | OpenApiReferenceObject) {
       const copy: this = Object.create(this);
       copy._additionalItems = val;
       return copy;
@@ -3312,12 +3325,12 @@ export function withRef<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiSchema
+ * @fieldType OpenApiSchema|OpenApiReferenceObject
  * @serializedName oneOf
  * @methodName addOneOf
  */
 export function withOneOf<TBase extends GConstructor>(Base: TBase) {
-  return <T extends OpenApiSchema>() => {
+  return <T extends OpenApiSchema | OpenApiReferenceObject>() => {
     return class extends Base {
       _oneOf?: T[];
       addOneOf(val: T[]) {
@@ -3340,12 +3353,12 @@ export function withOneOf<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiSchema
+ * @fieldType OpenApiSchema|OpenApiReferenceObject
  * @serializedName anyOf
  * @methodName addAnyOf
  */
 export function withAnyOf<TBase extends GConstructor>(Base: TBase) {
-  return <T extends OpenApiSchema>() => {
+  return <T extends OpenApiSchema | OpenApiReferenceObject>() => {
     return class extends Base {
       _anyOf?: T[];
       addAnyOf(val: T[]) {
@@ -3368,12 +3381,12 @@ export function withAnyOf<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiSchema
+ * @fieldType OpenApiSchema|OpenApiReferenceObject
  * @serializedName allOf
  * @methodName addAllOf
  */
 export function withAllOf<TBase extends GConstructor>(Base: TBase) {
-  return <T extends OpenApiSchema>() => {
+  return <T extends OpenApiSchema | OpenApiReferenceObject>() => {
     return class extends Base {
       _allOf?: T[];
       addAllOf(val: T[]) {
@@ -3396,14 +3409,14 @@ export function withAllOf<TBase extends GConstructor>(Base: TBase) {
 }
 
 /**
- * @fieldType OpenApiSchema
+ * @fieldType OpenApiSchema|OpenApiReferenceObject
  * @serializedName not
  * @methodName addNot
  */
 export function withNot<TBase extends GConstructor>(Base: TBase) {
   return class extends Base {
-    _not?: OpenApiSchema;
-    addNot(val: OpenApiSchema) {
+    _not?: OpenApiSchema | OpenApiReferenceObject;
+    addNot(val: OpenApiSchema | OpenApiReferenceObject) {
       const copy: this = Object.create(this);
       copy._not = val;
       return copy;
