@@ -131,7 +131,7 @@ export interface OpenApiV3_1 extends OpenApiV3 {
 }
 
 class _OpenApiV3 extends OpenApiBase {
-  private writeOASImpl(
+  private async writeOASImpl(
     fileWriteFn: (filepath: string, json: string) => void,
     filePath?: string
   ) {
@@ -140,12 +140,12 @@ class _OpenApiV3 extends OpenApiBase {
       console.log(json);
       return;
     }
-    fileWriteFn(filePath, json);
+    await fileWriteFn(filePath, json);
   }
 
-  writeOASASync(filePath?: string): void {
-    const fn = (filePath: string, json: string) =>
-      fs.writeFile(filePath, json, {}, err => {
+  async writeOASASync(filePath?: string): Promise<void> {
+    const fn = async (filePath: string, json: string) =>
+      await fs.writeFile(filePath, json, { encoding: "utf-8" }, err => {
         if (err) {
           console.error("Error writing file.", err.message);
         }
