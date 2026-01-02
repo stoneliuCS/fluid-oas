@@ -72,7 +72,7 @@ const errorSchema = Object.addProperties({
   message: String.addReadOnly(true),
 });
 
-const getUserResponses = Responses.addResponses({
+const getUserResponses = Responses({
   200: Response.addDescription("Successfully Retrieved User!").addContents({
     "application/json": MediaType.addSchema(userSchema),
   }),
