@@ -38,6 +38,8 @@ _Fluid-OAS_ is an embedded, completely functional _domain specific language_ for
 ### Example Usage
 
 ```ts
+import { Contact, Info, OpenApiV3, Operation, Union, String, Example, Null, Object, Responses, Response, MediaType, PathItem, Parameter, Path, OpenApiOperation } from "fluid-oas";
+
 const info = Info.addTitle("My API")
   .addVersion("1.0.0")
   .addDescription("Example description.")
@@ -83,24 +85,22 @@ const getUserResponses = Responses({
 
 // Declare Path Items
 const getUser = PathItem.addMethod({
-  get: Operation.addParameters([
-    Parameter.schema
-      .addName("id")
-      .addIn("path")
-      .addRequired(true)
-      .addSchema(uuidSchema),
-  ]).addResponses(getUserResponses),
+  get: addBearerAuthToRoute(Operation).addResponses(getUserResponses)
 });
 
+function addBearerAuthToRoute(op: OpenApiOperation): OpenApiOperation {
+  return op.addParameters([Parameter.header.addIn("header").addName("bearer")])
+}
+
 // Register Paths
-const path = Path.beginGroup("/api/v1")
-  .addEndpoints({ "/user/{id}": getUser })
-  .endGroup();
+const path = Path.addEndpoints({ "/user/{id}": getUser })
 
 const oas = OpenApiV3.addOpenApiVersion("3.1.1").addInfo(info).addPaths(path);
 
 // Write OAS Spec
 oas.writeOASSync();
+
+
 ```
 
 ```json
