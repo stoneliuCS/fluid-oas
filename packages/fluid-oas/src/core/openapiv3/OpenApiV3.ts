@@ -104,15 +104,17 @@ export interface OpenApiV3 extends BaseInterface {
    * Writes the OpenAPI specification synchronously to a file or outputs it.
    *
    * @param filePath - Optional file path where the specification should be written
+   * @param pretty - Pretty formats the output json
    */
-  writeOASSync(filePath?: string): void;
+  writeOASSync(filePath?: string, pretty?: boolean): void;
 
   /**
    * Writes the OpenAPI specification asynchronously to a file or outputs it.
    *
    * @param filePath - Optional file path where the specification should be written
+   * @param pretty - Pretty formats the output json
    */
-  writeOASASync(filePath?: string): void;
+  writeOASASync(filePath?: string, pretty?: boolean): void;
 }
 
 export interface OpenApiV3_1 extends OpenApiV3 {
@@ -133,9 +135,15 @@ export interface OpenApiV3_1 extends OpenApiV3 {
 class _OpenApiV3 extends OpenApiBase {
   private async writeOASImpl(
     fileWriteFn: (filepath: string, json: string) => void,
-    filePath?: string
+    filePath?: string,
+    pretty?: boolean
   ) {
-    let json = JSON.stringify(this);
+    let json;
+    if (pretty) {
+      json = JSON.stringify(this, null, 2);
+    } else {
+      json = JSON.stringify(this);
+    }
     if (!filePath) {
       console.log(json);
       return;
@@ -143,19 +151,19 @@ class _OpenApiV3 extends OpenApiBase {
     await fileWriteFn(filePath, json);
   }
 
-  async writeOASASync(filePath?: string): Promise<void> {
+  async writeOASASync(filePath?: string, pretty?: boolean): Promise<void> {
     const fn = async (filePath: string, json: string) =>
       await fs.writeFile(filePath, json, { encoding: "utf-8" }, err => {
         if (err) {
           console.error("Error writing file.", err.message);
         }
       });
-    this.writeOASImpl(fn, filePath);
+    this.writeOASImpl(fn, filePath, pretty);
   }
-  writeOASSync(filePath?: string): void {
+  writeOASSync(filePath?: string, pretty?: boolean): void {
     const fn = (filePath: string, json: string) =>
       fs.writeFileSync(filePath, json);
-    this.writeOASImpl(fn, filePath);
+    this.writeOASImpl(fn, filePath, pretty);
   }
 }
 
